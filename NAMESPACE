@@ -1,0 +1,3 @@
+useDynLib(ddhwPaper)
+importFrom(Rcpp, evalCpp)
+exportPattern("^[^\\.]")
