@@ -20,6 +20,3 @@ ddhf <- function(unadj_p, filterstat, alpha){
   ddhf_obj
 }
 
- #pv <- runif(1000)
- #ord <- sample(1:1000,1000)
- # tmp <- ddhf_order(pv,ord, .1)

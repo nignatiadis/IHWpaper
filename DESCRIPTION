@@ -1,10 +1,14 @@
 Package: ddhwPaper
 Title: What the package does (one line)
 Version: 0.1
-Authors@R: "First Last <first.last@example.com> [aut, cre]"
+Authors@R: "Nikos Ignatiadis <first.last@example.com> [aut, cre]"
 Description: What the package does (one paragraph)
 Depends: R (>= 3.1.2)
 License: What license is it under?
 LazyData: true
 LinkingTo: Rcpp
-Imports: Rcpp
+Imports: Rcpp,
+		 fdrtool,
+		 genefilter,
+		 DESeq2,
+		 FDRreg

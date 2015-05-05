@@ -7,18 +7,14 @@ using namespace Rcpp;
 
 // ddhf_order
 Rcpp::IntegerVector ddhf_order(Rcpp::NumericVector sorted_p, Rcpp::IntegerVector filterorder, double alpha);
-RcppExport SEXP ddhwThesis_ddhf_order(SEXP sorted_pSEXP, SEXP filterorderSEXP, SEXP alphaSEXP) {
+RcppExport SEXP ddhwPaper_ddhf_order(SEXP sorted_pSEXP, SEXP filterorderSEXP, SEXP alphaSEXP) {
 BEGIN_RCPP
-    SEXP __sexp_result;
-    {
-        Rcpp::RNGScope __rngScope;
-        Rcpp::traits::input_parameter< Rcpp::NumericVector >::type sorted_p(sorted_pSEXP );
-        Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type filterorder(filterorderSEXP );
-        Rcpp::traits::input_parameter< double >::type alpha(alphaSEXP );
-        Rcpp::IntegerVector __result = ddhf_order(sorted_p, filterorder, alpha);
-        PROTECT(__sexp_result = Rcpp::wrap(__result));
-    }
-    UNPROTECT(1);
-    return __sexp_result;
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type sorted_p(sorted_pSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type filterorder(filterorderSEXP);
+    Rcpp::traits::input_parameter< double >::type alpha(alphaSEXP);
+    __result = Rcpp::wrap(ddhf_order(sorted_p, filterorder, alpha));
+    return __result;
 END_RCPP
 }

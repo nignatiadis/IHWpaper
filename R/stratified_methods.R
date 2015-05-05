@@ -112,3 +112,43 @@ stratified_bh <- function(unadj_p, groups, alpha){
 rejected_hypotheses.SBH <- function(obj, alpha= obj$alpha){
   obj$adj_p <= alpha
 }
+
+
+#' Cai's local fdr based method
+
+lfdr_fit <- function(unadj_p, group, lfdr_estimation="fdrtool"){
+  if (lfdr_estimation == "covmod"){
+    lfdrs <- covmod_grouped(unadj_p, group)$cm_fdr
+  } else {
+
+      pvals_list <- split(unadj_p, group)
+      if (lfdr_estimation == "fdrtool"){
+        lfdr_fun <- function(pv) fdrtool(pv, statistic="pvalue",plot=F,verbose=F)$lfdr
+      } else if (lfdr_estimation == "ConcaveFDR"){
+        lfdr_fun <- function(pv) ConcaveFDR(pv, statistic="pvalue",plot=F,verbose=F)$lfdr.log
+      } else if (lfdr_estimation == "locfdr"){
+        lfdr_fun <- function(pv) locfdr(qnorm(pv), nulltype=0, plot=0)$fdr
+      } else if (lfdr_estimation == "mixfdr"){
+        lfdr_fun <- function(pv) mixFdr(qnorm(pv), theonull=T, plots=F)$fdr
+      }
+    
+      lfdr_list <- lapply(pvals_list, lfdr_fun) 
+      lfdrs <- unsplit(lfdr_list, group)
+    }
+    fit_obj <- data.frame(pvalue=unadj_p, lfdr=lfdrs, group=group)
+    fit_obj
+}
+
+cai_bh <- function(unadj_p, filterstat, nbins, alpha, ...){
+  grps <- groups_by_filter(filterstat,nbins)
+  lfdr_res <- lfdr_fit(unadj_p, grps, ...)
+  lfdrs <- lfdr_res$lfdr
+  # sort lfdrs, break ties by pvalues so that in the end within each stratum
+  # we get monotonic adjusted p-values as a function of the p-values
+  # this is mainly needed for grenander based lfdrs
+  o <- order(lfdrs, unadj_p)
+  lfdrs_sorted <- lfdrs[o]
+  fdr_estimate <- cumsum(lfdrs_sorted)/(1:length(unadj_p))
+  adj_p <- rev(cummin(rev(fdr_estimate)))
+  adj_p[order(o)]
+}
