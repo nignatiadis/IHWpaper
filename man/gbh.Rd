@@ -15,11 +15,15 @@ gbh(unadj_p, groups, alpha, method = "TST", pi0_global = "weighted_average")
 
 \item{method}{What pi0 estimator should be used (available "TST","LSL")}
 
-\item{pi0_global}{Method requires also a pi0 estimate for the marginal p-value distribution. Can either apply pi0 estimation method to
+\item{pi0_global}{GBH requires also a pi0 estimate for the marginal p-value distribution. Can either apply pi0 estimation method to
 all p-values (pi0_global="global") or use a weigted averarage (pi0_global="weighted_average") of the pi0 estimates within each stratum.
 This is not explicitly stated in the paper, but based on a reproduction of their paper figures it seems to be the weighted_average.}
 }
 \description{
 gbh: Grouped Benjamini Hochberg
+}
+\references{
+Hu, James X., Hongyu Zhao, and Harrison H. Zhou. "False discovery rate control with groups."
+        Journal of the American Statistical Association 105.491 (2010).
 }
 

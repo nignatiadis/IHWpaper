@@ -6,11 +6,11 @@ run_evals <- function(sim_funs, fdr_methods, nreps, alphas,...){
 }
 
 sim_fun_eval <- function(sim_fun, fdr_methods, nreps, alphas, BiocParallel=T){
-	simulations <- lapply(1:nreps, function(i) sim_fun())
+	sim_seeds <- 1:nreps
 	if (BiocParallel){
-		evaluated_sims <- bplapply(simulations, function(x) sim_eval(x, fdr_methods, alphas))
+		evaluated_sims <- bplapply(sim_seeds, function(x) sim_eval(sim_fun, x, fdr_methods, alphas))
 	} else {
-		evaluated_sims <- lapply(simulations, function(x) sim_eval(x, fdr_methods, alphas))
+		evaluated_sims <- lapply(sim_seeds, function(x) sim_eval(sim_fun, x, fdr_methods, alphas))
 	}
 	df <- dplyr::rbind_all(evaluated_sims)
 	df <- dplyr::summarize(group_by(df, fdr_method, fdr_pars, alpha), FDR = mean(FDP),
@@ -23,7 +23,8 @@ sim_fun_eval <- function(sim_fun, fdr_methods, nreps, alphas, BiocParallel=T){
 	df
 }
 
-sim_eval <- function(sim, fdr_methods, alphas){
+sim_eval <- function(sim_fun, seed, fdr_methods, alphas){
+	sim <- sim_fun(seed) 
 	rbind_all(lapply(fdr_methods, function(fdr_method) sim_fdrmethod_eval(sim, fdr_method, alphas)))
 }
 
@@ -56,7 +57,7 @@ sim_alpha_eval <- function(sim, fdr_method, alpha){
 }
 
 calculate_test_stats <- function(sim, fdr_method, alpha){
-	fdr_method_result <- fdr_method(sim)
+	fdr_method_result <- fdr_method(sim, alpha)
 	rejected <- rejected_hypotheses(fdr_method_result)
 	rjs <- sum(rejected)
 	rj_ratio <- rjs/nrow(sim)
@@ -67,5 +68,6 @@ calculate_test_stats <- function(sim, fdr_method, alpha){
 	FPR <-  sum(sim$H == 0 & rejected)/sum(sim$H == 0) 
 
 	df <- data.frame(rj_ratio=rj_ratio, FDP=FDP, power=power, FPR=FPR)
+	df
 }
 
