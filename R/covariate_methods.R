@@ -1,3 +1,37 @@
+### general wrapper
+continuous_wrap <- function(mt_method, nbins=20){
+  print(attr(mt_method,"fdr_method"))
+  if (attr(mt_method, "testing covariate") == "simple"){
+
+    f <- function(sim, alpha){
+      mt_method(sim$pvalue, alpha)
+    }
+    attr(f, "fdr_method") <- attr(mt_method, "fdr_method")
+
+  } else if (attr(mt_method, "testing covariate") == "stratified"){
+
+    f <- function(sim, alpha){
+      groups <- ddhw::groups_by_filter(sim$filterstat, nbins)
+      mt_method(sim$pvalue, groups, alpha)
+    }
+    attr(f, "fdr_method") <- paste(attr(mt_method, "fdr_method"), nbins, "bins")
+
+  } else if (attr(mt_method, "testing covariate") == "continuous"){
+    f <- function(sim, alpha){
+      mt_method(sim$pvalue, sim$filterstat, alpha)
+    }
+
+    attr(f, "fdr_method") <- attr(mt_method, "fdr_method")
+
+  } else {
+    stop("unknown covariate handling")
+  }
+
+  f
+}
+
+
+
 #' scott_fdrreg: Wrapper for FDR regression
 #'
 #'

@@ -1,6 +1,5 @@
 du_ttest_sim <- function(m, pi0, effect_size, n_samples=10, uninformative_filter=F, seed=NULL){
   if (!is.null(seed)) set.seed(seed)
-  set.seed(seed)
   m0 <- ceiling(m*pi0)
   false_nulls <- sample(1:m, m-m0)
   z_table <- matrix(rnorm(n_samples*m), ncol=n_samples)
@@ -31,6 +30,7 @@ du_ttest_sim_fun <- function(m, pi0, effect_size, n_samples=10, uninformative_fi
 
 null_sim <- function(m, seed=NULL){
   if (!is.null(seed)) set.seed(seed)
+
   sim_df <- data.frame(pvalue = runif(m), filterstat = runif(m), H=0)
   return(sim_df)
 }
@@ -43,7 +43,10 @@ null_sim_fun <- function(m){
   f
 }
 
-wasserman_normal_sim <- function(m, pi0, xi_min, xi_max){
+
+wasserman_normal_sim <- function(m, pi0, xi_min, xi_max, seed=NULL){
+    if (!is.null(seed)) set.seed(seed)
+
     X   <- runif(m, min=xi_min, max=xi_max)
     H   <- rbinom(m,1,1-pi0)
     Z   <- rnorm(m, H*X)
@@ -52,9 +55,9 @@ wasserman_normal_sim <- function(m, pi0, xi_min, xi_max){
 }
 
 wasserman_normal_sim_fun <- function(m, pi0, xi_min, xi_max){
-  f <- function() wasserman_normal_sim(m, pi0, xi_min, xi_max)
+  f <- function(seed) wasserman_normal_sim(m, pi0, xi_min, xi_max, seed=seed)
   attr(f, "sim_method") <- "wasserman sim"
-  attr(f, "sim_pars") <- paste0("pi0:", pi0) #add info about xi_min, xi_max
+  attr(f, "sim_pars") <- paste0("pi0:",pi0, ", xi_max:", xi_max)
   attr(f, "m") <- m
   f
 }

@@ -16,3 +16,5 @@ License: What license is it under?
 LazyData: true
 LinkingTo: Rcpp
 Imports: Rcpp
+Suggests: knitr
+VignetteBuilder: knitr

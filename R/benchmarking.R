@@ -5,12 +5,12 @@ run_evals <- function(sim_funs, fdr_methods, nreps, alphas,...){
 	rbind_all(lapply(sim_funs, function(x) sim_fun_eval(x, fdr_methods, nreps, alphas, ...)))
 }
 
-sim_fun_eval <- function(sim_fun, fdr_methods, nreps, alphas, BiocParallel=T){
+sim_fun_eval <- function(sim_fun, fdr_methods, nreps, alphas, BiocParallel=T, ...){
 	sim_seeds <- 1:nreps
 	if (BiocParallel){
-		evaluated_sims <- bplapply(sim_seeds, function(x) sim_eval(sim_fun, x, fdr_methods, alphas))
+		evaluated_sims <- bplapply(sim_seeds, function(x) sim_eval(sim_fun, x, fdr_methods, alphas,...))
 	} else {
-		evaluated_sims <- lapply(sim_seeds, function(x) sim_eval(sim_fun, x, fdr_methods, alphas))
+		evaluated_sims <- lapply(sim_seeds, function(x) sim_eval(sim_fun, x, fdr_methods, alphas,...))
 	}
 	df <- dplyr::rbind_all(evaluated_sims)
 	df <- dplyr::summarize(group_by(df, fdr_method, fdr_pars, alpha), FDR = mean(FDP),
@@ -23,9 +23,23 @@ sim_fun_eval <- function(sim_fun, fdr_methods, nreps, alphas, BiocParallel=T){
 	df
 }
 
-sim_eval <- function(sim_fun, seed, fdr_methods, alphas){
-	sim <- sim_fun(seed) 
-	rbind_all(lapply(fdr_methods, function(fdr_method) sim_fdrmethod_eval(sim, fdr_method, alphas)))
+sim_eval <- function(sim_fun, seed, fdr_methods, alphas, print_dir = NULL){
+	print(paste("@@@@@ seed is ", seed))
+	if (!is.null(print_dir)){
+		sim_pars <- attr(sim_fun, "sim_pars")
+		file_name <- paste0(print_dir, "seed", seed,"_", sim_pars, ".Rds")
+		if (file.exists(file_name)){
+			df <- readRDS(file_name)
+		} else {
+			sim <- sim_fun(seed) 
+			df <- rbind_all(lapply(fdr_methods, function(fdr_method) sim_fdrmethod_eval(sim, fdr_method, alphas)))
+			saveRDS(df, file=file_name)
+		}
+	} else {
+		sim <- sim_fun(seed) 
+		df <- rbind_all(lapply(fdr_methods, function(fdr_method) sim_fdrmethod_eval(sim, fdr_method, alphas)))
+	}
+	df
 }
 
 sim_fdrmethod_eval <- function(sim, fdr_method, alphas){
