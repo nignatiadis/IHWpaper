@@ -6,3 +6,16 @@ tst_pi0_est <- function(pvalue, alpha){
     n <- length(pvalue)
     (n-nrjs)/n
 }
+
+lsl_pi0_est <- function(pvalue){
+  n <- length(pvalue)
+  ls <- (n:1)/(1-sort(pvalue))
+  ls_diff <- ls[-c(1,2)] - ls[-c(1,n)]
+  index <- min(which(ls_diff > 0))+2
+  if (index == Inf) {
+    pi0 <- 1
+  } else {
+    pi0 <- min(1, (1+floor(ls[index]))/n)
+  }
+  pi0
+}

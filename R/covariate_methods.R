@@ -1,3 +1,9 @@
+
+groups_by_filter <- function(filter_statistic, nbins){
+  rfs <- rank(filter_statistic, ties.method="first")/length(filter_statistic)
+  as.factor(ceiling( rfs* nbins))
+}
+
 ### general wrapper
 continuous_wrap <- function(mt_method, nbins=20){
   print(attr(mt_method,"fdr_method"))
@@ -11,7 +17,7 @@ continuous_wrap <- function(mt_method, nbins=20){
   } else if (attr(mt_method, "testing covariate") == "stratified"){
 
     f <- function(sim, alpha){
-      groups <- ddhw::groups_by_filter(sim$filterstat, nbins)
+      groups <- groups_by_filter(sim$filterstat, nbins)
       mt_method(sim$pvalue, groups, alpha)
     }
     attr(f, "fdr_method") <- paste(attr(mt_method, "fdr_method"), nbins, "bins")
@@ -49,19 +55,27 @@ scott_fdrreg <- function(unadj_p, filterstat, alpha, df=3, lambda=0.01){
 
 	fdrreg_res <- FDRreg(qnorm(unadj_p), Xs, control=list(lambda = 0.01))
 
+  # modification to make this method applicable to p-values
+  # FDRreg tests in a two-sided way, this means that we might get rejections
+  # due to the right tail (high p-values) which have a z-score > 0 !
+  # for this reason, just set local-fdr to 1 or equivalently the posterior prob to 0
+
+  posterior_probs <- ifelse(unadj_p <= 0.5, fdrreg_res$postprob, 1)
+
 	FDR <- getFDR(fdrreg_res$postprob)$FDR
-  	
-  	obj <- list(adj_p = FDR,
+
+  obj <- list(adj_p = FDR,
               pi0_continuous = fdrreg_res$priorprob, pi0=fdrreg_res$p0,
               method="FDRreg", alpha=alpha)
-  	class(obj) <- "FDRreg"
+  class(obj) <- "FDRreg"
 	obj
 }
+
 attr(scott_fdrreg, "testing covariate") <- "continuous" 
 attr(scott_fdrreg, "fdr_method")        <- "FDRreg"     
 
-rejected_hypotheses.FDRreg <- function(obj, alpha= obj$alpha){
-	obj$adj_p <= alpha
+rejected_hypotheses.FDRreg <- function(object, alpha= object$alpha){
+	object$adj_p <= alpha
 }
 
 
@@ -100,7 +114,7 @@ attr(ddhf, "fdr_method")        <- "DDHF"
 # actually greedy independent filtering does not need continuous covariates,
 # it is sufficient if covariates can be ordered!
 
-rejected_hypotheses.DDHF <- function(obj, alpha= obj$alpha){
-	obj$adj_p <= alpha
+rejected_hypotheses.DDHF <- function(object, alpha= object$alpha){
+	object$adj_p <= alpha
 }
 

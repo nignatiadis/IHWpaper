@@ -73,7 +73,7 @@ gbh <- function(unadj_p, groups, alpha, method="TST", pi0_global="weighted_avera
   obj
 }
 attr(gbh, "testing covariate") <- "stratified" # i.e. covariates can be considered by stratifying based on them
-attr(gbh, "fdr_method")        <- "GBH"     
+attr(gbh, "fdr_method")        <- "GBH"
 
 #' tst_gbh: wrapper for gbh with method="TST"
 #' lsl_gbh: wrapper for gbh with method="LSL"
@@ -81,11 +81,11 @@ attr(gbh, "fdr_method")        <- "GBH"
 
 tst_gbh <- function(unadj_p, groups, alpha, ...) gbh(unadj_p, groups, alpha, method="TST", ...)
 attr(tst_gbh, "testing covariate") <- "stratified" # i.e. covariates can be considered by stratifying based on them
-attr(tst_gbh, "fdr_method")        <- "TST GBH"     
+attr(tst_gbh, "fdr_method")        <- "TST GBH"
 
 lsl_gbh <- function(unadj_p, groups, alpha, ...) gbh(unadj_p, groups, alpha, method="LSL", ...)
 attr(lsl_gbh, "testing covariate") <- "stratified" # i.e. covariates can be considered by stratifying based on them
-attr(lsl_gbh, "fdr_method")        <- "LSL GBH"     
+attr(lsl_gbh, "fdr_method")        <- "LSL GBH"
 
 rejected_hypotheses.GBH <- function(gbh_object, alpha= gbh_object$alpha){
   gbh_object$adj_p <= alpha
@@ -120,14 +120,14 @@ stratified_bh <- function(unadj_p, groups, alpha){
 }
 
 attr(stratified_bh, "testing covariate") <- "stratified" # i.e. covariates can be considered by stratifying based on them
-attr(stratified_bh, "fdr_method")        <- "SBH"  
+attr(stratified_bh, "fdr_method")        <- "SBH"
 
-rejected_hypotheses.SBH <- function(obj, alpha= obj$alpha){
-    obj$adj_p <= alpha
+rejected_hypotheses.SBH <- function(object, alpha= object$alpha){
+    object$adj_p <= alpha
 }
 
 
-#' cai: Cai's local fdr based method
+#' clfdr: Cai's local fdr based method
 #'
 #'
 #' @param unadj_p  Numeric vector of unadjusted p-values.
@@ -138,7 +138,7 @@ rejected_hypotheses.SBH <- function(obj, alpha= obj$alpha){
 #' @references Cai, T. Tony, and Wenguang Sun. "Simultaneous testing of grouped hypotheses: Finding needles in multiple haystacks." 
 #'           Journal of the American Statistical Association 104.488 (2009).
 
-cai <- function(unadj_p, groups, alpha, lfdr_estimation="fdrtool"){
+clfdr <- function(unadj_p, groups, alpha, lfdr_estimation="fdrtool"){
 
   # estimate local fdr within each stratum first
 
@@ -161,14 +161,14 @@ cai <- function(unadj_p, groups, alpha, lfdr_estimation="fdrtool"){
 
 
   obj <- list(adj_p = adj_p, alpha=alpha, lfdr_estimation=lfdr_estimation)
-  class(obj) <- "CAI"
+  class(obj) <- "Clfdr"
   obj
 }
 
-attr(cai, "testing covariate") <- "stratified" # i.e. covariates can be considered by stratifying based on them
-attr(cai, "fdr_method")        <- "cai"  
+attr(clfdr, "testing covariate") <- "stratified" # i.e. covariates can be considered by stratifying based on them
+attr(clfdr, "fdr_method")        <- "Clfdr"
 
-rejected_hypotheses.CAI <- function(obj, alpha= obj$alpha){
+rejected_hypotheses.Clfdr <- function(obj, alpha= obj$alpha){
     obj$adj_p <= alpha
 }
 
@@ -191,8 +191,8 @@ lfdr_fit <- function(unadj_p, group, lfdr_estimation="fdrtool"){
       } else if (lfdr_estimation == "mixfdr"){
         lfdr_fun <- function(pv) mixFdr(qnorm(pv), theonull=T, plots=F)$fdr
       }
-    
-      lfdr_list <- lapply(pvals_list, lfdr_fun) 
+
+      lfdr_list <- lapply(pvals_list, lfdr_fun)
       lfdrs <- unsplit(lfdr_list, group)
     }
     fit_obj <- data.frame(pvalue=unadj_p, lfdr=lfdrs, group=group)

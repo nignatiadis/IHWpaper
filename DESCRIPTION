@@ -4,7 +4,7 @@ Version: 0.1
 Authors@R: "Nikos Ignatiadis <nikos.ignatiadis01@gmail.com.com> [aut, cre]"
 Description: Reproduce figure in DDHW paper
 Depends: R (>= 3.1.2),
-		 ddhw,
+		 DDHW,
 		 fdrtool,
 		 genefilter,
 		 DESeq2,

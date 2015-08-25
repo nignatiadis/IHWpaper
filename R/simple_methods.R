@@ -12,8 +12,8 @@ bh <- function(unadj_p, alpha){
 attr(bh, "testing covariate") <- "simple" #i.e. covariate not considered
 attr(bh, "fdr_method")        <- "BH"     
 
-rejected_hypotheses.BH <- function(obj, alpha= obj$alpha){
-	obj$adj_p <= alpha
+rejected_hypotheses.BH <- function(object, alpha= object$alpha){
+	object$adj_p <= alpha
 }
 
 
@@ -31,6 +31,6 @@ storey_qvalue <- function(unadj_p, alpha){
 attr(storey_qvalue, "testing covariate") <- "simple" #i.e. covariate not considered
 attr(storey_qvalue, "fdr_method")        <- "qvalue"     
 
-rejected_hypotheses.StoreyQValue <- function(obj, alpha= obj$alpha){
-	obj$adj_p <= alpha
+rejected_hypotheses.StoreyQValue <- function(object, alpha= object$alpha){
+	object$adj_p <= alpha
 }
