@@ -25,6 +25,7 @@ continuous_methods_list <- list(bh,
 							    scott_fdrreg,
 							    ddhf,
 							    ddhw_5fold,
+							    ddhw_5fold_reg,
 							    ddhw_unregularized)
 
 fdr_methods <- lapply(continuous_methods_list, continuous_wrap)
