@@ -1,0 +1,197 @@
+---
+title: "Real data plots"
+author: "Nikos Ignatiadis"
+date: "9/29/2015"
+output: html_document
+---
+
+```{r}
+library("DESeq2")
+library("DDHW")
+library("dplyr")
+library("ggplot2")
+library("grid")
+library("tidyr")
+library("cowplot")
+```
+
+```{r}
+my_breaks <- c(-1, 
+               seq(from=10000,to=290000, by=10000) , 
+               seq(from=300000, to=0.9*10^6, by=100000),
+               seq(from=10^6, to=50*10^6, by=10^7))
+
+my_breaks <- my_breaks[-1]
+
+hqtl_dfs <- readRDS("hQTL_analysis.Rds")
+hqtl_df <- rbind_all(hqtl_dfs)
+hqtl_df <- mutate(hqtl_df, distance = my_breaks[stratum])
+hqtl_summary <- group_by(hqtl_df, alpha) %>%  gather(method, rejections, 6:10) %>%
+                select(alpha, method, rejections)
+pretty_names <- c("DDHW", "BH", "Indep. Filt. 10 kb", "Indep. Filt. 200 kb", "Indep. Filt. 1 Mb")
+levels(hqtl_summary$method) <- pretty_names
+library("RColorBrewer")
+colors <- scales::hue_pal(h = c(0, 360) + 15, c = 100, l = 65, h.start = 0,direction = 1)(5)
+  
+  
+```
+```{r}
+last_vals <- group_by(hqtl_summary, method) %>% summarize(last_vals = max(rejections))
+gg <- ggplot(hqtl_summary, aes(x=alpha,y=rejections,col=method)) +  
+                geom_line() +
+                xlab(expression(bold(paste("Nominal ",alpha)))) +
+                ylab("Rejections") +
+                scale_x_continuous(expand=c(0,0))
+
+gg <- gg + theme(legend.position="none")
+gg <- gg + theme(plot.margin = unit(c(1, 7.5, 2, 1), "lines"))
+gg
+for (i in 1:nrow(last_vals)) {
+  gg <- gg + annotation_custom(grob=textGrob(last_vals$method[i], hjust=0,
+                                             gp=gpar(fontsize=13, 
+                                                     col=colors[i])),
+                               xmin=0.102, xmax=0.102,
+                               ymin=last_vals$last_vals[i], ymax=last_vals$last_vals[i])
+}
+gg
+gb <- ggplot_build(gg)
+gt <- ggplot_gtable(gb)
+ 
+gt$layout$clip[gt$layout$name=="panel"] <- "off"
+ 
+fig2_panel_c <- ggdraw(gt)
+fig2_panel_c
+```
+
+```{r}
+fig2_panel_d <- ggplot(filter(hqtl_df, alpha==0.1), aes(x=distance,y=weight, col=fold)) +
+                geom_point()+ 
+                geom_line()+
+                scale_x_log10(breaks=c(10^4, 10^5,10^6,10^7)) +
+                xlab("genomic distance")+
+                theme(legend.position=c(0.8,0.4)) +
+                theme(plot.margin = unit(c(1, 1, 2, 1), "lines"))
+fig2_panel_d
+plot_grid(fig2_panel_c,fig2_panel_d, labels=c("c)","d)"), nrow=1) 
+```
+```{r}
+bottomly <- analyze_dataset("bottomly")
+ddhw_res <- ddhw(bottomly$pvalue, bottomly$baseMean, 0.1, nbins=13)
+breaks <- DDHW:::stratification_breaks(ddhw_res)
+breaks <- c(min(bottomly$baseMean) ,breaks)
+
+  
+  
+rnaseq_file <- system.file("real_data_examples/result_files", "RNAseq_benchmark.Rds", package = "ddhwPaper")
+mydfs2 <- readRDS(file=rnaseq_file)
+breaks <- c(0,breaks[-length(breaks)])
+mydfs2 <- mutate(mydfs2, baseMean = breaks[stratum])
+summ2 <- group_by(mydfs2, alpha) %>% summarize(BH = max(bh_rejections), DDHW=max(rejections)) %>% 
+       gather(method, rejections, BH, DDHW)
+summ2 <- mutate(summ2,method = factor(as.character(method), levels=pretty_names))
+```
+
+```{r}
+last_vals_rnaseq <- group_by(summ2, method) %>% summarize(last_vals = max(rejections))
+gg <- ggplot(summ2, aes(x=alpha,y=rejections,col=method)) +  
+                geom_line() +
+                xlab(expression(bold(paste("Nominal ",alpha)))) +
+                ylab("Rejections") +
+                scale_color_manual(values=colors)+
+                scale_x_continuous(expand=c(0,0))
+
+gg <- gg + theme(legend.position="none")
+gg <- gg + theme(plot.margin = unit(c(1, 7.5, 2, 1), "lines"))
+gg
+for (i in 1:2) {
+  gg <- gg + annotation_custom(grob=textGrob(last_vals_rnaseq$method[i], hjust=0,
+                                             gp=gpar(fontsize=13, 
+                                                     col=colors[i])),
+                               xmin=0.102, xmax=0.102,
+                               ymin=last_vals_rnaseq$last_vals[i], ymax=last_vals_rnaseq$last_vals[i])
+}
+gg
+gb <- ggplot_build(gg)
+gt <- ggplot_gtable(gb)
+ 
+gt$layout$clip[gt$layout$name=="panel"] <- "off"
+ 
+fig2_panel_a <- ggdraw(gt)
+fig2_panel_a
+```
+```{r}
+
+
+
+fig2_panel_b <- ggplot(filter(mydfs2, alpha==0.1), aes(x=baseMean,y=weight, col=fold)) +
+                geom_point()+ 
+                geom_line()+
+                scale_x_log10(breaks=c(1,10,100,1000,10000))+
+                xlab("Mean of normalized counts")+
+                theme(legend.position=c(0.8,0.4)) +
+                theme(plot.margin = unit(c(1, 1, 2, 1), "lines"))
+
+fig2_panel_b
+plot_grid(fig2_panel_a, fig2_panel_b, fig2_panel_c,fig2_panel_d, labels=c("a)", "b)","c)","d)"), nrow=2) 
+ggsave(filename="data_examples.pdf", width=12, height=9)
+```
+
+```{r}
+mydfs2 <- readRDS(file=rnaseq_file)
+breaks <- DDHW:::stratification_breaks(ddhw_res)
+break_min <- min(bottomly$baseMean)
+break_max <- max(bottomly$baseMean)
+breaks_left <- c(break_min,breaks[-length(breaks)])
+step_df <- mutate(mydfs2, baseMean_left = breaks_left[stratum], baseMean_right = breaks[stratum],
+                 baseMean_ratio = baseMean_right/baseMean_left , 
+                 baseMean_left = baseMean_left * baseMean_ratio^.2,
+                 baseMean_right = baseMean_right *baseMean_ratio^(-.2))
+connecting_df <- mutate(filter(mydfs2, stratum==1), baseMean_left = breaks_left[stratum],
+                        baseMean_right = breaks[stratum], xstart=1)
+
+test_df <- filter(step_df, alpha==0.1) %>% group_by(fold) %>% 
+                  do(stratum_fun(.)) %>%
+                  mutate(dashed = factor(ifelse(abs(weight_left - weight_right) > 10^(-4) , TRUE, FALSE),
+                         levels=c(FALSE,TRUE)))
+stratum_fun <- function(df){
+  stratum <- df$stratum
+  weight <- df$weight
+  stratum_left <- stratum[stratum != 13]
+  weight_left  <- weight[stratum_left]
+  baseMean_left <- df$baseMean_right[stratum_left]
+  stratum_right <- stratum[stratum != 1]
+  weight_right <- weight[stratum_right]
+  baseMean_right <- df$baseMean_left[stratum_right]
+  data.frame(stratum_left= stratum_left, weight_left= weight_left, 
+             stratum_right = stratum_right, weight_right = weight_right,
+             baseMean_left = baseMean_left, baseMean_right = baseMean_right)
+}
+fig2_panel_b <- ggplot(filter(step_df, alpha==0.1), 
+                       aes(x=baseMean_left, 
+                           xend=baseMean_right, 
+                           y=weight, yend=weight, col=fold)) +
+                geom_segment()+ 
+                geom_segment(data= test_df, aes(x=baseMean_left, xend=baseMean_right, 
+                                                y=weight_left, yend=weight_right, 
+                                                linetype=dashed))+
+                scale_x_log10(breaks=c(1,10,100,1000,10000))+
+                xlab("Mean of normalized counts")+
+                theme(legend.position=c(0.8,0.4)) +
+                theme(plot.margin = unit(c(1, 1, 2, 1), "lines")) +
+                guides(linetype=FALSE)
+
+fig2_panel_b
+
+```
+Save them individually as well e.g. for the presentation:
+
+```{r}
+plot_grid(fig2_panel_a, fig2_panel_b,  labels=c("a)", "b)"), nrow=1)
+ggsave(filename="data_examples_bottomly.pdf", width=12, height=5)
+  
+plot_grid(fig2_panel_c, fig2_panel_d,  labels=c("c)", "d)"), nrow=1)
+ggsave(filename="data_examples_judith.pdf", width=12, height=5)
+  
+fig2_panel_b
+ggsave(filename="data_example_bottomly_weights.pdf", width=9,height=6)
+```
