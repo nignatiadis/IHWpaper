@@ -4,7 +4,7 @@
 library("ihwPaper")
 
 
-register(MulticoreParam(workers=5, verbose=TRUE))
+register(MulticoreParam(workers=10, progressbar=TRUE, log=TRUE, threshold="TRACE", verbose=TRUE))
 
 #----------------- General benchmark settings -------------------------------#
 alphas <- seq(0.01, .1, length=10)
