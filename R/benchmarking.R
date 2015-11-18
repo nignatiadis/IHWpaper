@@ -24,7 +24,7 @@ sim_fun_eval <- function(sim_fun, fdr_methods, nreps, alphas, BiocParallel=T, ..
 }
 
 sim_eval <- function(sim_fun, seed, fdr_methods, alphas, print_dir = NULL){
-	flog.trace(paste("@@@@@ seed is ", seed))
+	#print(paste("@@@@@ seed is ", seed))
 	if (!is.null(print_dir)){
 		sim_pars <- attr(sim_fun, "sim_pars")
 		file_name <- paste0(print_dir, "seed", seed,"_", sim_pars, ".Rds")

@@ -8,7 +8,7 @@ register(MulticoreParam(workers=10, progressbar=TRUE, log=TRUE, threshold="TRACE
 
 #----------------- General benchmark settings -------------------------------#
 alphas <- seq(0.01, .1, length=10)
-nreps <- 4000 # number of times each simulation should be repeated (monte carlo replicates)
+nreps <- 100#4000 # number of times each simulation should be repeated (monte carlo replicates)
 
 #------------- Simulation function ------------------------------------------#
 ms <- 20000
@@ -17,7 +17,7 @@ sim_funs <- list(null_sim_fun(ms))
 
 #------------- Methods to be benchmarked ------------------------------------#
 
-continuous_methods_list <- list(ihw_naive)
+continuous_methods_list <- list(ihw_naive, ihw_ecdf_5fold)
 # ihw_naive we run on another script on its own
 
 fdr_methods <- lapply(continuous_methods_list, continuous_wrap)
@@ -26,4 +26,4 @@ fdr_methods <- lapply(continuous_methods_list, continuous_wrap)
 ###############################################################################
 eval_table <- run_evals(sim_funs, fdr_methods, nreps, alphas, BiocParallel=TRUE)
 
-saveRDS(eval_table, file="result_files/ihw_null_simulation_benchmark_grb.Rds")
+#saveRDS(eval_table, file="result_files/ihw_null_simulation_benchmark_grb.Rds")

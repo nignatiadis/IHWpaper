@@ -33,6 +33,15 @@ ihw_naive <- function(unadj_p, filterstat, alpha){
 attr(ihw_naive, "testing covariate") <- "continuous"
 attr(ihw_naive, "fdr_method")        <- "IHW naive"
 
+ihw_ecdf_5fold <- function(unadj_p, filterstat, alpha){
+	obj <- ihw(unadj_p, filterstat, alpha, nbins=20, nfolds=5, lambdas=Inf,
+ 		distrib_estimator="ECDF", lp_solver="gurobi")
+ 	obj
+}
+
+attr(ihw_ecdf_5fold, "testing covariate") <- "continuous"
+attr(ihw_ecdf_5fold, "fdr_method")        <- "IHW ECDF"
+
 
 ihw_5fold <- function(unadj_p, filterstat, alpha){
  	obj <- ihw(unadj_p, filterstat, alpha, nbins=20, nfolds=5, lambdas=Inf,
