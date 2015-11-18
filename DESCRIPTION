@@ -1,20 +1,23 @@
-Package: ddhwPaper
-Title: Reproduce figures in DDHW paper
+Package: ihwPaper
+Title: Reproduce figures in IHW paper
 Version: 0.1
 Authors@R: "Nikos Ignatiadis <nikos.ignatiadis01@gmail.com.com> [aut, cre]"
-Description: Reproduce figure in DDHW paper
+Description: Reproduce figure in IHW paper
 Depends: R (>= 3.1.2),
-		 DDHW,
+		 IHW,
 		 fdrtool,
 		 genefilter,
 		 DESeq2,
 		 FDRreg,
 		 qvalue,
+		 Biobase,
 		 BiocParallel,
 		 dplyr
 License: What license is it under?
 LazyData: true
 LinkingTo: Rcpp
 Imports: Rcpp
-Suggests: knitr
+Suggests: knitr,
+          airway,
+          pasilla
 VignetteBuilder: knitr

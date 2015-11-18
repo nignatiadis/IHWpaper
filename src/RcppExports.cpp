@@ -7,7 +7,7 @@ using namespace Rcpp;
 
 // ddhf_order
 Rcpp::IntegerVector ddhf_order(Rcpp::NumericVector sorted_p, Rcpp::IntegerVector filterorder, double alpha);
-RcppExport SEXP ddhwPaper_ddhf_order(SEXP sorted_pSEXP, SEXP filterorderSEXP, SEXP alphaSEXP) {
+RcppExport SEXP ihwPaper_ddhf_order(SEXP sorted_pSEXP, SEXP filterorderSEXP, SEXP alphaSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;

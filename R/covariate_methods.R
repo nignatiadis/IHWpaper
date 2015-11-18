@@ -110,7 +110,7 @@ ddhf <- function(unadj_p, filterstat, alpha){
   ddhf_obj
 }
 attr(ddhf, "testing covariate") <- "continuous" 
-attr(ddhf, "fdr_method")        <- "DDHF"     
+attr(ddhf, "fdr_method")        <- "Greedy Indep. Filt."     
 # actually greedy independent filtering does not need continuous covariates,
 # it is sufficient if covariates can be ordered!
 
