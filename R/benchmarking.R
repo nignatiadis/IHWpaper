@@ -5,12 +5,12 @@ run_evals <- function(sim_funs, fdr_methods, nreps, alphas,...){
 	rbind_all(lapply(sim_funs, function(x) sim_fun_eval(x, fdr_methods, nreps, alphas, ...)))
 }
 
-sim_fun_eval <- function(sim_fun, fdr_methods, nreps, alphas, BiocParallel=T, ...){
+sim_fun_eval <- function(sim_fun, fdr_methods, nreps, alphas, BiocParallel=T){
 	sim_seeds <- 1:nreps
 	if (BiocParallel){
-		evaluated_sims <- bplapply(sim_seeds, function(x) sim_eval(sim_fun, x, fdr_methods, alphas,...))
+		evaluated_sims <- bplapply(sim_seeds, function(x) sim_eval(sim_fun, x, fdr_methods, alphas))
 	} else {
-		evaluated_sims <- lapply(sim_seeds, function(x) sim_eval(sim_fun, x, fdr_methods, alphas,...))
+		evaluated_sims <- lapply(sim_seeds, function(x) sim_eval(sim_fun, x, fdr_methods, alphas))
 	}
 	df <- dplyr::rbind_all(evaluated_sims)
 	df <- dplyr::summarize(group_by(df, fdr_method, fdr_pars, alpha), FDR = mean(FDP),

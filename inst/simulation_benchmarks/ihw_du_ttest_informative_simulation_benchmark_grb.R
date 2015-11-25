@@ -3,7 +3,7 @@
 library("ihwPaper")
 
 
-register(MulticoreParam(workers=20, log=T, verbose=TRUE))
+register(MulticoreParam(workers=20))
 
 #----------------- General benchmark settings -------------------------------#
 alphas <- 0.1
@@ -23,7 +23,7 @@ fdr_methods <- lapply(continuous_methods_list, continuous_wrap)
 
 #-----------------------------------------------------------------------------
 
-eval_table <- run_evals(sim_funs, fdr_methods, nreps, alphas, BiocParallel=F)
+eval_table <- run_evals(sim_funs, fdr_methods, nreps, alphas, BiocParallel=TRUE)
 eval_table <- mutate(eval_table,
 		eff_size = sapply(strsplit(eval_table$sim_pars,"effect size:"),
 				function(x) as.numeric(x[2])))

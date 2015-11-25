@@ -45,7 +45,7 @@ attr(ihw_ecdf_5fold, "fdr_method")        <- "IHW ECDF"
 
 ihw_5fold <- function(unadj_p, filterstat, alpha){
  	obj <- ihw(unadj_p, filterstat, alpha, nbins=20, nfolds=5, lambdas=Inf,
- 		distrib_estimator="grenander", lp_solver="lpsymphony", threads=5)
+ 		distrib_estimator="grenander", lp_solver="lpsymphony")
  	obj
 }
 
