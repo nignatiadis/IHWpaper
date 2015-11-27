@@ -52,9 +52,22 @@ ihw_5fold <- function(unadj_p, filterstat, alpha){
 attr(ihw_5fold, "testing covariate") <- "continuous"
 attr(ihw_5fold, "fdr_method")        <- "IHW"
 
+
+ihw_5fold_reg <- function(unadj_p, filterstat, alpha){
+  obj <- ihw(unadj_p, filterstat, alpha, nbins=20, nfolds=5,
+             distrib_estimator="grenander", lp_solver="lpsymphony")
+  obj
+}
+
+attr(ihw_5fold_reg, "testing covariate") <- "continuous"
+attr(ihw_5fold_reg, "fdr_method")        <- "IHW E3"
+
+
+
 rejected_hypotheses.ihwResult <- function(object, alpha= object@alpha){
   adj_pvalues(object) <= alpha
 }
+
 
 ###########################
 

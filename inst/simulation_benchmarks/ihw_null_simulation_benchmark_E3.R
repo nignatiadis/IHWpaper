@@ -17,8 +17,8 @@ sim_funs <- list(null_sim_fun(ms))
 
 #------------- Methods to be benchmarked ------------------------------------#
 
-continuous_methods_list <- list(ihw_naive)
-# ihw_naive we run on another script on its own
+continuous_methods_list <- list(ihw_5fold_reg)
+
 
 fdr_methods <- lapply(continuous_methods_list, continuous_wrap)
 
@@ -26,4 +26,4 @@ fdr_methods <- lapply(continuous_methods_list, continuous_wrap)
 ###############################################################################
 eval_table <- run_evals(sim_funs, fdr_methods, nreps, alphas, BiocParallel=TRUE)
 
-saveRDS(eval_table, file="result_files/ihw_null_simulation_benchmark_grb.Rds")
+saveRDS(eval_table, file="result_files/ihw_null_simulation_benchmark_E3.Rds")
