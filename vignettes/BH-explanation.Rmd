@@ -17,7 +17,7 @@ library("dplyr")
 library("wesanderson")
 library("grid")
 library("gridExtra")
-library("ddhw")
+library("IHW")
 ```
 
 # B.Sc. thesis plot (low $\pi_0$)

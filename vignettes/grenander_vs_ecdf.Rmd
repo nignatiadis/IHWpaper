@@ -1,5 +1,5 @@
 ---
-title: "Grenander Estimator"
+title: "Grenander Estimator as applied to IHW"
 author: "Nikos Ignatiadis"
 date: "September 30, 2015"
 output: html_document
@@ -7,10 +7,10 @@ output: html_document
 
 
 
-This vignette is meant to illustrate how the distribution function of some p-values can be approximated by the ECDF and how the ECDF compares to the Grenander estimator, i.e. the least concave majorant (LCM) of the ECDF. The advantage of the Grenander estimator is that it convexifies the underlying optimization problem of DDHW.
+This vignette is meant to illustrate how the distribution function of some p-values can be approximated by the ECDF and how the ECDF compares to the Grenander estimator, i.e. the least concave majorant (LCM) of the ECDF. The advantage of the Grenander estimator is that it convexifies the underlying optimization problem of IHW
 
 ```{r warning=F, message=F}
-library("ddhwPaper")
+library("ihwPaper")
 library("fdrtool")
 library("cowplot")
 ```
@@ -25,7 +25,7 @@ unique_pvalues <- unique(sorted_pvalues)
 ecdf_values <- cumsum(tabulate(match(sorted_pvalues, unique_pvalues)))/n
 
 df_ecdf <- data.frame(x=unique_pvalues,y=ecdf_values)
-gren <- DDHW:::presorted_grenander(sorted_pvalues)
+gren <- IHW:::presorted_grenander(sorted_pvalues)
 df_gren <- data.frame(x=gren$x.knots, y=gren$y.knots)
 ```
 

@@ -13,15 +13,16 @@ Depends:
     qvalue,
     Biobase,
     BiocParallel,
-    dplyr
+    dplyr,
+    cowplot,
+    knitr,
+    airway,
+    pasilla
 License: What license is it under?
 LazyData: true
 LinkingTo: Rcpp
 Imports:
     Rcpp
 Suggests:
-    knitr,
-    airway,
-    pasilla
 VignetteBuilder: knitr
 RoxygenNote: 5.0.0

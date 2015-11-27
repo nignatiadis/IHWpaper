@@ -26,14 +26,14 @@ analyze_dataset <- function(dataset=c("pasilla","airway","bottomly","pasilla"), 
                               levels=c("untreated","treated"))
       dds <- DESeq(dds)
     } else if (dataset == "bottomly") {
-      load(system.file("real_data_examples", "bottomly_eset.RData", package = "ddhwPaper"))
+      load(system.file("real_data_examples/raw_data", "bottomly_eset.RData", package = "ihwPaper"))
       countData <- exprs(bottomly.eset)
       colData <- pData(bottomly.eset)
       dds <- DESeqDataSetFromMatrix(countData = countData, colData = colData , design = ~strain)
       dds <- DESeq(dds)
 
     } else if (dataset == "hammer") {
-      load(system.file("real_data_examples", "hammer_eset.RData", package = "ddhwPaper"))
+      load(system.file("real_data_examples/raw_data", "hammer_eset.RData", package = "ihwPaper"))
       countData <- exprs(hammer.eset)
       colData <- pData(hammer.eset)
       dds <- DESeqDataSetFromMatrix(countData = countData, colData = colData , design = ~protocol)
@@ -49,7 +49,7 @@ analyze_dataset <- function(dataset=c("pasilla","airway","bottomly","pasilla"), 
     resDf$var <- vars
     resDf$max <- rowMax(counts(dds,normalized=T))
     resDf$min <- rowMin(counts(dds,normalized=T))
-    resDf <-subset(resDf, !is.na(pvalue)) #maybe remove that since DDHW should be able to handle NAs anyway
+    resDf <-subset(resDf, !is.na(pvalue)) #maybe remove that since IHW should be able to handle NAs anyway
     return (resDf)
   } else {
     return (dds)
