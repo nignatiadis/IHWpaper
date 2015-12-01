@@ -15,9 +15,14 @@ Depends:
     BiocParallel,
     dplyr,
     cowplot,
-    knitr,
     airway,
     pasilla
+Suggests:
+    ggplot2,
+    scales,
+    BiocStyle,
+    knitr,
+    rmarkdown
 License: What license is it under?
 LazyData: true
 LinkingTo: Rcpp
