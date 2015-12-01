@@ -1,18 +1,4 @@
----
-title: "Real data examples"
-author: "Nikos Ignatiadis"
-date: "`r doc_date()`"
-package: "`r pkg_ver('ihwPaper')`"
-output: BiocStyle::html_document
-vignette: >
-  %\VignetteIndexEntry{"Real data examples"}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\usepackage[utf8]{inputenc}
----
-
-In this vignette we will reproduce Figure 1 of the paper, which includes applications of IHW to RNASeq, proteomics and hQTL data.
-
-```{r warning=F, message=F}
+## ----warning=F, message=F------------------------------------------------
 library("IHW")
 library("dplyr")
 library("ggplot2")
@@ -21,27 +7,20 @@ library("tidyr")
 library("cowplot")
 library("RColorBrewer")
 library("ihwPaper")
-```
 
-Define colors and names for methods we will be using throughout this vignette.
-```{r}
+## ------------------------------------------------------------------------
 pretty_colors <- scales::hue_pal(h = c(0, 360) + 15, c = 100, l = 65, h.start = 0,direction = 1)(5)
 pretty_names <- c("IHW", "BH", "Indep. Filt. \n 10 kb", "Indep. Filt. \n 200 kb", "Indep. Filt. \n 1 Mb")
-```
 
-```{r}
+## ------------------------------------------------------------------------
 
 rnaseq_file <- system.file("real_data_examples/result_files", "RNAseq_benchmark.Rds", package = "ihwPaper")
 rnaseq_data <- readRDS(file=rnaseq_file)
 panel_a_data <- group_by(rnaseq_data$alpha_df, alpha) %>% summarize(BH = max(bh_rejections), IHW=max(rejections)) %>% 
                      gather(method, rejections, BH, IHW) %>%
                      mutate(method = factor(as.character(method), levels=pretty_names))
-```
 
-#RNAseq example
-## Panel a)
-
-```{r}
+## ------------------------------------------------------------------------
 last_vals_a <- group_by(panel_a_data, method) %>% 
                summarize(last_vals = max(rejections)) %>%
                mutate(label = method,
@@ -58,11 +37,8 @@ panel_a <- ggplot(panel_a_data, aes(x=alpha,y=rejections,col=method)) +
 
 panel_a <- pretty_legend(panel_a, last_vals_a, 0.102)
 panel_a
-```
 
-## Panel b)
-
-```{r}
+## ------------------------------------------------------------------------
 breaks <- rnaseq_data$breaks
 break_min <- rnaseq_data$break_min
 
@@ -109,20 +85,15 @@ panel_b <- ggplot(filter(step_df, alpha==0.1),
                 guides(linetype=FALSE)
 
 panel_b
-```
 
-# Proteomics Example
-
-```{r}
+## ------------------------------------------------------------------------
 proteomics_file <- system.file("real_data_examples/result_files", "proteomics_benchmark.Rds", package = "ihwPaper")
 proteomics_data <- readRDS(file=proteomics_file)
 panel_c_data <- group_by(proteomics_data$alpha_df, alpha) %>% summarize(BH = max(bh_rejections), IHW=max(rejections)) %>% 
                      gather(method, rejections, BH, IHW) %>%
                      mutate(method = factor(as.character(method), levels=pretty_names))
-```
 
-## panel c)
-```{r}
+## ------------------------------------------------------------------------
 last_vals_c <- group_by(panel_c_data, method) %>% 
                summarize(last_vals = max(rejections)) %>%
                mutate(label = method,
@@ -139,10 +110,8 @@ panel_c <- ggplot(panel_c_data, aes(x=alpha,y=rejections,col=method)) +
 
 panel_c <- pretty_legend(panel_c, last_vals_c, 0.102)
 panel_c
-```
 
-## Panel d)
-```{r}
+## ------------------------------------------------------------------------
 breaks <- proteomics_data$breaks
 break_min <- proteomics_data$break_min
 
@@ -186,13 +155,8 @@ panel_d <- ggplot(step_df, aes(x=break_left, xend=break_right,y=weight, yend=wei
                 guides(linetype=FALSE)
 
 panel_d
-```
 
-
-# hQTL Example
-
-## Load in data
-```{r}
+## ------------------------------------------------------------------------
 hqtl_file <- system.file("real_data_examples/result_files", "hQTL_benchmark.Rds", package = "ihwPaper")
 hqtl_data <- readRDS(file=hqtl_file)
 hqtl_summary <- group_by(hqtl_data$alpha_df, alpha) %>%  gather(method, rejections, 6:10) %>%
@@ -202,10 +166,8 @@ hqtl_summary <- group_by(hqtl_data$alpha_df, alpha) %>%  gather(method, rejectio
 # see http://stackoverflow.com/questions/7547597/dictionary-style-replace-multiple-items-in-r
 map <- setNames(pretty_names,
                c("rejections","bh_rejections","threshold:10000","threshold:2e+05", "threshold:1e+06"))
-```
 
-## Panel e)
-```{r}
+## ------------------------------------------------------------------------
 last_vals_e <- group_by(hqtl_summary, method) %>% 
                summarize(last_vals = max(rejections))  %>%
                mutate(method = map[method]) %>%
@@ -224,11 +186,8 @@ panel_e <- ggplot(hqtl_summary, aes(x=alpha,y=rejections,col=method)) +
 
 panel_e <- pretty_legend(panel_e, last_vals_e, 0.102)
 panel_e 
-```
 
-## Panel f)
-
-```{r}
+## ------------------------------------------------------------------------
 breaks <-   hqtl_data$breaks
 breaks <- breaks[-1]
 break_min <- hqtl_data$break_min
@@ -272,11 +231,8 @@ panel_f <- ggplot(step_df, aes(x=break_left, xend=break_right,y=weight, yend=wei
 
 panel_f
 
-```
 
-# Put all panels together!
-
-```{r fig.width=12, fig.height=14}
+## ----fig.width=12, fig.height=14-----------------------------------------
 full_fig <- plot_grid(panel_a, panel_b,
                       panel_c, panel_d,
                       panel_e, panel_f,
@@ -284,8 +240,7 @@ full_fig <- plot_grid(panel_a, panel_b,
                               "d)", "e)", "f)"),
                       nrow=3)
 full_fig
-````
 
-```{r eval=FALSE}
-ggsave(full_fig, filename="data_examples.pdf", width=12, height=14)
-```
+## ----eval=FALSE----------------------------------------------------------
+#  ggsave(full_fig, filename="data_examples.pdf", width=12, height=14)
+

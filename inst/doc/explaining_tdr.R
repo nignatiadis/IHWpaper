@@ -1,30 +1,12 @@
----
-title: "Explaining tdr"
-author: "Nikos Ignatiadis"
-date: "`r doc_date()`"
-package: "`r pkg_ver('ihwPaper')`"
-output: BiocStyle::html_document
-vignette: >
-  %\VignetteIndexEntry{"Explaining tdr"}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\usepackage[utf8]{inputenc}
----
-
-# Introduction
-In the first part of this vignette, one of the supplemental figures is generated, which clarifies some concepts regarding the tdr. In particular, the tdr at a fixed p-value is illustrated, the tdr as a function of p-values and also tdr(P_i) as a random variable, which in general will not be a test statistic. It's only a test statistic when we know pi0 and the alternative density, and in such a case it really provides higher discriminatory power than the p-values.
-
-
-```{r warning=F, message=F}
+## ----warning=F, message=F------------------------------------------------
 library("ggplot2")
 library("dplyr")
 library("tidyr")
 library("gridExtra")
 library("cowplot")
 library("wesanderson")
-```
 
-Helper functions to generate simulated data and also evaluate tdr and other quantities on them.
-```{r warning=F}
+## ----warning=F-----------------------------------------------------------
 falt1 <- function(t){
     1-pnorm(qnorm(1-t)-mu1)
   }
@@ -52,10 +34,8 @@ sim_pars <- function(eff_size, pi0){
             tdr_density=tdr_density  ))
 }
 
-````
 
-Helper function to generate plots for different parameter values:
-```{r warning=F}
+## ----warning=F-----------------------------------------------------------
 plot_tdr <- function(x,pi0,xthreshold=0.05){
   eff_size <- x
   pars <- sim_pars(x,pi0)
@@ -94,31 +74,21 @@ plot_tdr <- function(x,pi0,xthreshold=0.05){
   tdr_hist <- ggplot(sim_df, aes(x=tdr)) + geom_histogram(aes(y = ..density..),binwidth=0.036, colour = "darkgreen", fill = "white") + xlab("tdr")
   list(plot_pv=plot_pv,  plot_pv_vs_tdr=plot_pv_vs_tdr, pv_hist=pv_hist, tdr_hist=tdr_hist)
 }
-```
-Generate all plots:
-```{r fig.keep="none", warning=F}
+
+## ----fig.keep="none", warning=F------------------------------------------
 myplots <- c(plot_tdr(3.5, 0.6), plot_tdr(3.5,0.85), plot_tdr(1.5,0.6))
 myplots <- myplots[c(1,5,9) + rep(0:3,each=3)]
 myplots <- c(myplots, list(labels = letters[1:12]), list(ncol=3, align="hv"))
-```
 
-Let's put all plots together:
-```{r warning=F, fig.width=10, fig.height=15}
+## ----warning=F, fig.width=10, fig.height=15------------------------------
 do.call(plot_grid,myplots)
-```
 
-```{r eval=F}
-pdf("pvalue_vs_tdr_explanation.pdf", width=10, height=15)
-do.call(plot_grid,myplots)
-dev.off()
-```
+## ----eval=F--------------------------------------------------------------
+#  pdf("pvalue_vs_tdr_explanation.pdf", width=10, height=15)
+#  do.call(plot_grid,myplots)
+#  dev.off()
 
-
-# Size investing and tdr
-This part of the vignette generates figures which explain the relationship between tdrs and size investing. In particular it illustrates why fdr estimation methods which assume the conditional alternative densities remain the same, cannot have any power (i.e. differences only due to pi0 estimation cannot support a size investing strategy).
-
-Again first generate the data and the individual plots for a case in which both pi0 changes and the alternative distribution:
-```{r warning=F}
+## ----warning=F-----------------------------------------------------------
 
 df <- data.frame(t=seq(0.00001,1, length=1000))
 x <- 2.5
@@ -160,11 +130,8 @@ plot_cdf1 <- ggplot(df, aes(x=t, y= CDF,color=test)) +
                     scale_x_continuous(expand = c(0, 0)) +
                     scale_colour_manual(values =wes_palette("Chevalier")[c(1,4)], name='',labels = expression(H , tilde(H)))
 
-```
 
-Second we generate an example in which only pi0 differs and the alternative distributions are the same:
-
-```{r warning=F}
+## ----warning=F-----------------------------------------------------------
 df <- data.frame(t=seq(0.00001,1, length=1000))
 x <- 2.5
 pi0 <- 0.8
@@ -206,15 +173,13 @@ plot_cdf <- ggplot(df, aes(x=t, y= CDF,color=test)) +
                     scale_x_continuous(expand = c(0, 0)) +
                       scale_colour_manual(values =wes_palette("Chevalier")[c(1,4)], name='',
                                           labels = expression(H , tilde(H)))
-```
 
-```{r, fig.width=8, fig.height=6, warning=F}
+## ---- fig.width=8, fig.height=6, warning=F-------------------------------
 plotgrid <- plot_grid(plot_cdf1, plot_cdf, plot_tdr_inversed1, plot_tdr_inversed, labels = letters[1:4], ncol=2, align="hv")
 plotgrid
-```
 
-```{r, eval=F}
-pdf("tdr_size_investing.pdf", width=8, height=6)
-plotgrid
-dev.off()
-```
+## ---- eval=F-------------------------------------------------------------
+#  pdf("tdr_size_investing.pdf", width=8, height=6)
+#  plotgrid
+#  dev.off()
+

@@ -1,49 +1,24 @@
----
-title: "Weights vs Independent Filtering"
-author: "Nikos Ignatiadis"
-date: "`r doc_date()`"
-package: "`r pkg_ver('ihwPaper')`"
-output: BiocStyle::html_document
-vignette: >
-  %\VignetteIndexEntry{"Weights vs Independent Filtering"}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\usepackage[utf8]{inputenc}
----
-
-In this vignette we show that weights can behave very similarly to an independent filtering threshold:
-
-```{r warning=F, message=F}
+## ----warning=F, message=F------------------------------------------------
 library("IHW")
 library("ihwPaper")
 library("ggplot2")
 library("dplyr")
 library("wesanderson")
-```
 
-First we generate the simulated data and then use (data-driven greedy) independent filtering. We convert the binary threshold cut-off into weights.
-
-```{r, warning=F}
+## ---- warning=F----------------------------------------------------------
 sim <- du_ttest_sim(80000, 0.9, 2, seed=1)
 ddhf_res <- ddhf(sim$pvalue, sim$filterstat, .1)
 ws <- ifelse(sim$filterst <= ddhf_res$cutoff_value, 0, 1)
 ws <- ws/sum(ws)*length(sim$pvalue)
-```
 
-The induced weight function has total regularization equal to the following:
-```{r}
+## ------------------------------------------------------------------------
 total_regularization_lambda <- max(ws)-min(ws)
 total_regularization_lambda
-```
 
-We now apply IHW based on the above total regularization penalization parameter. This makes the comparison more directly applicable.
-
-```{r warning=F}
+## ----warning=F-----------------------------------------------------------
 ihw_res <- ihw(sim$pvalue, sim$filterstat, .1, lambdas = total_regularization_lambda, nfolds=1L,  nbins=20)
-```
 
-The plot below compares the binary threshold with the IHW threshold, which is a bit smoother:
-
-```{r fig.width=5, fig.height=5, warning=F}
+## ----fig.width=5, fig.height=5, warning=F--------------------------------
 df <- rbind( data.frame(covariate = sim$filterstat, weight= ws, method="filtering"),
              data.frame(covariate = sim$filterstat, weight= weights(ihw_res, levels_only=F), 
                         method=paste0("IHW; \nlambda=",format(total_regularization_lambda,digits=2))))
@@ -51,27 +26,19 @@ weights_filter_plot <- ggplot(df, aes(x=covariate, y=weight, col=method)) + geom
                       scale_colour_manual(values=wes_palette("Cavalcanti")[c(1,2)]) +
                       theme_classic(16)
 weights_filter_plot
-```
 
-```{r, eval=FALSE}
-pdf("smoothed_threshold.pdf", width=5, height=5)
-weights_filter_plot
-dev.off()
-```
+## ---- eval=FALSE---------------------------------------------------------
+#  pdf("smoothed_threshold.pdf", width=5, height=5)
+#  weights_filter_plot
+#  dev.off()
 
-But weights can be even more flexible if we allow the total regularization parameter to vary. Here we use 5fold CV along an equally spaced grid of lambdas to find the best total variation regularization using IHW:
-
-```{r message=F, warning=F}
+## ----message=F, warning=F------------------------------------------------
 ihw_res2 <- ihw(sim$pvalue, sim$filterstat, .1, lambdas=seq(0,10,length=20), nfolds=1L, nfolds_internal = 5L, nbins=20, quiet=T)
-```
 
-The returned regularization parameter is the following:
-
-```{r message=F, warning=F}
+## ----message=F, warning=F------------------------------------------------
 ihw_res2@regularization_term
-```
-Now we plot everything:
-```{r fig.width=5, fig.height=5, warning=F}
+
+## ----fig.width=5, fig.height=5, warning=F--------------------------------
 df <- rbind(df,
             data.frame(covariate = sim$filterstat, weight= weights(ihw_res2, levels_only=F),  
                        method=paste0("IHW; \nlambda=",
@@ -82,10 +49,7 @@ weights_filter_plot <- ggplot(df, aes(x=covariate, y=weight, col=method)) + geom
                       theme_classic(16)
 
 weights_filter_plot
-```
 
-Notice that all 3 types of weights still fullfill the necessary budget condition:
-
-```{r, warning=F}
+## ---- warning=F----------------------------------------------------------
 group_by(df, method) %>% summarize(mean_weight = mean(weight))
-```
+

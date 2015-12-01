@@ -1,25 +1,11 @@
----
-title: "Simulation Results"
-author: "Nikos Ignatiadis"
-date: "`r doc_date()`"
-package: "`r pkg_ver('ihwPaper')`"
-output: BiocStyle::html_document
-vignette: >
-  %\VignetteIndexEntry{"Simulation Figures"}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\usepackage[utf8]{inputenc}
----
-
-```{r warning=F, message=F}
+## ----warning=F, message=F------------------------------------------------
 library("ggplot2")
 library("grid")
 library("dplyr")
 library("cowplot")
 library("ihwPaper")
-```
 
-Some general preliminary work, define factors, colours, which methods should we consider conservative, which anticonservative.
-```{r}
+## ------------------------------------------------------------------------
 methods_pretty <- c("BH", "Clfdr", "Greedy Indep. Filt.", "IHW", "IHW naive", "FDRreg", "LSL GBH", "SBH", "TST GBH")
 colors <- scales::hue_pal(h = c(0, 360) + 15, c = 100, l = 65, h.start = 0,direction = 1)(10)
 
@@ -28,13 +14,8 @@ conservative_idx <- match(conservative_methods, methods_pretty)
 
 anticonservative_methods <- c("Greedy Indep. Filt.", "IHW naive", "SBH", "TST GBH")
 anticonservative_idx     <- match(anticonservative_methods, methods_pretty)
-```
 
-
-
-# Panels a,b
-## Data for panels a,b
-```{r}
+## ------------------------------------------------------------------------
 null_grb_file <- system.file("simulation_benchmarks/result_files",
                         "ihw_null_simulation_benchmark_grb.Rds", package = "ihwPaper")
 null_e3_file <- system.file("simulation_benchmarks/result_files",
@@ -50,12 +31,8 @@ null_df <- rbind(readRDS(null_grb_file),
                            fdr_method = factor(fdr_method, levels= methods_pretty)) 
 
 
-```
 
-
-## Panel a)
-
-```{r}
+## ------------------------------------------------------------------------
 panel_a_df <-  filter(null_df, fdr_method %in% anticonservative_methods)
 last_vals_a <- group_by(panel_a_df, fdr_method) %>% summarize(last_vals = max(FDR)) %>%
                mutate(last_vals = last_vals + c(0, 0,0.05, -0.03), 
@@ -73,10 +50,8 @@ panel_a <- ggplot(panel_a_df, aes(x=alpha, y=FDR, col=fdr_method)) +
 
 panel_a <- pretty_legend(panel_a, last_vals_a, 0.102)
 panel_a
-```
 
-## Panel b)
-```{r}
+## ------------------------------------------------------------------------
 panel_b_df <- filter(null_df, fdr_method %in% conservative_methods)
 
 last_vals_b <- group_by(panel_b_df, fdr_method) %>% summarize(last_vals = max(FDR)) %>% 
@@ -94,11 +69,8 @@ panel_b <- ggplot(panel_b_df, aes(x=alpha, y=FDR, col=fdr_method)) +
 
 panel_b <- pretty_legend(panel_b, last_vals_b, 0.102 )
 panel_b
-```
 
-## Panels a, b)
-
-```{r, fig.width=11, fig.height=5.5}
+## ---- fig.width=11, fig.height=5.5---------------------------------------
 panel_ab <- plot_grid(panel_a, panel_b, labels=c("a)","b)"), vjust=4.5) 
           
 
@@ -113,12 +85,8 @@ panel_ab
 
 #ggsave(panel_ab, "null_all.pdf",width=11,height=5.5)
 
-```
 
-# Panels c, d)
-
-## Data for panels c,d)
-```{r}
+## ------------------------------------------------------------------------
 effsize_grb_file <- system.file("simulation_benchmarks/result_files",
                         "ihw_du_ttest_informative_simulation_benchmark_grb.Rds", package = "ihwPaper")
 effsize_e3_file <- system.file("simulation_benchmarks/result_files",
@@ -132,11 +100,8 @@ effsize_df <- rbind(readRDS(effsize_grb_file),
               mutate(fdr_method = ifelse(fdr_method=="IHW E3", "IHW", fdr_method),  
                            fdr_method = sapply(strsplit(fdr_method," 20"), "[",1),
                            fdr_method = factor(fdr_method, levels= methods_pretty)) 
-```
 
-## Panel c)
-
-```{r}
+## ------------------------------------------------------------------------
 panel_c_df <- filter(effsize_df, fdr_method %in% conservative_methods)
 
 last_vals_c <- group_by(panel_c_df, fdr_method) %>% summarize(last_vals =  FDR[which.max(eff_size)]) %>%
@@ -153,11 +118,8 @@ panel_c <- ggplot(panel_c_df, aes(x=eff_size, y=FDR, col=fdr_method)) +
 
 panel_c <- pretty_legend(panel_c, last_vals_c, 2.52 )
 panel_c
-```
 
-## Panel d)
-
-```{r}
+## ------------------------------------------------------------------------
 panel_d_df <- filter(effsize_df, fdr_method %in% conservative_methods)
 
 last_vals_d <- group_by(panel_d_df, fdr_method) %>% summarize(last_vals = power[which.max(eff_size)]) %>%
@@ -175,11 +137,8 @@ panel_d <- ggplot(panel_c_df, aes(x=eff_size, y=power, col=fdr_method)) +
 
 panel_d <- pretty_legend(panel_d, last_vals_d, 2.52 )
 panel_d
-```
 
-## Put panels c), d) together:
-
-```{r, fig.width=11, fig.height=5.5}
+## ---- fig.width=11, fig.height=5.5---------------------------------------
 panel_cd <- plot_grid(panel_c, panel_d, labels=c("c)","d)"), vjust=4.5) 
 
 #ggsave(panel_cd, "t_test_full.pdf",width=11,height=5.5)
@@ -191,12 +150,8 @@ panel_cd <- ggdraw(panel_cd) +
           theme(plot.margin=unit(c(.2,.2,.2,.2),"cm"))
 
 panel_cd
-```
 
-# Panels e),f)
-
-## Load data for panels e),f)
-```{r}
+## ------------------------------------------------------------------------
 sizeinvesting_grb_file <- system.file("simulation_benchmarks/result_files",
                         "ihw_wasserman_normal_simulation_benchmark_grb.Rds", package = "ihwPaper")
 sizeinvesting_e3_file <-  system.file("simulation_benchmarks/result_files",
@@ -215,9 +170,8 @@ sizeinvesting_df <- rbind_all(lapply(c(sizeinvesting_file,
                     group_by(xi_max) %>% 
                     mutate(normalized = log2(power/max(power*(fdr_method=="BH"))))
 
-```
-## Panel e)
-```{r}
+
+## ------------------------------------------------------------------------
 panel_e_df <- filter(sizeinvesting_df, fdr_method %in% conservative_methods)
 
 last_vals_e <- group_by(panel_e_df, fdr_method) %>% summarize(last_vals = FDR[which.max(xi_max)]) %>%
@@ -234,10 +188,8 @@ panel_e <- ggplot(panel_e_df, aes(x=xi_max, y=FDR, col=fdr_method)) +
 
 panel_e <- pretty_legend(panel_e, last_vals_e, 6.02 )
 panel_e
-```
 
-## Panel f)
-```{r}
+## ------------------------------------------------------------------------
 panel_f_df <- filter(sizeinvesting_df, fdr_method %in% conservative_methods)
 
 last_vals_f <- group_by(panel_f_df, fdr_method) %>% summarize(last_vals = normalized[which.max(xi_max)]) %>%
@@ -254,12 +206,8 @@ panel_f <- ggplot(panel_f_df, aes(x=xi_max, y=normalized, col=fdr_method)) +
 
 panel_f <- pretty_legend(panel_f, last_vals_f, 6.02 )
 panel_f
-```
 
-## Combine main panels for size investing
-
-
-```{r fig.width=11, fig.height=5.5}
+## ----fig.width=11, fig.height=5.5----------------------------------------
 panel_ef <- plot_grid(panel_e, panel_f, labels=c("e)","f)"), vjust=4.5) 
 
 #plot_grid(panel_c, panel_d) 
@@ -272,24 +220,15 @@ panel_ef <- ggdraw(panel_ef) +
           theme(plot.margin=unit(c(.2,.2,.2,.2),"cm"))
 
 panel_ef
-```
 
-# Combine everything into main text simulation figure
-
-```{r, fig.width=12, fig.height=16}
+## ---- fig.width=12, fig.height=16----------------------------------------
 main_sim_fig <- plot_grid(panel_ab,panel_cd, panel_ef, nrow=3)
 main_sim_fig
-```
 
-```{r eval=FALSE}
-ggsave("main_simulations.pdf", width=12, height=16)
-```
+## ----eval=FALSE----------------------------------------------------------
+#  ggsave("main_simulations.pdf", width=12, height=16)
 
-# Supplementary Effect Size Simulation
-
-## Supplementary panel a)
-
-```{r}
+## ------------------------------------------------------------------------
 sup_panel_a_df <- filter(effsize_df, fdr_method %in% anticonservative_methods)
 
 sup_last_vals_a <- group_by(sup_panel_a_df, fdr_method) %>%
@@ -307,11 +246,8 @@ sup_panel_a <- ggplot(sup_panel_a_df, aes(x=eff_size, y=FDR, col=fdr_method)) +
 
 sup_panel_a <- pretty_legend(sup_panel_a, sup_last_vals_a, 2.52 )
 sup_panel_a
-```
 
-## Supplementary panel b)
-
-```{r}
+## ------------------------------------------------------------------------
 sup_panel_b_df <- filter(effsize_df, fdr_method %in% anticonservative_methods)
 
 sup_last_vals_b <- group_by(sup_panel_b_df, fdr_method) %>%
@@ -330,11 +266,8 @@ sup_panel_b <- ggplot(sup_panel_b_df, aes(x=eff_size, y=power, col=fdr_method)) 
 
 sup_panel_b <- pretty_legend(sup_panel_b, sup_last_vals_b, 2.52 )
 sup_panel_b
-```
 
-## Combine supplementary effect size simulations
-
-```{r fig.width=11, fig.height=5.5}
+## ----fig.width=11, fig.height=5.5----------------------------------------
 sup_panel_ab<- plot_grid(sup_panel_a, sup_panel_b, labels=c("a)","b)"), vjust=4.5) 
 
 sup_panel_ab <- ggdraw(sup_panel_ab) +
@@ -345,13 +278,8 @@ sup_panel_ab <- ggdraw(sup_panel_ab) +
           theme(plot.margin=unit(c(.2,.2,.2,.2),"cm"))
 
 sup_panel_ab
-```
 
-# Supplementary Size Investing
-
-## Supplementary Panel c), FDR in size investing simulations
-
-```{r}
+## ------------------------------------------------------------------------
 sup_panel_c_df <- filter(sizeinvesting_df, fdr_method %in% anticonservative_methods)
 
 sup_last_vals_c <- group_by(sup_panel_c_df, fdr_method) %>% 
@@ -370,11 +298,8 @@ sup_panel_c <- ggplot(sup_panel_c_df, aes(x=xi_max, y=FDR, col=fdr_method)) +
 
 sup_panel_c <- pretty_legend(sup_panel_c, sup_last_vals_c, 6.02 )
 sup_panel_c
-```
 
-## Supplementary Panel d), Power in size investing simulations
-
-```{r}
+## ------------------------------------------------------------------------
 sup_panel_d_df <- filter(sizeinvesting_df, fdr_method %in% anticonservative_methods)
 
 sup_last_vals_d <- group_by(sup_panel_d_df, fdr_method) %>% 
@@ -394,11 +319,8 @@ sup_panel_d <- ggplot(sup_panel_d_df, aes(x=xi_max, y=normalized, col=fdr_method
 
 sup_panel_d <- pretty_legend(sup_panel_d, sup_last_vals_d, 6.02 )
 sup_panel_d
-```
 
-## Combine supplemental size investing panels
-
-```{r fig.width=11, fig.height=5.5}
+## ----fig.width=11, fig.height=5.5----------------------------------------
 sup_panel_cd <- plot_grid(sup_panel_c, sup_panel_d, labels=c("c)","d)"), vjust=4.5) 
 
 #plot_grid(panel_c, panel_d) 
@@ -411,15 +333,11 @@ sup_panel_cd <- ggdraw(sup_panel_cd) +
           theme(plot.margin=unit(c(.2,.2,.2,.2),"cm"))
 
 sup_panel_cd
-```
 
-# Full supplementary simulations figure
-
-```{r fig.width=12, fig.height=12}
+## ----fig.width=12, fig.height=12-----------------------------------------
 sup_sim_fig <- plot_grid(sup_panel_ab,sup_panel_cd, nrow=2)
 sup_sim_fig
-```
-```{r eval=FALSE}
-ggsave(sup_sim_fig, "suppl_simulations.pdf", width=12, height=12)
-```
+
+## ----eval=FALSE----------------------------------------------------------
+#  ggsave(sup_sim_fig, "suppl_simulations.pdf", width=12, height=12)
 

@@ -1,31 +1,12 @@
----
-title: "BH explanation / visualization"
-author: "Nikos Ignatiadis"
-date: "`r doc_date()`"
-package: "`r pkg_ver('ihwPaper')`"
-output: BiocStyle::html_document
-vignette: >
-  %\VignetteIndexEntry{"BH explanation / visualization"}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\usepackage[utf8]{inputenc}
----
-
-Below we just generate the necessary plot to explain how BH works.
-
-```{r}
+## ------------------------------------------------------------------------
 library("ggplot2")
 library("dplyr")
 library("wesanderson")
 library("grid")
 library("gridExtra")
 library("IHW")
-```
 
-# B.Sc. thesis plot (low $\pi_0$)
-
-Plot as in B.Sc. thesis with very low $\pi_0$. (Using this so it can be clearly demonstrated that the BH threshold is an intermediate threshold between the Bonferroni threshold and the uncorrected one, also such $\pi_0$ allows to show all p-values in the second plot and still observe the interesting behaviour.)
-
-```{r}
+## ------------------------------------------------------------------------
 simpleSimulation <- function(m,m1,betaA,betaB){
     pvalue <- runif(m)
     H <- rep(0,m)
@@ -62,22 +43,16 @@ bh_plot <- ggplot(sim, aes(x=rank, y=pvalue)) +
   ylab("p-value") + xlab("rank of p-value") +
   theme_bw() + scale_colour_manual(values=wes_palette("Chevalier")[c(3,4)]) 
 
-```
 
-```{r fig.width=11, fig.height=5}
+## ----fig.width=11, fig.height=5------------------------------------------
 grid.arrange(histogram_plot, bh_plot, nrow=1)
-```
 
-```{r eval=FALSE}
-pdf(file="bh_explanation.pdf", width=11, height=5)
-grid.arrange(histogram_plot, bh_plot, nrow=1)
-dev.off()
-```
+## ----eval=FALSE----------------------------------------------------------
+#  pdf(file="bh_explanation.pdf", width=11, height=5)
+#  grid.arrange(histogram_plot, bh_plot, nrow=1)
+#  dev.off()
 
-# Bioc presentation plot (higher $\pi_0$)
-
-For ddhw presentation, remake above plot with higher $\pi_0$.
-```{r}
+## ------------------------------------------------------------------------
 set.seed(1)
 sim <- simpleSimulation(10000, 2000, 0.3, 8)
 sim$rank <- rank(sim$pvalue)
@@ -99,14 +74,12 @@ bh_plot <- ggplot(sim, aes(x=rank, y=pvalue)) +
   geom_hline(yintercept=bh_threshold, linetype=2, size=1.2) + 
   ylab("p-value") + xlab("rank of p-value") +
   theme_bw() + scale_colour_manual(values=wes_palette("Chevalier")[c(3,4)])
-```
-```{r fig.width=11, fig.height=5}
-grid.arrange(histogram_plot, bh_plot, nrow=1)
-```
 
-
-```{r eval=FALSE}
-pdf(file="bh_explanation_high_pi0.pdf", width=11, height=5)
+## ----fig.width=11, fig.height=5------------------------------------------
 grid.arrange(histogram_plot, bh_plot, nrow=1)
-dev.off()
-```
+
+## ----eval=FALSE----------------------------------------------------------
+#  pdf(file="bh_explanation_high_pi0.pdf", width=11, height=5)
+#  grid.arrange(histogram_plot, bh_plot, nrow=1)
+#  dev.off()
+
