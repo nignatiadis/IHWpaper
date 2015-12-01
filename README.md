@@ -10,7 +10,7 @@ library("devtools")
 install_github("vladchimescu/lpsymphony", subdir="lpsymphony")
 install_github("nignatiadis/IHW")
 # install FDRreg, version on CRAN is outdated
-install_github(repo= "jgscott/FDRreg", subdir="R_pkg/" ref = "a63cebae6faecb1fb0ebee634195296f39faa11b")
+install_github(repo= "jgscott/FDRreg", subdir="R_pkg/", ref = "a63cebae6faecb1fb0ebee634195296f39faa11b")
 # finally install this package
 install_github("nignatiadis/ihwPaper")
 ```
