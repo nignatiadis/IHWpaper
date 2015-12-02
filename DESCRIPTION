@@ -7,7 +7,6 @@ Depends:
     R (>= 3.1.2),
     IHW,
     fdrtool,
-    wesanderson,
     genefilter,
     DESeq2,
     FDRreg,
@@ -20,6 +19,7 @@ Depends:
     pasilla
 Suggests:
     ggplot2,
+    wesanderson,
     scales,
     BiocStyle,
     knitr,
