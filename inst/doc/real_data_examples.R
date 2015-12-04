@@ -242,5 +242,5 @@ full_fig <- plot_grid(panel_a, panel_b,
 full_fig
 
 ## ----eval=FALSE----------------------------------------------------------
-#  ggsave(full_fig, filename="data_examples.pdf", width=12, height=14)
+#  ggsave(plot=full_fig, file="data_examples.pdf", width=12, height=14)
 

@@ -3,7 +3,7 @@
 # implement the below mainly for size-investing strategy illustration 
 library("ihwPaper")
 
-register(MulticoreParam(workers=5, verbose=TRUE))
+register(BatchJobsParam())
 
 #----------------- General benchmark settings -------------------------------#
 alphas <- .1#c(0.1, 0.01)

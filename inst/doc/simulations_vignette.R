@@ -226,14 +226,14 @@ main_sim_fig <- plot_grid(panel_ab,panel_cd, panel_ef, nrow=3)
 main_sim_fig
 
 ## ----eval=FALSE----------------------------------------------------------
-#  ggsave("main_simulations.pdf", width=12, height=16)
+#  ggsave(plot=main_sim_fig, file="main_simulations.pdf", width=12, height=16)
 
 ## ------------------------------------------------------------------------
 sup_panel_a_df <- filter(effsize_df, fdr_method %in% anticonservative_methods)
 
 sup_last_vals_a <- group_by(sup_panel_a_df, fdr_method) %>%
                    summarize(last_vals =  FDR[which.max(eff_size)]) %>%
-                   mutate(last_vals = last_vals + c(-0.013,0,0, +0.013 ), 
+                   mutate(last_vals = last_vals + c(-0.001 ,+0.011,0, -0.003 ), 
                       label = fdr_method,
                       colour = colors[anticonservative_idx])
 
@@ -339,5 +339,5 @@ sup_sim_fig <- plot_grid(sup_panel_ab,sup_panel_cd, nrow=2)
 sup_sim_fig
 
 ## ----eval=FALSE----------------------------------------------------------
-#  ggsave(sup_sim_fig, "suppl_simulations.pdf", width=12, height=12)
+#  cowplot::ggsave(plot=sup_sim_fig, file="suppl_simulations.pdf", width=12, height=12)
 

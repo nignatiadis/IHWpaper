@@ -16,8 +16,10 @@ Depends:
     dplyr,
     cowplot,
     airway,
-    pasilla
-Suggests:
+    pasilla,
+    gridExtra,
+    tidyr,
+    RColorBrewer,
     ggplot2,
     wesanderson,
     scales,

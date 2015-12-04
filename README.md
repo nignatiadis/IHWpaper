@@ -1,3 +1,6 @@
+[![Travis-CI Build Status](https://travis-ci.org/nignatiadis/ihwPaper.svg?branch=master)](https://travis-ci.org/nignatiadis/ihwPaper)
+
+
 # ihwPaper
 
 This is a package which reproduces all IHW paper figures (as well as some additional figures for presentations etc.).

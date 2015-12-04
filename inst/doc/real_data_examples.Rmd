@@ -287,5 +287,5 @@ full_fig
 ````
 
 ```{r eval=FALSE}
-ggsave(full_fig, filename="data_examples.pdf", width=12, height=14)
+ggsave(plot=full_fig, file="data_examples.pdf", width=12, height=14)
 ```
