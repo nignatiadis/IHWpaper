@@ -7,7 +7,7 @@ sudo: required
 r_github_packages:
   - vladchimescu/lpsymphony/lpsymphony
   - nignatiadis/IHW
-  - jgscott/FDRreg/R_pkg/
+  - jgscott/FDRreg/R_pkg
 bioc_required: true
 bioc_packages:
   - Biobase
