@@ -34,3 +34,22 @@ attr(storey_qvalue, "fdr_method")        <- "qvalue"
 rejected_hypotheses.StoreyQValue <- function(object, alpha= object$alpha){
 	object$adj_p <= alpha
 }
+
+
+#' bonf: Wrapper for Bonferroni
+#'
+#' @param unadj_p  Numeric vector of unadjusted p-values.
+#' @param alpha    Significance level at which to apply method
+
+bonf <- function(unadj_p, alpha){
+    adj_p <- p.adjust(unadj_p, method="bonferroni")
+    obj <- list(adj_p = adj_p, alpha = alpha)
+    class(obj) <- "Bonferroni"
+    obj
+}
+attr(bonf, "testing covariate") <- "simple" #i.e. covariate not considered
+attr(bonf, "fdr_method")        <- "Bonferroni"
+
+rejected_hypotheses.Bonferroni <- function(object, alpha= object$alpha){
+    object$adj_p <= alpha
+}

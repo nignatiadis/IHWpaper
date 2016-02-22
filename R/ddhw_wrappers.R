@@ -69,5 +69,14 @@ rejected_hypotheses.ihwResult <- function(object, alpha= object@alpha){
 }
 
 
-###########################
+########################### IHW-Bonferroni
+ihw_bonf_5fold_reg <- function(unadj_p, filterstat, alpha){
+  obj <- ihw(unadj_p, filterstat, alpha, nbins=20, nfolds=5,
+             distrib_estimator="grenander", lp_solver="lpsymphony",
+             adjustment_type="bonferroni")
+  obj
+}
+
+attr(ihw_bonf_5fold_reg, "testing covariate") <- "continuous"
+attr(ihw_bonf_5fold_reg, "fdr_method")        <- "IHW-Bonferroni E3"
 

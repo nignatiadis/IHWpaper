@@ -15,7 +15,7 @@ sim_fun_eval <- function(sim_fun, fdr_methods, nreps, alphas, BiocParallel=T){
 	df <- dplyr::rbind_all(evaluated_sims)
 	df <- dplyr::summarize(group_by(df, fdr_method, fdr_pars, alpha), FDR = mean(FDP),
 		 power= mean(power), rj_ratio = mean(rj_ratio), FPR = mean(FPR), FDR_sd = sd(FDP), 
-		 nsuccessful = n())
+		 FWER=mean(FWER), nsuccessful = n())
 	m  <- attr(sim_fun, "m")
 	sim_method <- attr(sim_fun, "sim_method")
 	sim_pars <- attr(sim_fun, "sim_pars")
@@ -74,14 +74,15 @@ calculate_test_stats <- function(sim, fdr_method, alpha){
 	fdr_method_result <- fdr_method(sim, alpha)
 	rejected <- rejected_hypotheses(fdr_method_result)
 	rjs <- sum(rejected)
+	false_rjs <- sum(sim$H == 0 & rejected)
 	rj_ratio <- rjs/nrow(sim)
-	FDP <- ifelse(rjs == 0, 0, sum(sim$H == 0 & rejected)/rjs)
+	FDP <- ifelse(rjs == 0, 0, false_rjs/rjs)
 	power <- ifelse(sum(sim$H) == 0, NA, sum(sim$H == 1 & rejected)/sum(sim$H ==1))
 	# in principle I should take special care in case only alternatives, but we are not
 	# interested in this scenario...
-	FPR <-  sum(sim$H == 0 & rejected)/sum(sim$H == 0) 
-
-	df <- data.frame(rj_ratio=rj_ratio, FDP=FDP, power=power, FPR=FPR)
+	FPR <-  sum(sim$H == 0 & rejected)/sum(sim$H == 0)
+	FWER <- as.numeric(false_rjs > 0)
+	df <- data.frame(rj_ratio=rj_ratio, FDP=FDP, power=power, FPR=FPR, FWER=FWER)
 	df
 }
 
