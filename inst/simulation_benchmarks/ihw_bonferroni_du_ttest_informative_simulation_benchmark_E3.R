@@ -9,7 +9,7 @@ if (length(args)==0) {
   stop("At least one argument must be supplied (input file).\n", call.=FALSE)
 }
 
-register(MulticoreParam(workers=10))
+register(MulticoreParam(workers=8))
 
 #----------------- General benchmark settings -------------------------------#
 alphas <- 0.1
