@@ -61,3 +61,36 @@ wasserman_normal_sim_fun <- function(m, pi0, xi_min, xi_max){
   attr(f, "m") <- m
   f
 }
+
+
+
+# Z_i correlated + PRDS
+# Uninformative covariate
+
+wasserman_normal_prds_sim <- function(m, pi0, rho=0.0, latent_factors=1, xi_min=0, xi_max=2.5, seed=NULL){
+    if (!is.null(seed)) set.seed(seed)
+    latent_idx <- sample(1:latent_factors, m, replace=TRUE)
+    latent_Z <- rnorm(latent_factors)
+    X   <- runif(m, min=xi_min, max=xi_max)
+    H   <- rbinom(m,1,1-pi0)
+    Z   <- sqrt(1-rho)*rnorm(m) + rho*latent_Z[latent_idx] + H*X
+    pvalue <- 1-pnorm(Z)
+    simDf <- data.frame(pvalue=pvalue, filterstat=X,H=H, Z=Z)
+}
+
+wasserman_normal_prds_sim_fun <- function(m, pi0, rho=0.0, latent_factors=1, xi_min=0, xi_max=2.5){
+  f <- function(seed) wasserman_normal_prds_sim(m, pi0, rho=rho, xi_min=xi_min,
+                xi_max=xi_max, seed=seed)
+  attr(f, "sim_method") <- "wasserman normal prds sim"
+  attr(f, "sim_pars") <- paste0("pi0:",pi0, ", xi_max:", xi_max, 
+                                ", rho:", rho,
+                                ", latent_factors:",latent_factors)
+  attr(f, "m") <- m
+  f
+}
+
+# TODO: Allow both covariate effects + dependence effects..
+#dependence_by_groups_sim <- function(m, pi0, effect_size=1.5, rho=0.0){
+#
+#}
+
