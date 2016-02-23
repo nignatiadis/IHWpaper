@@ -19,14 +19,14 @@ nreps <- 500  #number of times each simulation should be repeated (monte carlo r
 ms <- 20000
 
 xi_maxs<- seq(3, 6, length=10)
-eff_sizes <- eff_sizes[idx]
+xi_maxs <- xi_maxs[idx]
 
 sim_funs <- lapply(xi_maxs, function(x) wasserman_normal_sim_fun(20000,0.9,1, x))
 
 
 
 #------------- Methods to be benchmarked ------------------------------------#
-continuous_methods_list <- list(ihw_5fold_reg)
+continuous_methods_list <- list(ihw_bonf_5fold_reg, bonf)
 
 fdr_methods <- lapply(continuous_methods_list, continuous_wrap)
 
