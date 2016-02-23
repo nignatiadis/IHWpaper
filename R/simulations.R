@@ -79,7 +79,7 @@ wasserman_normal_prds_sim <- function(m, pi0, rho=0.0, latent_factors=1, xi_min=
 }
 
 wasserman_normal_prds_sim_fun <- function(m, pi0, rho=0.0, latent_factors=1, xi_min=0, xi_max=2.5){
-  f <- function(seed) wasserman_normal_prds_sim(m, pi0, rho=rho, latent_factors=1, 
+  f <- function(seed) wasserman_normal_prds_sim(m, pi0, rho=rho, latent_factors=latent_factors, 
                     xi_min=xi_min, xi_max=xi_max, seed=seed)
   attr(f, "sim_method") <- "wasserman normal prds sim"
   attr(f, "sim_pars") <- paste0("pi0:",pi0, ", xi_max:", xi_max, 
