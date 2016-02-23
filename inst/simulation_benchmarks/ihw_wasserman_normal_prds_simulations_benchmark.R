@@ -20,15 +20,17 @@ ms <- 20000
 
 param_df <- expand.grid(rho=seq(0,0.5,length=5),
                         latent_factors=c(1,10),
-                        pi0=c(0.9,0.95,1))
+                        pi0=c(0.9,0.95,1),
+                        xi_max = c(3,4))
 
 # grab parameters for current run
 rho <- param_df$rho[idx]
-latent_factors <- param_df$rho[idx]
+latent_factors <- param_df$latent_factors[idx]
 pi0 <- param_df$pi0[idx]
+xi_max <- param_df$xi_max[idx]
 
 sim_funs <- list(wasserman_normal_prds_sim_fun(ms, pi0,
-                    rho=rho, latent_factors=latent_factors, xi_min=0, xi_max=2.5))
+                    rho=rho, latent_factors=latent_factors, xi_min=0, xi_max=xi_max))
 
 #------------- Methods to be benchmarked ------------------------------------#
 continuous_methods_list <- list(bh,
@@ -44,7 +46,7 @@ eval_table <- run_evals(sim_funs, fdr_methods, nreps, alphas, BiocParallel=TRUE)
 extract_params <- function(x){
   comma_split <- strsplit(x,", ")[[1]]
   par_split <- lapply(comma_split, function(presplit) strsplit(presplit,":")[[1]])
-  df <- do.call(cbind, lapply(par_split, function(tmp) {tmp_df <-data.frame(tmp[2]);
+  df <- do.call(cbind, lapply(par_split, function(tmp) {tmp_df <-data.frame(as.numeric(tmp[2]));
                               names(tmp_df) <- tmp[1]; tmp_df}))
   df
 }

@@ -75,12 +75,12 @@ wasserman_normal_prds_sim <- function(m, pi0, rho=0.0, latent_factors=1, xi_min=
     H   <- rbinom(m,1,1-pi0)
     Z   <- sqrt(1-rho)*rnorm(m) + rho*latent_Z[latent_idx] + H*X
     pvalue <- 1-pnorm(Z)
-    simDf <- data.frame(pvalue=pvalue, filterstat=X,H=H, Z=Z)
+    simDf <- data.frame(pvalue=pvalue, filterstat=X,H=H, Z=Z, latent_idx=latent_idx)
 }
 
 wasserman_normal_prds_sim_fun <- function(m, pi0, rho=0.0, latent_factors=1, xi_min=0, xi_max=2.5){
-  f <- function(seed) wasserman_normal_prds_sim(m, pi0, rho=rho, xi_min=xi_min,
-                xi_max=xi_max, seed=seed)
+  f <- function(seed) wasserman_normal_prds_sim(m, pi0, rho=rho, latent_factors=1, 
+                    xi_min=xi_min, xi_max=xi_max, seed=seed)
   attr(f, "sim_method") <- "wasserman normal prds sim"
   attr(f, "sim_pars") <- paste0("pi0:",pi0, ", xi_max:", xi_max, 
                                 ", rho:", rho,
@@ -90,7 +90,27 @@ wasserman_normal_prds_sim_fun <- function(m, pi0, rho=0.0, latent_factors=1, xi_
 }
 
 # TODO: Allow both covariate effects + dependence effects..
-#dependence_by_groups_sim <- function(m, pi0, effect_size=1.5, rho=0.0){
-#
-#}
+# pi0 not group dependent for now?
+dependence_by_groups_sim <- function(m, pi0, rho=0.0, latent_factors=1,
+                                     xi_min=0, xi_max=2.5, seed=NULL){
+  if (!is.null(seed)) set.seed(seed)
+
+  group_idx <- 1:latent_factors
+  mgroups <- rep(floor(m/latent_factors), latent_factors)
+  mgroups[1] <- mgroups[1] + m - sum(mgroups)
+
+  xi_min_range <- xi_min + (0:(latent_factors-1))*(xi_max-xi_min)/latent_factors
+  xi_max_range <- c(xi_min_range[-1], xi_max)
+
+  sim_df <- rbind_all(mapply(wasserman_normal_prds_sim,
+                             mgroups, pi0, rho, 1, xi_min_range,
+                             xi_max_range,
+                             SIMPLIFY=FALSE))
+  sim_df$X <- sim_df$filterstat
+  sim_df$filterstat <- unlist(mapply(function(idx, m) rep(idx,m), 
+                                     group_idx, mgroups,
+                                     SIMPLIFY=FALSE ))
+  sim_df <- sim_df[sample(m,m),]
+  sim_df
+}
 
