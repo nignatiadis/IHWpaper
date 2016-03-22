@@ -10,9 +10,6 @@ warnings_are_errors: false
 bioc_required: true
 bioc_use_devel: true
 
-r_github_packages:
-  - jgscott/FDRreg/R_pkg
-
 bioc_packages:
   - BiocCheck
   - Biobase
@@ -23,8 +20,12 @@ bioc_packages:
   - airway
   - pasilla
   - BiocStyle
-  - IHW
+  - lpsymphony
 
+r_github_packages:
+  - jgscott/FDRreg/R_pkg
+  - nignatiadis/IHW
+  
 notifications:
   email:
     on_success: always
