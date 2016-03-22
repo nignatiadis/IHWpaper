@@ -1,14 +1,20 @@
 # Sample .travis.yml for R projects
 
 language: r
+sudo: false
+cache: packages
+
+r:
+  - devel
 warnings_are_errors: false
-sudo: required
+bioc_required: true
+bioc_use_devel: true
 
 r_github_packages:
-  - vladchimescu/lpsymphony/lpsymphony
-  - nignatiadis/IHW
-bioc_required: true
+  - jgscott/FDRreg/R_pkg
+
 bioc_packages:
+  - BiocCheck
   - Biobase
   - genefilter
   - DESeq2
@@ -17,3 +23,9 @@ bioc_packages:
   - airway
   - pasilla
   - BiocStyle
+  - IHW
+
+notifications:
+  email:
+    on_success: always
+    on_failure: always
