@@ -33,7 +33,7 @@ bh_threshold <- get_bh_threshold(sim$pvalue, .1)
 bh_plot <- ggplot(sim, aes(x=rank, y=pvalue)) +
   geom_step(col=wes_palette("Chevalier")[4]) + 
   ylim(c(0,0.2)) +
-  geom_abline(yintercept=0, slope= 0.1/1000, col = wes_palette("Chevalier")[2]) +
+  geom_abline(intercept=0, slope= 0.1/1000, col = wes_palette("Chevalier")[2]) +
   geom_hline(yintercept=bh_threshold, linetype=2) + 
   annotate("text",x=250, y=0.065, label="BH testing") + 
   geom_hline(yintercept = 0.1, linetype=2) + 
@@ -69,7 +69,7 @@ bh_plot <- ggplot(sim, aes(x=rank, y=pvalue)) +
   geom_step(col=wes_palette("Chevalier")[4], size=1.2) + 
   scale_x_continuous(limits=c(0,2000),expand = c(0, 0))+
   scale_y_continuous(limit=c(0,0.06), expand=c(0,0)) +
-  geom_abline(yintercept=0, slope= 0.1/10000, col = wes_palette("Chevalier")[2], size=1.2) +
+  geom_abline(intercept=0, slope= 0.1/10000, col = wes_palette("Chevalier")[2], size=1.2) +
   annotate("text",x=500, y=1.3*bh_threshold, label="BH rejection threshold") + 
   geom_hline(yintercept=bh_threshold, linetype=2, size=1.2) + 
   ylab("p-value") + xlab("rank of p-value") +
