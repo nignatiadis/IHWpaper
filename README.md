@@ -1,4 +1,4 @@
-[![Travis-CI Build Status](https://travis-ci.org/nignatiadis/ihwPaper.svg?branch=master)](https://travis-ci.org/nignatiadis/ihwPaper)
+[![Travis-CI Build Status](https://travis-ci.org/nignatiadis/ihwPaper.svg?branch=master)](https://travis-ci.org/nignatiadis/IHWpaper)
 
 
 # ihwPaper
