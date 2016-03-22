@@ -38,12 +38,18 @@ continuous_wrap <- function(mt_method, nbins=20){
 
 
 
-#' scott_fdrreg: Wrapper for FDR regression
+#' scott_fdrreg: Wrapper for FDR regression (https://github.com/jgscott/FDRreg)
 #'
 #'
 #' @param unadj_p  Numeric vector of unadjusted p-values.
 #' @param filterstat   Factor to which different hypotheses belong
 #' @param alpha    Significance level at which to apply method
+#' @param df       Degrees of freedom for B-slines
+#' @param lambda Ridge regularization parameter
+#'
+#' @references  James G. Scott, Ryan C. Kelly, Matthew A. Smith, Pengcheng Zhou, and Robert E. Kass. 
+#'         "False discovery rate regression: application to neural synchrony detection in primary visual cortex." 
+#'         Journal of the American Statistical Association (2015).
 
 scott_fdrreg <- function(unadj_p, filterstat, alpha, df=3, lambda=0.01){
 	# no automated way to choose function space over which we optimize
@@ -81,7 +87,6 @@ rejected_hypotheses.FDRreg <- function(object, alpha= object$alpha){
 
 
 #' ddhf: Greedy independent filtering
-#'
 #'
 #' @param unadj_p  Numeric vector of unadjusted p-values.
 #' @param filterstat   Factor to which different hypotheses belong
