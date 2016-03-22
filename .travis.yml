@@ -20,12 +20,12 @@ bioc_packages:
   - airway
   - pasilla
   - BiocStyle
-  - lpsymphony
 
 r_github_packages:
   - jgscott/FDRreg/R_pkg
+  - vladchimescu/lpsymphony/lpsymphony
   - nignatiadis/IHW
-  
+
 notifications:
   email:
     on_success: always
