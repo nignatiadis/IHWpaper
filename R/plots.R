@@ -1,5 +1,5 @@
-# helper function to create nice legends
-#
+#' helper function to create nice legends
+#'
 #' @param gg ggplot2 object
 #' @param last_vals, data frame with columns 
 #'    label, colour, last_vals (i.e. place label with colour at y-coordinate last_vals)
