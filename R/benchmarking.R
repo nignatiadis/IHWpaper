@@ -1,6 +1,15 @@
 # general functions to make it easy to benchmark FDR methods on given simulations..
 
-
+#' run_evals: Main function to benchmark FDR methods on given simulations.
+#' 
+#' @param sim_funs List of simulation settings
+#' @param fdr_methods List of FDR controlling methods to be benchmarked
+#' @param nreps Integer, number of Monte Carlo replicates for the simulations 
+#' @param alphas Numeric, vector of nominal significance levels 
+#'	   at which to apply FDR controlling methods
+#' @param ... Additional arguments passed to sim_fun_eval
+#'
+#' @export
 run_evals <- function(sim_funs, fdr_methods, nreps, alphas,...){
 	rbind_all(lapply(sim_funs, function(x) sim_fun_eval(x, fdr_methods, nreps, alphas, ...)))
 }

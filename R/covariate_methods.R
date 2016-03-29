@@ -5,6 +5,18 @@ groups_by_filter <- function(filter_statistic, nbins){
 }
 
 ### general wrapper
+
+#' Benchmarking wrapper: Given a multiple testing method, convert it so that it takes
+#'   a simulation object (see simulation function) and a nominal level alpha
+#'   as inputs
+#'
+#' @param mt_method Multiple testing method (e.g. a function such as gbh or ddhf)
+#' @param nbins Integer, number of equally sized bins into which to stratify hypotheses
+#'
+#' @return A new multiple testing function which has an
+#'           interface of the form f(sim_data_frame, alpha)
+#'
+#' @export
 continuous_wrap <- function(mt_method, nbins=20){
   print(attr(mt_method,"fdr_method"))
   if (attr(mt_method, "testing covariate") == "simple"){

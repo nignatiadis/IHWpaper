@@ -1,7 +1,17 @@
-#' t-test simulation 
+#' t-test simulation: Simulate rowwise t-tests
 #'
-#' @param m Integer, total number of hypotheses being tested
+#' @param m Integer, total number of hypotheses 
 #' @param pi0 Numeric, proportion of null hypotheses
+#' @param effect_size Numeric, the alternative hypotheses will be 
+#       distributed according to N(effect_size, 1), while nulls according to N(0,1).
+#' @param n_samples Integer, number of samples for t-test, i.e.
+#'      the comparison will be n_samples/2 vs n_samples/2
+#' @param uninformative_filter Boolean, if TRUE will generate uniformly distributed filter statistic
+#'     Otherwise will use the pooled standard deviations
+#' @param seed Integer, Random seed to be used for simulation 
+#'        (default: NULL, i.e. RNG state will be used as is)
+#'
+#' @return A data frame containing all information about the simulation experiment
 #'
 #' @export
 du_ttest_sim <- function(m, pi0, effect_size, n_samples=10, uninformative_filter=F, seed=NULL){
@@ -26,6 +36,8 @@ du_ttest_sim <- function(m, pi0, effect_size, n_samples=10, uninformative_filter
   simDf
 }
 
+#' @describeIn du_ttest_sim Creates a closure function for a given seed
+#' @export
 du_ttest_sim_fun <- function(m, pi0, effect_size, n_samples=10, uninformative_filter=F){
   f <- function(seed) du_ttest_sim(m, pi0, effect_size, n_samples=n_samples, uninformative_filter=uninformative_filter, seed=seed)
   attr(f, "sim_method") <- "t-test"
@@ -34,6 +46,15 @@ du_ttest_sim_fun <- function(m, pi0, effect_size, n_samples=10, uninformative_fi
   f
 }
 
+#' Null simulation: Generate uniformly distributed p-values and covariates
+#'
+#' @param m Integer, total number of hypotheses
+#' @param seed Integer, Random seed to be used for simulation 
+#'        (default: NULL, i.e. RNG state will be used as is)
+#'
+#' @return A data frame containing all information about the simulation experiment
+#'
+#' @export
 null_sim <- function(m, seed=NULL){
   if (!is.null(seed)) set.seed(seed)
 
@@ -41,6 +62,8 @@ null_sim <- function(m, seed=NULL){
   return(sim_df)
 }
 
+#' @describeIn null_sim Creates a closure function for a given seed
+#' @export
 null_sim_fun <- function(m){
   f <- function(seed) null_sim(m=m, seed=seed)
   attr(f, "sim_method") <- "only nulls"
@@ -49,7 +72,17 @@ null_sim_fun <- function(m){
   f
 }
 
-
+#' Normal simulation: Covariate is effect size under alternative
+#'
+#' @param m Integer, total number of hypotheses 
+#' @param pi0 Numeric, proportion of null hypotheses
+#' @param xi_min, xi_max  Numeric, covariates are drawn as uniform on xi_min, xi_max
+#' @param seed Integer, Random seed to be used for simulation 
+#'        (default: NULL, i.e. RNG state will be used as is)
+#'
+#' @return A data frame containing all information about the simulation experiment
+#'
+#' @export
 wasserman_normal_sim <- function(m, pi0, xi_min, xi_max, seed=NULL){
     if (!is.null(seed)) set.seed(seed)
 
@@ -60,6 +93,8 @@ wasserman_normal_sim <- function(m, pi0, xi_min, xi_max, seed=NULL){
     simDf <- data.frame(pvalue=pvalue, filterstat=X,H=H, Z=Z)
 }
 
+#' @describeIn wasserman_normal_sim Creates a closure function for a given seed
+#' @export
 wasserman_normal_sim_fun <- function(m, pi0, xi_min, xi_max){
   f <- function(seed) wasserman_normal_sim(m, pi0, xi_min, xi_max, seed=seed)
   attr(f, "sim_method") <- "wasserman sim"
@@ -73,6 +108,21 @@ wasserman_normal_sim_fun <- function(m, pi0, xi_min, xi_max){
 # Z_i correlated + PRDS
 # Uninformative covariate
 
+
+#' Normal PRDS simulation: Covariate is effect size under alternative, there are latent factors
+#'      driving PRDS correlations among hypotheses
+#'
+#' @param m Integer, total number of hypotheses 
+#' @param pi0 Numeric, proportion of null hypotheses
+#' @param rho Numeric, correlation between z-scores of hypotheses driven by same latent factor
+#' @param latent_factors Integer, number of latent factors driving the correlations
+#' @param xi_min, xi_max  Numeric, covariates are drawn as uniform on xi_min, xi_max
+#' @param seed Integer, Random seed to be used for simulation 
+#'        (default: NULL, i.e. RNG state will be used as is)
+#'
+#' @return A data frame containing all information about the simulation experiment
+#'
+#' @export
 wasserman_normal_prds_sim <- function(m, pi0, rho=0.0, latent_factors=1, xi_min=0, xi_max=2.5, seed=NULL){
     if (!is.null(seed)) set.seed(seed)
     latent_idx <- sample(1:latent_factors, m, replace=TRUE)
@@ -84,6 +134,8 @@ wasserman_normal_prds_sim <- function(m, pi0, rho=0.0, latent_factors=1, xi_min=
     simDf <- data.frame(pvalue=pvalue, filterstat=X,H=H, Z=Z, latent_idx=latent_idx)
 }
 
+#' @describeIn wasserman_normal_prds_sim Creates a closure function for a given seed
+#' @export
 wasserman_normal_prds_sim_fun <- function(m, pi0, rho=0.0, latent_factors=1, xi_min=0, xi_max=2.5){
   f <- function(seed) wasserman_normal_prds_sim(m, pi0, rho=rho, latent_factors=latent_factors, 
                     xi_min=xi_min, xi_max=xi_max, seed=seed)

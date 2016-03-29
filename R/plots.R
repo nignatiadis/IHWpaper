@@ -1,6 +1,17 @@
-
-# helper function to create nice legends as described in the following blog post
-# http://www.r-bloggers.com/coloring-and-drawing-outside-the-lines-in-ggplot/
+# helper function to create nice legends
+#
+#' @param gg ggplot2 object
+#' @param last_vals, data frame with columns 
+#'    label, colour, last_vals (i.e. place label with colour at y-coordinate last_vals)
+#' @param xmin Numeric, offset
+#' @param fontsize Integer, fontsize
+#'
+#' @return Another ggplot2 object
+#'
+#  @details As described in the following blog post:
+#'    http://www.r-bloggers.com/coloring-and-drawing-outside-the-lines-in-ggplot/
+#'
+#' @export
 pretty_legend <- function(gg,  last_vals, xmin, fontsize=13){
   #tmp <- ggplot_build(gg)
   #label_name <- tmp$plot$labels$colour

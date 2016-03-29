@@ -1,12 +1,26 @@
 # implement LSL and TST pi0 estimators which we need in order to benchmark the GBH method
-# implementation of GBH in structSSI R package is unfortunately too buggy
 
+
+#' TST (Two-Step) pi0 estimator
+#' @param pvalue Numeric vector of unadjusted p-values.
+#' @param alpha Nominal level for applying the TST procedure
+#'
+#' @return estimated proportion of null hypotheses (pi0)
+#'
+#' @export
 tst_pi0_est <- function(pvalue, alpha){
     nrjs <- sum(p.adjust(pvalue, method="BH") <= alpha/(1+alpha))
     n <- length(pvalue)
     (n-nrjs)/n
 }
 
+#' LSL (Least-Slope) pi0 estimator
+#' @param pvalue Numeric vector of unadjusted p-values.
+#' @param alpha Nominal level for applying the TST procedure
+#'
+#' @return estimated proportion of null hypotheses (pi0)
+#'
+#' @export
 lsl_pi0_est <- function(pvalue){
   n <- length(pvalue)
   ls <- (n:1)/(1-sort(pvalue))
