@@ -1,5 +1,5 @@
 ## ----warning=F, message=F------------------------------------------------
-library("ihwPaper")
+library("IHWpaper")
 library("fdrtool")
 library("cowplot")
 

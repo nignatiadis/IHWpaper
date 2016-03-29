@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 
-library("ihwPaper")
+library("IHWpaper")
 
 args <- commandArgs(trailingOnly=TRUE)
 idx <- as.integer(args[1])

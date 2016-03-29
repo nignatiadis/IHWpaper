@@ -2,7 +2,7 @@
 title: "Grenander Estimator as applied to IHW (vs ECDF)"
 author: "Nikos Ignatiadis"
 date: "`r doc_date()`"
-package: "`r pkg_ver('ihwPaper')`"
+package: "`r pkg_ver('IHWpaper')`"
 output: BiocStyle::html_document
 vignette: >
   %\VignetteIndexEntry{"Grenander Estimator as applied to IHW (vs ECDF)"}
@@ -15,7 +15,7 @@ vignette: >
 This vignette is meant to illustrate how the distribution function of some p-values can be approximated by the ECDF and how the ECDF compares to the Grenander estimator, i.e. the least concave majorant (LCM) of the ECDF. The advantage of the Grenander estimator is that it convexifies the underlying optimization problem of IHW
 
 ```{r warning=F, message=F}
-library("ihwPaper")
+library("IHWpaper")
 library("fdrtool")
 library("cowplot")
 ```

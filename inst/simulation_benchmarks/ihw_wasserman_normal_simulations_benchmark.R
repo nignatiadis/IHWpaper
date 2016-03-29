@@ -1,7 +1,7 @@
 #!/usr/bin/env Rscript
 
 # implement the below mainly for size-investing strategy illustration 
-library("ihwPaper")
+library("IHWpaper")
 
 register(MulticoreParam(workers=5, verbose=TRUE))
 

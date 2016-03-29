@@ -2,7 +2,7 @@
 title: "Weights vs Independent Filtering"
 author: "Nikos Ignatiadis"
 date: "`r doc_date()`"
-package: "`r pkg_ver('ihwPaper')`"
+package: "`r pkg_ver('IHWpaper')`"
 output: BiocStyle::html_document
 vignette: >
   %\VignetteIndexEntry{"Weights vs Independent Filtering"}
@@ -14,7 +14,7 @@ In this vignette we show that weights can behave very similarly to an independen
 
 ```{r warning=F, message=F}
 library("IHW")
-library("ihwPaper")
+library("IHWpaper")
 library("ggplot2")
 library("dplyr")
 library("wesanderson")

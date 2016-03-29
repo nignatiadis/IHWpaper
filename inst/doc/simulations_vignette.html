@@ -53,7 +53,7 @@ document.addEventListener("DOMContentLoaded", function() {
 <h4 class="author"><em>Nikos Ignatiadis</em></h4>
 <h4 class="date"><em>22 March 2016</em></h4>
 </div>
-<h4 class="package">Package version: <span style="font-weight: normal">ihwPaper 0.99.0</span></h4>
+<h4 class="package">Package version: <span style="font-weight: normal">IHWpaper 0.99.0</span></h4>
 
 <h1>Contents</h1>
 <div id="TOC">
@@ -95,7 +95,7 @@ document.addEventListener("DOMContentLoaded", function() {
 library(&quot;grid&quot;)
 library(&quot;dplyr&quot;)
 library(&quot;cowplot&quot;)
-library(&quot;ihwPaper&quot;)</code></pre>
+library(&quot;IHWpaper&quot;)</code></pre>
 <p>Some general preliminary work, define factors, colours, which methods should we consider conservative, which anticonservative.</p>
 <pre class="r"><code>methods_pretty &lt;- c(&quot;BH&quot;, &quot;Clfdr&quot;, &quot;Greedy Indep. Filt.&quot;, &quot;IHW&quot;, &quot;IHW naive&quot;, &quot;FDRreg&quot;, &quot;LSL GBH&quot;, &quot;SBH&quot;, &quot;TST GBH&quot;)
 colors &lt;- scales::hue_pal(h = c(0, 360) + 15, c = 100, l = 65, h.start = 0,direction = 1)(10)
@@ -110,11 +110,11 @@ anticonservative_idx     &lt;- match(anticonservative_methods, methods_pretty)</
 <div id="data-for-panels-ab" class="section level2">
 <h2><span class="header-section-number">1.1</span> Data for panels a,b</h2>
 <pre class="r"><code>null_grb_file &lt;- system.file(&quot;simulation_benchmarks/result_files&quot;,
-                        &quot;ihw_null_simulation_benchmark_grb.Rds&quot;, package = &quot;ihwPaper&quot;)
+                        &quot;ihw_null_simulation_benchmark_grb.Rds&quot;, package = &quot;IHWpaper&quot;)
 null_e3_file &lt;- system.file(&quot;simulation_benchmarks/result_files&quot;,
-                        &quot;ihw_null_simulation_benchmark_E3.Rds&quot;, package = &quot;ihwPaper&quot;)
+                        &quot;ihw_null_simulation_benchmark_E3.Rds&quot;, package = &quot;IHWpaper&quot;)
 null_file &lt;- system.file(&quot;simulation_benchmarks/result_files&quot;,
-                        &quot;ihw_null_simulation_benchmark.Rds&quot;, package = &quot;ihwPaper&quot;)
+                        &quot;ihw_null_simulation_benchmark.Rds&quot;, package = &quot;IHWpaper&quot;)
 null_df &lt;- rbind(readRDS(null_grb_file),
                  readRDS(null_e3_file),
                  readRDS(null_file)) %&gt;% 
@@ -187,11 +187,11 @@ panel_ab</code></pre>
 <div id="data-for-panels-cd" class="section level2">
 <h2><span class="header-section-number">2.1</span> Data for panels c,d)</h2>
 <pre class="r"><code>effsize_grb_file &lt;- system.file(&quot;simulation_benchmarks/result_files&quot;,
-                        &quot;ihw_du_ttest_informative_simulation_benchmark_grb.Rds&quot;, package = &quot;ihwPaper&quot;)
+                        &quot;ihw_du_ttest_informative_simulation_benchmark_grb.Rds&quot;, package = &quot;IHWpaper&quot;)
 effsize_e3_file &lt;- system.file(&quot;simulation_benchmarks/result_files&quot;,
-                        &quot;ihw_du_ttest_informative_simulation_benchmark_E3.Rds&quot;, package = &quot;ihwPaper&quot;)
+                        &quot;ihw_du_ttest_informative_simulation_benchmark_E3.Rds&quot;, package = &quot;IHWpaper&quot;)
 effsize_file &lt;- system.file(&quot;simulation_benchmarks/result_files&quot;,
-                         &quot;ihw_du_ttest_informative_simulation_benchmark.Rds&quot;, package = &quot;ihwPaper&quot;)
+                         &quot;ihw_du_ttest_informative_simulation_benchmark.Rds&quot;, package = &quot;IHWpaper&quot;)
 effsize_df &lt;- rbind(readRDS(effsize_grb_file),
                     readRDS(effsize_file),
                     readRDS(effsize_e3_file)) %&gt;%
@@ -262,11 +262,11 @@ panel_cd</code></pre>
 <div id="load-data-for-panels-ef" class="section level2">
 <h2><span class="header-section-number">3.1</span> Load data for panels e),f)</h2>
 <pre class="r"><code>sizeinvesting_grb_file &lt;- system.file(&quot;simulation_benchmarks/result_files&quot;,
-                        &quot;ihw_wasserman_normal_simulation_benchmark_grb.Rds&quot;, package = &quot;ihwPaper&quot;)
+                        &quot;ihw_wasserman_normal_simulation_benchmark_grb.Rds&quot;, package = &quot;IHWpaper&quot;)
 sizeinvesting_e3_file &lt;-  system.file(&quot;simulation_benchmarks/result_files&quot;,
-                        &quot;ihw_wasserman_normal_simulation_benchmark_E3.Rds&quot;, package = &quot;ihwPaper&quot;)
+                        &quot;ihw_wasserman_normal_simulation_benchmark_E3.Rds&quot;, package = &quot;IHWpaper&quot;)
 sizeinvesting_file &lt;- system.file(&quot;simulation_benchmarks/result_files&quot;,
-                         &quot;ihw_wasserman_normal_simulation_benchmark.Rds&quot;, package = &quot;ihwPaper&quot;)
+                         &quot;ihw_wasserman_normal_simulation_benchmark.Rds&quot;, package = &quot;IHWpaper&quot;)
 sizeinvesting_df &lt;- rbind_all(lapply(c(sizeinvesting_file,
                                        sizeinvesting_e3_file,
                                        sizeinvesting_grb_file), readRDS)) %&gt;%

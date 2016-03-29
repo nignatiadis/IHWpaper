@@ -2,7 +2,7 @@
 title: "Real data examples"
 author: "Nikos Ignatiadis"
 date: "`r doc_date()`"
-package: "`r pkg_ver('ihwPaper')`"
+package: "`r pkg_ver('IHWpaper')`"
 output: BiocStyle::html_document
 vignette: >
   %\VignetteIndexEntry{"Real data examples"}
@@ -20,7 +20,7 @@ library("grid")
 library("tidyr")
 library("cowplot")
 library("RColorBrewer")
-library("ihwPaper")
+library("IHWpaper")
 ```
 
 Define colors and names for methods we will be using throughout this vignette.
@@ -31,7 +31,7 @@ pretty_names <- c("IHW", "BH", "Indep. Filt. \n 10 kb", "Indep. Filt. \n 200 kb"
 
 ```{r}
 
-rnaseq_file <- system.file("real_data_examples/result_files", "RNAseq_benchmark.Rds", package = "ihwPaper")
+rnaseq_file <- system.file("real_data_examples/result_files", "RNAseq_benchmark.Rds", package = "IHWpaper")
 rnaseq_data <- readRDS(file=rnaseq_file)
 panel_a_data <- group_by(rnaseq_data$alpha_df, alpha) %>% summarize(BH = max(bh_rejections), IHW=max(rejections)) %>% 
                      gather(method, rejections, BH, IHW) %>%
@@ -114,7 +114,7 @@ panel_b
 # Proteomics Example
 
 ```{r}
-proteomics_file <- system.file("real_data_examples/result_files", "proteomics_benchmark.Rds", package = "ihwPaper")
+proteomics_file <- system.file("real_data_examples/result_files", "proteomics_benchmark.Rds", package = "IHWpaper")
 proteomics_data <- readRDS(file=proteomics_file)
 panel_c_data <- group_by(proteomics_data$alpha_df, alpha) %>% summarize(BH = max(bh_rejections), IHW=max(rejections)) %>% 
                      gather(method, rejections, BH, IHW) %>%
@@ -193,7 +193,7 @@ panel_d
 
 ## Load in data
 ```{r}
-hqtl_file <- system.file("real_data_examples/result_files", "hQTL_benchmark.Rds", package = "ihwPaper")
+hqtl_file <- system.file("real_data_examples/result_files", "hQTL_benchmark.Rds", package = "IHWpaper")
 hqtl_data <- readRDS(file=hqtl_file)
 hqtl_summary <- group_by(hqtl_data$alpha_df, alpha) %>%  gather(method, rejections, 6:10) %>%
                 select(alpha, method, rejections)

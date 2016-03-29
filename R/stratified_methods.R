@@ -11,10 +11,12 @@
 #' @param pi0_global GBH requires also a pi0 estimate for the marginal p-value distribution. Can either apply pi0 estimation method to
 #'    all p-values (pi0_global="global") or use a weigted averarage (pi0_global="weighted_average") of the pi0 estimates within each stratum.
 #'    This is not explicitly stated in the paper, but based on a reproduction of their paper figures it seems to be the weighted_average.
-
+#'
+#' @return GBH multiple testing object
+#' 
 #' @references  Hu, James X., Hongyu Zhao, and Harrison H. Zhou. "False discovery rate control with groups." 
 #'         Journal of the American Statistical Association 105.491 (2010).
-
+#' @export
 gbh <- function(unadj_p, groups, alpha, method="TST", pi0_global="weighted_average"){
 
   # special care has to be taken for TST GBH, uses alpha/(1+alpha) instead of alpha
@@ -79,18 +81,25 @@ attr(gbh, "fdr_method")        <- "GBH"
 #' lsl_gbh: wrapper for gbh with method="LSL"
 #'
 
+#' @describeIn gbh Wrapper of GBH with TST pi0 estimator
+#' @export
 tst_gbh <- function(unadj_p, groups, alpha, ...) gbh(unadj_p, groups, alpha, method="TST", ...)
 attr(tst_gbh, "testing covariate") <- "stratified" # i.e. covariates can be considered by stratifying based on them
 attr(tst_gbh, "fdr_method")        <- "TST GBH"
 
+#' @describeIn gbh Wrapper of GBH with LSL pi0 estimator
+#' @export
 lsl_gbh <- function(unadj_p, groups, alpha, ...) gbh(unadj_p, groups, alpha, method="LSL", ...)
 attr(lsl_gbh, "testing covariate") <- "stratified" # i.e. covariates can be considered by stratifying based on them
 attr(lsl_gbh, "fdr_method")        <- "LSL GBH"
 
-rejected_hypotheses.GBH <- function(gbh_object, alpha= gbh_object$alpha){
-  gbh_object$adj_p <= alpha
+#
+rejected_hypotheses.GBH <- function(object, alpha= object$alpha){
+  object$adj_p <= alpha
 }
 
+setOldClass("GBH")
+setMethod("rejected_hypotheses", signature("GBH"), rejected_hypotheses.GBH)
 
 #' stratified_bh: Stratified Benjamini Hochberg
 #'
@@ -99,11 +108,13 @@ rejected_hypotheses.GBH <- function(gbh_object, alpha= gbh_object$alpha){
 #' @param groups   Factor to which different hypotheses belong
 #' @param alpha    Significance level at which to apply method
 #'
+#' @return SBH multiple testing object
+#'
 #' @references Sun, Lei, et al. "Stratified false discovery control for large-scale hypothesis testing with application to genome-wide
 #'    association studies." Genetic epidemiology 30.6 (2006): 519-530.
 #' @references Yoo, Yun J., et al. "Were genome-wide linkage studies a waste of time? Exploiting candidate regions within genome-wide
 #'    association studies." Genetic epidemiology 34.2 (2010): 107-118.
-
+#' @export
 stratified_bh <- function(unadj_p, groups, alpha){
     groups <- as.factor(groups)
     pv_list <- split(unadj_p, groups)
@@ -126,6 +137,9 @@ rejected_hypotheses.SBH <- function(object, alpha= object$alpha){
     object$adj_p <= alpha
 }
 
+setOldClass("SBH")
+setMethod("rejected_hypotheses", signature("SBH"), rejected_hypotheses.SBH)
+
 
 #' clfdr: Cai's local fdr based method
 #'
@@ -133,11 +147,13 @@ rejected_hypotheses.SBH <- function(object, alpha= object$alpha){
 #' @param unadj_p  Numeric vector of unadjusted p-values.
 #' @param groups   Factor to which different hypotheses belong
 #' @param alpha    Significance level at which to apply method
-#' @param lfdr_estimation  Method used to estimate the loca fdr, defaults to fdrtool
-
+#' @param lfdr_estimation  Method used to estimate the loca fdr, defaults to "fdrtool"
+#'
+#' @return Clfdr multiple testing object
+#'
 #' @references Cai, T. Tony, and Wenguang Sun. "Simultaneous testing of grouped hypotheses: Finding needles in multiple haystacks." 
 #'           Journal of the American Statistical Association 104.488 (2009).
-
+#' @export
 clfdr <- function(unadj_p, groups, alpha, lfdr_estimation="fdrtool"){
 
   # estimate local fdr within each stratum first
@@ -168,9 +184,14 @@ clfdr <- function(unadj_p, groups, alpha, lfdr_estimation="fdrtool"){
 attr(clfdr, "testing covariate") <- "stratified" # i.e. covariates can be considered by stratifying based on them
 attr(clfdr, "fdr_method")        <- "Clfdr"
 
-rejected_hypotheses.Clfdr <- function(obj, alpha= obj$alpha){
-    obj$adj_p <= alpha
+rejected_hypotheses.Clfdr <- function(object, alpha= object$alpha){
+    object$adj_p <= alpha
 }
+
+setOldClass("Clfdr")
+setMethod("rejected_hypotheses", signature("Clfdr"), rejected_hypotheses.Clfdr)
+
+
 
 # helper function for cai
 lfdr_fit <- function(unadj_p, group, lfdr_estimation="fdrtool"){

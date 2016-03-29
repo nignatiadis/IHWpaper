@@ -6,7 +6,7 @@ library("grid")
 library("tidyr")
 library("cowplot")
 library("RColorBrewer")
-library("ihwPaper")
+library("IHWpaper")
 
 ## ------------------------------------------------------------------------
 pretty_colors <- scales::hue_pal(h = c(0, 360) + 15, c = 100, l = 65, h.start = 0,direction = 1)(5)
@@ -14,7 +14,7 @@ pretty_names <- c("IHW", "BH", "Indep. Filt. \n 10 kb", "Indep. Filt. \n 200 kb"
 
 ## ------------------------------------------------------------------------
 
-rnaseq_file <- system.file("real_data_examples/result_files", "RNAseq_benchmark.Rds", package = "ihwPaper")
+rnaseq_file <- system.file("real_data_examples/result_files", "RNAseq_benchmark.Rds", package = "IHWpaper")
 rnaseq_data <- readRDS(file=rnaseq_file)
 panel_a_data <- group_by(rnaseq_data$alpha_df, alpha) %>% summarize(BH = max(bh_rejections), IHW=max(rejections)) %>% 
                      gather(method, rejections, BH, IHW) %>%
@@ -87,7 +87,7 @@ panel_b <- ggplot(filter(step_df, alpha==0.1),
 panel_b
 
 ## ------------------------------------------------------------------------
-proteomics_file <- system.file("real_data_examples/result_files", "proteomics_benchmark.Rds", package = "ihwPaper")
+proteomics_file <- system.file("real_data_examples/result_files", "proteomics_benchmark.Rds", package = "IHWpaper")
 proteomics_data <- readRDS(file=proteomics_file)
 panel_c_data <- group_by(proteomics_data$alpha_df, alpha) %>% summarize(BH = max(bh_rejections), IHW=max(rejections)) %>% 
                      gather(method, rejections, BH, IHW) %>%
@@ -157,7 +157,7 @@ panel_d <- ggplot(step_df, aes(x=break_left, xend=break_right,y=weight, yend=wei
 panel_d
 
 ## ------------------------------------------------------------------------
-hqtl_file <- system.file("real_data_examples/result_files", "hQTL_benchmark.Rds", package = "ihwPaper")
+hqtl_file <- system.file("real_data_examples/result_files", "hQTL_benchmark.Rds", package = "IHWpaper")
 hqtl_data <- readRDS(file=hqtl_file)
 hqtl_summary <- group_by(hqtl_data$alpha_df, alpha) %>%  gather(method, rejections, 6:10) %>%
                 select(alpha, method, rejections)

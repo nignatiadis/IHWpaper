@@ -47,10 +47,12 @@ continuous_wrap <- function(mt_method, nbins=20){
 #' @param df       Degrees of freedom for B-slines
 #' @param lambda Ridge regularization parameter
 #'
+#' @return FDRreg multiple testing object
+#'
 #' @references  James G. Scott, Ryan C. Kelly, Matthew A. Smith, Pengcheng Zhou, and Robert E. Kass. 
 #'         "False discovery rate regression: application to neural synchrony detection in primary visual cortex." 
 #'         Journal of the American Statistical Association (2015).
-
+#' @export
 scott_fdrreg <- function(unadj_p, filterstat, alpha, df=3, lambda=0.01){
 	# no automated way to choose function space over which we optimize
 	# so we just use bs(df=3) as done in their analysis
@@ -77,13 +79,16 @@ scott_fdrreg <- function(unadj_p, filterstat, alpha, df=3, lambda=0.01){
 	obj
 }
 
-attr(scott_fdrreg, "testing covariate") <- "continuous" 
-attr(scott_fdrreg, "fdr_method")        <- "FDRreg"     
+attr(scott_fdrreg, "testing covariate") <- "continuous"
+attr(scott_fdrreg, "fdr_method")        <- "FDRreg"
 
+#' @importFrom IHW rejected_hypotheses
 rejected_hypotheses.FDRreg <- function(object, alpha= object$alpha){
 	object$adj_p <= alpha
 }
 
+setOldClass("FDRreg")
+setMethod("rejected_hypotheses", signature("FDRreg"), rejected_hypotheses.FDRreg)
 
 
 #' ddhf: Greedy independent filtering
@@ -91,8 +96,11 @@ rejected_hypotheses.FDRreg <- function(object, alpha= object$alpha){
 #' @param unadj_p  Numeric vector of unadjusted p-values.
 #' @param filterstat   Factor to which different hypotheses belong
 #' @param alpha    Significance level at which to apply method
-
-
+#'
+#' @return DDHF multiple testing object
+#'
+#' @export
+#' @useDynLib IHWpaper
 ddhf <- function(unadj_p, filterstat, alpha){
   sortedp <- sort(unadj_p)
   ranksp <- rank(unadj_p, ties.method="first")
@@ -122,4 +130,7 @@ attr(ddhf, "fdr_method")        <- "Greedy Indep. Filt."
 rejected_hypotheses.DDHF <- function(object, alpha= object$alpha){
 	object$adj_p <= alpha
 }
+
+setOldClass("DDHF")
+setMethod("rejected_hypotheses", signature("DDHF"), rejected_hypotheses.DDHF)
 

@@ -3,7 +3,7 @@ library("ggplot2")
 library("grid")
 library("dplyr")
 library("cowplot")
-library("ihwPaper")
+library("IHWpaper")
 
 ## ------------------------------------------------------------------------
 methods_pretty <- c("BH", "Clfdr", "Greedy Indep. Filt.", "IHW", "IHW naive", "FDRreg", "LSL GBH", "SBH", "TST GBH")
@@ -17,11 +17,11 @@ anticonservative_idx     <- match(anticonservative_methods, methods_pretty)
 
 ## ------------------------------------------------------------------------
 null_grb_file <- system.file("simulation_benchmarks/result_files",
-                        "ihw_null_simulation_benchmark_grb.Rds", package = "ihwPaper")
+                        "ihw_null_simulation_benchmark_grb.Rds", package = "IHWpaper")
 null_e3_file <- system.file("simulation_benchmarks/result_files",
-                        "ihw_null_simulation_benchmark_E3.Rds", package = "ihwPaper")
+                        "ihw_null_simulation_benchmark_E3.Rds", package = "IHWpaper")
 null_file <- system.file("simulation_benchmarks/result_files",
-                        "ihw_null_simulation_benchmark.Rds", package = "ihwPaper")
+                        "ihw_null_simulation_benchmark.Rds", package = "IHWpaper")
 null_df <- rbind(readRDS(null_grb_file),
                  readRDS(null_e3_file),
                  readRDS(null_file)) %>% 
@@ -88,11 +88,11 @@ panel_ab
 
 ## ------------------------------------------------------------------------
 effsize_grb_file <- system.file("simulation_benchmarks/result_files",
-                        "ihw_du_ttest_informative_simulation_benchmark_grb.Rds", package = "ihwPaper")
+                        "ihw_du_ttest_informative_simulation_benchmark_grb.Rds", package = "IHWpaper")
 effsize_e3_file <- system.file("simulation_benchmarks/result_files",
-                        "ihw_du_ttest_informative_simulation_benchmark_E3.Rds", package = "ihwPaper")
+                        "ihw_du_ttest_informative_simulation_benchmark_E3.Rds", package = "IHWpaper")
 effsize_file <- system.file("simulation_benchmarks/result_files",
-                         "ihw_du_ttest_informative_simulation_benchmark.Rds", package = "ihwPaper")
+                         "ihw_du_ttest_informative_simulation_benchmark.Rds", package = "IHWpaper")
 effsize_df <- rbind(readRDS(effsize_grb_file),
                     readRDS(effsize_file),
                     readRDS(effsize_e3_file)) %>%
@@ -153,11 +153,11 @@ panel_cd
 
 ## ------------------------------------------------------------------------
 sizeinvesting_grb_file <- system.file("simulation_benchmarks/result_files",
-                        "ihw_wasserman_normal_simulation_benchmark_grb.Rds", package = "ihwPaper")
+                        "ihw_wasserman_normal_simulation_benchmark_grb.Rds", package = "IHWpaper")
 sizeinvesting_e3_file <-  system.file("simulation_benchmarks/result_files",
-                        "ihw_wasserman_normal_simulation_benchmark_E3.Rds", package = "ihwPaper")
+                        "ihw_wasserman_normal_simulation_benchmark_E3.Rds", package = "IHWpaper")
 sizeinvesting_file <- system.file("simulation_benchmarks/result_files",
-                         "ihw_wasserman_normal_simulation_benchmark.Rds", package = "ihwPaper")
+                         "ihw_wasserman_normal_simulation_benchmark.Rds", package = "IHWpaper")
 sizeinvesting_df <- rbind_all(lapply(c(sizeinvesting_file,
                                        sizeinvesting_e3_file,
                                        sizeinvesting_grb_file), readRDS)) %>%

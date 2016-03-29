@@ -33,7 +33,7 @@ source("http://bioconductor.org/biocLite.R")
 biocLite(c("genefilter","DESeq2","qvalue","Biobase",
             "BiocParallel","airway","pasilla", "BiocStyle"))
 # finally install this package
-install_github("nignatiadis/ihwPaper")
+install_github("nignatiadis/IHWpaper")
 ```
 
 Afterwards you can view the pre-built vignettes or rebuild them yourself.

@@ -1,6 +1,6 @@
 ## ----warning=F, message=F------------------------------------------------
 library("IHW")
-library("ihwPaper")
+library("IHWpaper")
 library("ggplot2")
 library("dplyr")
 library("wesanderson")

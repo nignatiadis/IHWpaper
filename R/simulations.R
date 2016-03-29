@@ -1,3 +1,9 @@
+#' t-test simulation 
+#'
+#' @param m Integer, total number of hypotheses being tested
+#' @param pi0 Numeric, proportion of null hypotheses
+#'
+#' @export
 du_ttest_sim <- function(m, pi0, effect_size, n_samples=10, uninformative_filter=F, seed=NULL){
   if (!is.null(seed)) set.seed(seed)
   m0 <- ceiling(m*pi0)

@@ -2,6 +2,6 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 ddhf_order <- function(sorted_p, filterorder, alpha) {
-    .Call('ihwPaper_ddhf_order', PACKAGE = 'ihwPaper', sorted_p, filterorder, alpha)
+    .Call('IHWpaper_ddhf_order', PACKAGE = 'IHWpaper', sorted_p, filterorder, alpha)
 }
 

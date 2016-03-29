@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 
-library("ihwPaper")
+library("IHWpaper")
 
 
 register(MulticoreParam(workers=5))

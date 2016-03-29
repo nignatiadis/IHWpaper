@@ -1,5 +1,5 @@
 library("IHW")
-library("ihwPaper")
+library("IHWpaper")
 
 bottomly <- analyze_dataset("bottomly")
 

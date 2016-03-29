@@ -2,7 +2,7 @@
 title: "BH explanation / visualization"
 author: "Nikos Ignatiadis"
 date: "`r doc_date()`"
-package: "`r pkg_ver('ihwPaper')`"
+package: "`r pkg_ver('IHWpaper')`"
 output: BiocStyle::html_document
 vignette: >
   %\VignetteIndexEntry{"BH explanation / visualization"}

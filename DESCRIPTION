@@ -1,4 +1,4 @@
-Package: ihwPaper
+Package: IHWpaper
 Title: Reproduce figures in IHW paper
 Version: 0.99.0
 Authors@R: "Nikos Ignatiadis <nikos.ignatiadis01@gmail.com.com> [aut, cre]"

@@ -1,8 +1,8 @@
-library("ihwPaper")
+library("IHWpaper")
 library("IHW")
 
 proteomics_file <- system.file("real_data_examples/raw_data",
-                                "science_signaling.csv", package = "ihwPaper")
+                                "science_signaling.csv", package = "IHWpaper")
 
 proteomics_df <- read.csv(proteomics_file, stringsAsFactors = F)
 

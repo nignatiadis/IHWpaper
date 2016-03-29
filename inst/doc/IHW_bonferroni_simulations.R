@@ -3,7 +3,7 @@ library("ggplot2")
 library("grid")
 library("dplyr")
 library("cowplot")
-library("ihwPaper")
+library("IHWpaper")
 library("wesanderson")
 
 ## ------------------------------------------------------------------------
@@ -12,7 +12,7 @@ colors <- wes_palette("Cavalcanti")[c(3,5)]
 ## ------------------------------------------------------------------------
 
 null_folder <- system.file("simulation_benchmarks/result_files/ihw_bonferroni_null",
-                        package = "ihwPaper")
+                        package = "IHWpaper")
 null_sim <- rbind_all(lapply(file.path(null_folder,list.files(null_folder)), function(x) readRDS(x))) %>%
             mutate(fdr_method = ifelse(fdr_method == "IHW-Bonferroni E3", "IHW-Bonferroni", fdr_method))
 
@@ -36,7 +36,7 @@ panel_a
 
 ## ------------------------------------------------------------------------
 ttest_folder <- system.file("simulation_benchmarks/result_files/ihw_bonferroni_du_ttest_informative",
-                     package = "ihwPaper")
+                     package = "IHWpaper")
 ttest_sim <- rbind_all(lapply(file.path(ttest_folder,list.files(ttest_folder)), function(x) readRDS(x))) %>%
             mutate(fdr_method = ifelse(fdr_method == "IHW-Bonferroni E3", "IHW-Bonferroni", fdr_method))
 
@@ -75,7 +75,7 @@ panel_c
 
 ## ------------------------------------------------------------------------
 size_investing_folder <- system.file("simulation_benchmarks/result_files/ihw_bonferroni_wasserman_normal",
-                              package = "ihwPaper")
+                              package = "IHWpaper")
 size_investing_sim <- rbind_all(lapply(file.path(size_investing_folder,
                                              list.files(size_investing_folder)), function(x) readRDS(x))) %>%
             mutate(fdr_method = ifelse(fdr_method == "IHW-Bonferroni E3", "IHW-Bonferroni", fdr_method))
