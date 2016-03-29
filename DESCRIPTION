@@ -8,6 +8,7 @@ Depends:
     IHW,
     fdrtool,
     genefilter,
+    DESeq,
     DESeq2,
     FDRreg,
     qvalue,
