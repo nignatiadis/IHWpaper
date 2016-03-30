@@ -10,7 +10,7 @@
 #'
 #' @importFrom Biobase pData exprs rowMax rowMin
 #' @importFrom BiocGenerics counts
-#' @importFrom DESeq2 DESeqDataSet DESeq DESeqDataSetFromMatrix
+#' @importFrom DESeq2 DESeqDataSet DESeq DESeqDataSetFromMatrix results
 #' @import genefilter
 #' @export
 analyze_dataset <- function(dataset=c("pasilla","airway","bottomly","pasilla"), res= TRUE) {

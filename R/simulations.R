@@ -76,7 +76,7 @@ null_sim_fun <- function(m){
 #'
 #' @param m Integer, total number of hypotheses 
 #' @param pi0 Numeric, proportion of null hypotheses
-#' @param xi_min, xi_max  Numeric, covariates are drawn as uniform on xi_min, xi_max
+#' @param xi_min,xi_max  Numeric, covariates are drawn as uniform on xi_min, xi_max
 #' @param seed Integer, Random seed to be used for simulation 
 #'        (default: NULL, i.e. RNG state will be used as is)
 #'

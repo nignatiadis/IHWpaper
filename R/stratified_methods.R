@@ -195,6 +195,7 @@ setMethod("rejected_hypotheses", signature("Clfdr"), rejected_hypotheses.Clfdr)
 
 
 # helper function for cai
+#' @importFrom fdrtool fdrtool
 lfdr_fit <- function(unadj_p, group, lfdr_estimation="fdrtool"){
   if (lfdr_estimation == "covmod"){
 

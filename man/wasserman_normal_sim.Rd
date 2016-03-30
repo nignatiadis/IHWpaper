@@ -14,7 +14,7 @@ wasserman_normal_sim_fun(m, pi0, xi_min, xi_max)
 
 \item{pi0}{Numeric, proportion of null hypotheses}
 
-\item{xi_min, }{xi_max  Numeric, covariates are drawn as uniform on xi_min, xi_max}
+\item{xi_min, xi_max}{Numeric, covariates are drawn as uniform on xi_min, xi_max}
 
 \item{seed}{Integer, Random seed to be used for simulation 
 (default: NULL, i.e. RNG state will be used as is)}

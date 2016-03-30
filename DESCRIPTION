@@ -36,6 +36,6 @@ Imports:
     Rcpp
 VignetteBuilder: knitr
 biocViews:
-    MultipleComparison,
     ReproducibleResearch
 RoxygenNote: 5.0.1
+Suggests: testthat
