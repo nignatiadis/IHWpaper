@@ -1,6 +1,6 @@
 Package: IHWpaper
 Title: Reproduce figures in IHW paper
-Version: 0.99.0
+Version: 0.99.1
 Authors@R: person("Nikos", "Ignatiadis", email = "nikos.ignatiadis01@gmail.com",
                   role = c("aut", "cre"))
 Description: This package conveniently wraps all functions needed to 
@@ -20,18 +20,12 @@ Depends:
     BiocGenerics,
     BiocParallel,
     dplyr,
-    cowplot,
     airway,
     pasilla,
     gridExtra,
     tidyr,
-    RColorBrewer,
     ggplot2,
-    wesanderson,
-    scales,
-    BiocStyle,
-    knitr,
-    rmarkdown
+    scales
 License: Artistic-2.0
 LazyData: true
 LinkingTo: Rcpp
@@ -41,4 +35,11 @@ VignetteBuilder: knitr
 biocViews:
     ReproducibleResearch
 RoxygenNote: 5.0.1
-Suggests: testthat
+Suggests: testthat,
+          cowplot,
+          RColorBrewer,
+          wesanderson,
+          BiocStyle,
+          knitr,
+          rmarkdown
+
