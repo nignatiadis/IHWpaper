@@ -17,4 +17,9 @@ estimated proportion of null hypotheses (pi0)
 \description{
 TST (Two-Step) pi0 estimator
 }
+\examples{
+     sim_df <- du_ttest_sim(20000,0.95, 1.5)
+     tst_pi0_est(sim_df$pvalue, .1)
+
+}
 

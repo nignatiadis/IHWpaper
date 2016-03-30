@@ -15,4 +15,9 @@ estimated proportion of null hypotheses (pi0)
 \description{
 LSL (Least-Slope) pi0 estimator
 }
+\examples{
+     sim_df <- du_ttest_sim(20000,0.95, 1.5)
+     lsl_pi0_est(sim_df$pvalue)
+
+}
 
