@@ -122,7 +122,7 @@ setMethod("rejected_hypotheses", signature("FDRreg"), rejected_hypotheses.FDRreg
 #'
 #' @export
 #' @import Rcpp
-#' @useDynLib IHWpaper
+#' @useDynLib IHWpaper, .registration=TRUE
 ddhf <- function(unadj_p, filterstat, alpha){
   sortedp <- sort(unadj_p)
   ranksp <- rank(unadj_p, ties.method="first")
