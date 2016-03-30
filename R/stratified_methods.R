@@ -82,6 +82,7 @@ attr(gbh, "fdr_method")        <- "GBH"
 #'
 
 #' @describeIn gbh Wrapper of GBH with TST pi0 estimator
+#' @param ... Additional arguments passed from tst_gbh/lsl_gbh to gbh
 #' @export
 tst_gbh <- function(unadj_p, groups, alpha, ...) gbh(unadj_p, groups, alpha, method="TST", ...)
 attr(tst_gbh, "testing covariate") <- "stratified" # i.e. covariates can be considered by stratifying based on them
@@ -204,13 +205,13 @@ lfdr_fit <- function(unadj_p, group, lfdr_estimation="fdrtool"){
       pvals_list <- split(unadj_p, group)
 
       if (lfdr_estimation == "fdrtool"){
-        lfdr_fun <- function(pv) fdrtool(pv, statistic="pvalue",plot=F,verbose=F)$lfdr
+        lfdr_fun <- function(pv) fdrtool(pv, statistic="pvalue",plot=FALSE,verbose=FALSE)$lfdr
       } else if (lfdr_estimation == "ConcaveFDR"){
-        lfdr_fun <- function(pv) ConcaveFDR(pv, statistic="pvalue",plot=F,verbose=F)$lfdr.log
+        lfdr_fun <- function(pv) ConcaveFDR(pv, statistic="pvalue",plot=FALSE,verbose=FALSE)$lfdr.log
       } else if (lfdr_estimation == "locfdr"){
         lfdr_fun <- function(pv) locfdr(qnorm(pv), nulltype=0, plot=0)$fdr
       } else if (lfdr_estimation == "mixfdr"){
-        lfdr_fun <- function(pv) mixFdr(qnorm(pv), theonull=T, plots=F)$fdr
+        lfdr_fun <- function(pv) mixFdr(qnorm(pv), theonull=TRUE, plots=FALSE)$fdr
       }
 
       lfdr_list <- lapply(pvals_list, lfdr_fun)

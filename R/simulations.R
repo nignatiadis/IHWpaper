@@ -14,7 +14,7 @@
 #' @return A data frame containing all information about the simulation experiment
 #'
 #' @export
-du_ttest_sim <- function(m, pi0, effect_size, n_samples=10, uninformative_filter=F, seed=NULL){
+du_ttest_sim <- function(m, pi0, effect_size, n_samples=10, uninformative_filter=FALSE, seed=NULL){
   if (!is.null(seed)) set.seed(seed)
   m0 <- ceiling(m*pi0)
   false_nulls <- sample(1:m, m-m0)
@@ -38,7 +38,7 @@ du_ttest_sim <- function(m, pi0, effect_size, n_samples=10, uninformative_filter
 
 #' @describeIn du_ttest_sim Creates a closure function for a given seed
 #' @export
-du_ttest_sim_fun <- function(m, pi0, effect_size, n_samples=10, uninformative_filter=F){
+du_ttest_sim_fun <- function(m, pi0, effect_size, n_samples=10, uninformative_filter=FALSE){
   f <- function(seed) du_ttest_sim(m, pi0, effect_size, n_samples=n_samples, uninformative_filter=uninformative_filter, seed=seed)
   attr(f, "sim_method") <- "t-test"
   attr(f, "sim_pars") <- paste0("pi0:",pi0, ", effect size:", effect_size)
@@ -116,7 +116,7 @@ wasserman_normal_sim_fun <- function(m, pi0, xi_min, xi_max){
 #' @param pi0 Numeric, proportion of null hypotheses
 #' @param rho Numeric, correlation between z-scores of hypotheses driven by same latent factor
 #' @param latent_factors Integer, number of latent factors driving the correlations
-#' @param xi_min, xi_max  Numeric, covariates are drawn as uniform on xi_min, xi_max
+#' @param xi_min,xi_max  Numeric, covariates are drawn as uniform on xi_min, xi_max
 #' @param seed Integer, Random seed to be used for simulation 
 #'        (default: NULL, i.e. RNG state will be used as is)
 #'

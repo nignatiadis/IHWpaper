@@ -9,12 +9,13 @@
 #'	   at which to apply FDR controlling methods
 #' @param ... Additional arguments passed to sim_fun_eval
 #'
+#' @import dplyr
 #' @export
 run_evals <- function(sim_funs, fdr_methods, nreps, alphas,...){
 	rbind_all(lapply(sim_funs, function(x) sim_fun_eval(x, fdr_methods, nreps, alphas, ...)))
 }
 
-sim_fun_eval <- function(sim_fun, fdr_methods, nreps, alphas, BiocParallel=T){
+sim_fun_eval <- function(sim_fun, fdr_methods, nreps, alphas, BiocParallel=TRUE){
 	sim_seeds <- 1:nreps
 	if (BiocParallel){
 		evaluated_sims <- bplapply(sim_seeds, function(x) sim_eval(sim_fun, x, fdr_methods, alphas))

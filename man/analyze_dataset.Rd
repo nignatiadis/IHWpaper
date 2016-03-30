@@ -6,7 +6,7 @@
           , i.e. the DESeq2 result whose p-values and baseMean statistics can then be used with DDHW}
 \usage{
 analyze_dataset(dataset = c("pasilla", "airway", "bottomly", "pasilla"),
-  res = T)
+  res = TRUE)
 }
 \arguments{
 \item{dataset}{Character, name of dataset to be preprocessed, only 4 choices currently available}
@@ -22,5 +22,6 @@ analyze_dataset: Basically performs preprocessing and then returns analyzed RNAS
 }
 \examples{
 pasilla <- analyze_dataset("pasilla")
+
 }
 

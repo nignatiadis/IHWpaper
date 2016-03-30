@@ -8,8 +8,6 @@ lsl_pi0_est(pvalue)
 }
 \arguments{
 \item{pvalue}{Numeric vector of unadjusted p-values.}
-
-\item{alpha}{Nominal level for applying the TST procedure}
 }
 \value{
 estimated proportion of null hypotheses (pi0)

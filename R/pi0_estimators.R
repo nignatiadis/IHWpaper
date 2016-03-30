@@ -16,7 +16,6 @@ tst_pi0_est <- function(pvalue, alpha){
 
 #' LSL (Least-Slope) pi0 estimator
 #' @param pvalue Numeric vector of unadjusted p-values.
-#' @param alpha Nominal level for applying the TST procedure
 #'
 #' @return estimated proportion of null hypotheses (pi0)
 #'

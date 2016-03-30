@@ -24,6 +24,8 @@ lsl_gbh(unadj_p, groups, alpha, ...)
 \item{pi0_global}{GBH requires also a pi0 estimate for the marginal p-value distribution. Can either apply pi0 estimation method to
 all p-values (pi0_global="global") or use a weigted averarage (pi0_global="weighted_average") of the pi0 estimates within each stratum.
 This is not explicitly stated in the paper, but based on a reproduction of their paper figures it seems to be the weighted_average.}
+
+\item{...}{Additional arguments passed from tst_gbh/lsl_gbh to gbh}
 }
 \value{
 GBH multiple testing object

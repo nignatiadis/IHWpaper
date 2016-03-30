@@ -1,9 +1,3 @@
-
-groups_by_filter <- function(filter_statistic, nbins){
-  rfs <- rank(filter_statistic, ties.method="first")/length(filter_statistic)
-  as.factor(ceiling( rfs* nbins))
-}
-
 ### general wrapper
 
 #' Benchmarking wrapper: Given a multiple testing method, convert it so that it takes
@@ -64,6 +58,7 @@ continuous_wrap <- function(mt_method, nbins=20){
 #' @references  James G. Scott, Ryan C. Kelly, Matthew A. Smith, Pengcheng Zhou, and Robert E. Kass. 
 #'         "False discovery rate regression: application to neural synchrony detection in primary visual cortex." 
 #'         Journal of the American Statistical Association (2015).
+#' @import FDRreg
 #' @export
 scott_fdrreg <- function(unadj_p, filterstat, alpha, df=3, lambda=0.01){
 	# no automated way to choose function space over which we optimize
@@ -112,6 +107,7 @@ setMethod("rejected_hypotheses", signature("FDRreg"), rejected_hypotheses.FDRreg
 #' @return DDHF multiple testing object
 #'
 #' @export
+#' @import Rcpp
 #' @useDynLib IHWpaper
 ddhf <- function(unadj_p, filterstat, alpha){
   sortedp <- sort(unadj_p)

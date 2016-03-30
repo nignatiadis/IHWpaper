@@ -7,8 +7,13 @@
 #'
 #' @return Preprocessed dataset
 #' @examples pasilla <- analyze_dataset("pasilla")
+#'
+#' @importFrom Biobase pData exprs rowMax rowMin
+#' @importFrom BiocGenerics counts
+#' @importFrom DESeq2 DESeqDataSet DESeq DESeqDataSetFromMatrix
+#' @import genefilter
 #' @export
-analyze_dataset <- function(dataset=c("pasilla","airway","bottomly","pasilla"), res= T) {
+analyze_dataset <- function(dataset=c("pasilla","airway","bottomly","pasilla"), res= TRUE) {
 
     if (dataset=="airway") {
       requireNamespace("airway", quietly = TRUE)
@@ -46,11 +51,11 @@ analyze_dataset <- function(dataset=c("pasilla","airway","bottomly","pasilla"), 
     }
 
   if (res){
-    vars <- rowVars(counts(dds,normalized=T))
+    vars <- rowVars(counts(dds,normalized=TRUE))
     resDf <- as.data.frame(results(dds))
     resDf$var <- vars
-    resDf$max <- rowMax(counts(dds,normalized=T))
-    resDf$min <- rowMin(counts(dds,normalized=T))
+    resDf$max <- rowMax(counts(dds,normalized=TRUE))
+    resDf$min <- rowMin(counts(dds,normalized=TRUE))
     resDf <-subset(resDf, !is.na(pvalue)) #maybe remove that since IHW should be able to handle NAs anyway
     return (resDf)
   } else {

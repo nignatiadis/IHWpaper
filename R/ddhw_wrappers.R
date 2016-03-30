@@ -5,6 +5,7 @@
 #'
 #' @return ihwResult multiple testing object
 #'
+#' @import IHW
 #' @export
 #' @describeIn ihw_naive IHW naive
 ihw_naive <- function(unadj_p, filterstat, alpha){

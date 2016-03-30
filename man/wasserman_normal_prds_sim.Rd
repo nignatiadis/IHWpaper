@@ -21,7 +21,7 @@ wasserman_normal_prds_sim_fun(m, pi0, rho = 0, latent_factors = 1,
 
 \item{latent_factors}{Integer, number of latent factors driving the correlations}
 
-\item{xi_min, }{xi_max  Numeric, covariates are drawn as uniform on xi_min, xi_max}
+\item{xi_min, xi_max}{Numeric, covariates are drawn as uniform on xi_min, xi_max}
 
 \item{seed}{Integer, Random seed to be used for simulation 
 (default: NULL, i.e. RNG state will be used as is)}
