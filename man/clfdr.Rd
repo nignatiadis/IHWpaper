@@ -21,6 +21,13 @@ Clfdr multiple testing object
 \description{
 clfdr: Cai's local fdr based method
 }
+\examples{
+     sim_df <- du_ttest_sim(20000,0.95, 1.5)
+     sim_df$group <- groups_by_filter(sim_df$filterstat, 20)
+     obj <- clfdr(sim_df$pvalue, sim_df$group, .1)
+     sum(rejected_hypotheses(obj))
+
+}
 \references{
 Cai, T. Tony, and Wenguang Sun. "Simultaneous testing of grouped hypotheses: Finding needles in multiple haystacks." 
           Journal of the American Statistical Association 104.488 (2009).

@@ -5,6 +5,11 @@
 #'
 #' @return ihwResult multiple testing object
 #'
+#' @examples
+#'      sim_df <- du_ttest_sim(20000,0.95, 1.5)
+#'      obj <- ihw_5fold(sim_df$pvalue, sim_df$filterstat, .1)
+#'      sum(rejected_hypotheses(obj))
+#'
 #' @import IHW
 #' @export
 #' @describeIn ihw_naive IHW naive

@@ -13,6 +13,8 @@
 #'
 #' @return A data frame containing all information about the simulation experiment
 #'
+#' @examples sim_df <- du_ttest_sim(20000,0.95, 1.5)
+#'
 #' @export
 du_ttest_sim <- function(m, pi0, effect_size, n_samples=10, uninformative_filter=FALSE, seed=NULL){
   if (!is.null(seed)) set.seed(seed)
@@ -54,6 +56,8 @@ du_ttest_sim_fun <- function(m, pi0, effect_size, n_samples=10, uninformative_fi
 #'
 #' @return A data frame containing all information about the simulation experiment
 #'
+#' @examples sim_df <- null_sim(20000)
+#'
 #' @export
 null_sim <- function(m, seed=NULL){
   if (!is.null(seed)) set.seed(seed)
@@ -81,6 +85,8 @@ null_sim_fun <- function(m){
 #'        (default: NULL, i.e. RNG state will be used as is)
 #'
 #' @return A data frame containing all information about the simulation experiment
+#'
+#' @examples sim_df <- wasserman_normal_sim(20000,0.9, 1, 5)
 #'
 #' @export
 wasserman_normal_sim <- function(m, pi0, xi_min, xi_max, seed=NULL){
@@ -121,6 +127,8 @@ wasserman_normal_sim_fun <- function(m, pi0, xi_min, xi_max){
 #'        (default: NULL, i.e. RNG state will be used as is)
 #'
 #' @return A data frame containing all information about the simulation experiment
+#'
+#' @examples sim_df <- wasserman_normal_prds_sim(20000,0.9, rho=0.1)
 #'
 #' @export
 wasserman_normal_prds_sim <- function(m, pi0, rho=0.0, latent_factors=1, xi_min=0, xi_max=2.5, seed=NULL){

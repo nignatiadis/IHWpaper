@@ -9,6 +9,15 @@
 #'
 #' @return A new multiple testing function which has an
 #'           interface of the form f(sim_data_frame, alpha)
+#' @examples
+#'      sim_df <- du_ttest_sim(20000,0.95, 1.5)
+#'      sim_df$group <- groups_by_filter(sim_df$filterstat, 20)
+#'      obj <- tst_gbh(sim_df$pvalue, sim_df$group, .1)
+#'      sum(rejected_hypotheses(obj))
+#'
+#'      tst_gbh_continuous <- continuous_wrap(tst_gbh)
+#'      obj2 <- tst_gbh_continuous(sim_df, .1)
+#'      sum(rejected_hypotheses(obj2))
 #'
 #' @export
 continuous_wrap <- function(mt_method, nbins=20){
@@ -105,6 +114,11 @@ setMethod("rejected_hypotheses", signature("FDRreg"), rejected_hypotheses.FDRreg
 #' @param alpha    Significance level at which to apply method
 #'
 #' @return DDHF multiple testing object
+#'
+#' @examples
+#'      sim_df <- du_ttest_sim(20000,0.95, 1.5)
+#'      obj <- ddhf(sim_df$pvalue, sim_df$filterstat, .1)
+#'      sum(rejected_hypotheses(obj))
 #'
 #' @export
 #' @import Rcpp

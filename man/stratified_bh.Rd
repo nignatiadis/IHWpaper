@@ -19,6 +19,13 @@ SBH multiple testing object
 \description{
 stratified_bh: Stratified Benjamini Hochberg
 }
+\examples{
+     sim_df <- du_ttest_sim(20000,0.95, 1.5)
+     sim_df$group <- groups_by_filter(sim_df$filterstat, 20)
+     obj <- stratified_bh(sim_df$pvalue, sim_df$group, .1)
+     sum(rejected_hypotheses(obj))
+
+}
 \references{
 Sun, Lei, et al. "Stratified false discovery control for large-scale hypothesis testing with application to genome-wide
    association studies." Genetic epidemiology 30.6 (2006): 519-530.

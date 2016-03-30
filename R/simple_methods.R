@@ -2,8 +2,13 @@
 #'
 #' @param unadj_p  Numeric vector of unadjusted p-values.
 #' @param alpha    Significance level at which to apply method
-#' 
+#'
 #' @return BH multiple testing object
+#'
+#' @examples
+#'      sim_df <- du_ttest_sim(20000,0.95, 1.5)
+#'      obj <- bh(sim_df$pvalue, .1)
+#'      sum(rejected_hypotheses(obj))
 #'
 #' @export
 bh <- function(unadj_p, alpha){
@@ -29,6 +34,12 @@ setMethod("rejected_hypotheses", signature("BH"), rejected_hypotheses.BH)
 #' @param alpha    Significance level at which to apply method
 #'
 #' @return StoreyQValue multiple testing object
+#'
+#' @examples
+#'      sim_df <- du_ttest_sim(20000,0.95, 1.5)
+#'      obj <- storey_qvalue(sim_df$pvalue, .1)
+#'      sum(rejected_hypotheses(obj))
+#'
 #' @export
 storey_qvalue <- function(unadj_p, alpha){
 	qval_res <- qvalue(unadj_p, alpha)
@@ -53,6 +64,12 @@ setMethod("rejected_hypotheses", signature("StoreyQValue"), rejected_hypotheses.
 #' @param alpha    Significance level at which to apply method
 #'
 #' @return Bonferroni multiple testing object
+#'
+#' @examples
+#'      sim_df <- du_ttest_sim(20000,0.95, 1.5)
+#'      obj <- bonf(sim_df$pvalue, .1)
+#'      sum(rejected_hypotheses(obj))
+#'
 #' @export
 bonf <- function(unadj_p, alpha){
     adj_p <- p.adjust(unadj_p, method="bonferroni")

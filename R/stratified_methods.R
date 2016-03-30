@@ -13,7 +13,13 @@
 #'    This is not explicitly stated in the paper, but based on a reproduction of their paper figures it seems to be the weighted_average.
 #'
 #' @return GBH multiple testing object
-#' 
+#'
+#' @examples
+#'      sim_df <- du_ttest_sim(20000,0.95, 1.5)
+#'      sim_df$group <- groups_by_filter(sim_df$filterstat, 20)
+#'      obj <- tst_gbh(sim_df$pvalue, sim_df$group, .1)
+#'      sum(rejected_hypotheses(obj))
+#'
 #' @references  Hu, James X., Hongyu Zhao, and Harrison H. Zhou. "False discovery rate control with groups." 
 #'         Journal of the American Statistical Association 105.491 (2010).
 #' @export
@@ -111,6 +117,12 @@ setMethod("rejected_hypotheses", signature("GBH"), rejected_hypotheses.GBH)
 #'
 #' @return SBH multiple testing object
 #'
+#' @examples
+#'      sim_df <- du_ttest_sim(20000,0.95, 1.5)
+#'      sim_df$group <- groups_by_filter(sim_df$filterstat, 20)
+#'      obj <- stratified_bh(sim_df$pvalue, sim_df$group, .1)
+#'      sum(rejected_hypotheses(obj))
+#'
 #' @references Sun, Lei, et al. "Stratified false discovery control for large-scale hypothesis testing with application to genome-wide
 #'    association studies." Genetic epidemiology 30.6 (2006): 519-530.
 #' @references Yoo, Yun J., et al. "Were genome-wide linkage studies a waste of time? Exploiting candidate regions within genome-wide
@@ -151,6 +163,12 @@ setMethod("rejected_hypotheses", signature("SBH"), rejected_hypotheses.SBH)
 #' @param lfdr_estimation  Method used to estimate the loca fdr, defaults to "fdrtool"
 #'
 #' @return Clfdr multiple testing object
+#'
+#' @examples
+#'      sim_df <- du_ttest_sim(20000,0.95, 1.5)
+#'      sim_df$group <- groups_by_filter(sim_df$filterstat, 20)
+#'      obj <- clfdr(sim_df$pvalue, sim_df$group, .1)
+#'      sum(rejected_hypotheses(obj))
 #'
 #' @references Cai, T. Tony, and Wenguang Sun. "Simultaneous testing of grouped hypotheses: Finding needles in multiple haystacks." 
 #'           Journal of the American Statistical Association 104.488 (2009).

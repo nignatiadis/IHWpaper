@@ -18,6 +18,9 @@ at which to apply FDR controlling methods}
 
 \item{...}{Additional arguments passed to sim_fun_eval}
 }
+\value{
+data.frame which summarizes results of numerical experiment
+}
 \description{
 run_evals: Main function to benchmark FDR methods on given simulations.
 }

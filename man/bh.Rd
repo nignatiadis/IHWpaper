@@ -17,4 +17,10 @@ BH multiple testing object
 \description{
 bh: Wrapper for Benjamini Hochberg
 }
+\examples{
+     sim_df <- du_ttest_sim(20000,0.95, 1.5)
+     obj <- bh(sim_df$pvalue, .1)
+     sum(rejected_hypotheses(obj))
+
+}
 

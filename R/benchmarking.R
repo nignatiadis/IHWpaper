@@ -9,6 +9,8 @@
 #'	   at which to apply FDR controlling methods
 #' @param ... Additional arguments passed to sim_fun_eval
 #'
+#' @return data.frame which summarizes results of numerical experiment
+#'
 #' @import dplyr
 #' @export
 run_evals <- function(sim_funs, fdr_methods, nreps, alphas,...){

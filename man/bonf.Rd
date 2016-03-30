@@ -17,4 +17,10 @@ Bonferroni multiple testing object
 \description{
 bonf: Wrapper for Bonferroni
 }
+\examples{
+     sim_df <- du_ttest_sim(20000,0.95, 1.5)
+     obj <- bonf(sim_df$pvalue, .1)
+     sum(rejected_hypotheses(obj))
+
+}
 

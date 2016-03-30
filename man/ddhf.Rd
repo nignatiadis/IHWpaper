@@ -19,4 +19,10 @@ DDHF multiple testing object
 \description{
 ddhf: Greedy independent filtering
 }
+\examples{
+     sim_df <- du_ttest_sim(20000,0.95, 1.5)
+     obj <- ddhf(sim_df$pvalue, sim_df$filterstat, .1)
+     sum(rejected_hypotheses(obj))
+
+}
 

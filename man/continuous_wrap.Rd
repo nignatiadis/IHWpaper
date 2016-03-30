@@ -22,4 +22,15 @@ Benchmarking wrapper: Given a multiple testing method, convert it so that it tak
   a simulation object (see simulation function) and a nominal level alpha
   as inputs
 }
+\examples{
+     sim_df <- du_ttest_sim(20000,0.95, 1.5)
+     sim_df$group <- groups_by_filter(sim_df$filterstat, 20)
+     obj <- tst_gbh(sim_df$pvalue, sim_df$group, .1)
+     sum(rejected_hypotheses(obj))
+
+     tst_gbh_continuous <- continuous_wrap(tst_gbh)
+     obj2 <- tst_gbh_continuous(sim_df, .1)
+     sum(rejected_hypotheses(obj2))
+
+}
 

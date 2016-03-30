@@ -17,4 +17,10 @@ StoreyQValue multiple testing object
 \description{
 storey_qvalue: Wrapper for Storey's qvalue package
 }
+\examples{
+     sim_df <- du_ttest_sim(20000,0.95, 1.5)
+     obj <- storey_qvalue(sim_df$pvalue, .1)
+     sum(rejected_hypotheses(obj))
+
+}
 
