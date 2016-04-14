@@ -22,14 +22,14 @@ sim <- function(m =20000){
   alt_ft_bh <- dnorm(-eff_size+ qnorm(1-t_bh))/dnorm(qnorm(1-t_bh))
   tdr_bh <- alt_ft_bh*(1-pi0)/((1-pi0)*alt_ft_bh + pi0)
   t_ddhw <- thresholds(ihw(pvalue, x, alpha= .1, nbins=20,
-                           nsplits_internal=10, nfolds = 1), levels_only=F)
+                           nsplits_internal=10, nfolds = 1), levels_only=FALSE)
 
   alt_ft_ddhw <- dnorm(-eff_size+ qnorm(1-t_ddhw))/dnorm(qnorm(1-t_ddhw))
   tdr_ddhw <- alt_ft_ddhw*(1-pi0)/((1-pi0)*alt_ft_ddhw + pi0)
 
   alt_ft <- dnorm(qnorm(1-t)-eff_size)/dnorm(qnorm(1-t))
   tdr <- alt_ft*(1-pi0)/((1-pi0)*alt_ft + pi0)
-  return(data.frame(x=x,pi0=pi0, t=t, eff_size=eff_size,H=H, 
+  return(data.frame(x=x,pi0=pi0, t=t, eff_size=eff_size,H=H,
                     Z=Z, pvalue=pvalue, alt_ft=alt_ft, tdr=tdr,
                     tdr_bh=tdr_bh, alt_ft_bh=alt_ft_bh, t_bh=t_bh,
                     t_ddhw=t_ddhw, tdr_ddhw=tdr_ddhw, alt_ft_ddhw=alt_ft_ddhw))
@@ -41,7 +41,7 @@ sim_df <- sim(m=80000)
 
 ## ------------------------------------------------------------------------
 sim_df_t <- select(sim_df, x, t_bh, t_ddhw ) %>%
-            gather(method, t, -x) %>% 
+            gather(method, t, -x) %>%
             mutate(method=ifelse(method=="t_bh", "BH","IHW"))
 
 ggplot(sim_df_t, aes(x=x, y=t,color=method)) +
@@ -64,8 +64,8 @@ ggplot(sim_df_tdr, aes(x=x, y=tdr,color=method)) +
 #sim_df$group <- groups_by_filter(sim_df$x, 10)
 #plot(sim_df$x, sim_df$tdr_bh)
 
-#with(filter(sim_df,-log10(pvalue) > 0.001), heatscatter(-log10(pvalue),x, add.contour=T))
-#with(filter(sim_df,tdr>0.2), heatscatter(tdr,x, add.contour=T)) 
+#with(filter(sim_df,-log10(pvalue) > 0.001), heatscatter(-log10(pvalue),x, add.contour=TRUE))
+#with(filter(sim_df,tdr>0.2), heatscatter(tdr,x, add.contour=TRUE)) 
 
 #ggplot(filter(sim_df), aes(x=-log10(pvalue), y=x)) + geom_density2d(aes(color = ..level..)) 
 #ggplot(filter(sim_df, tdr>0.4), aes(x=tdr, y=x)) + geom_density2d(aes(color = ..level..)) 

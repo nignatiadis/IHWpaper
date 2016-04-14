@@ -10,7 +10,7 @@
 
 <meta name="author" content="Nikos Ignatiadis" />
 
-<meta name="date" content="2016-03-22" />
+<meta name="date" content="2016-04-14" />
 
 <title>tdr and pvalue rejection regions</title>
 
@@ -51,9 +51,9 @@ document.addEventListener("DOMContentLoaded", function() {
 <div id="header">
 <h1 class="title">tdr and pvalue rejection regions</h1>
 <h4 class="author"><em>Nikos Ignatiadis</em></h4>
-<h4 class="date"><em>22 March 2016</em></h4>
+<h4 class="date"><em>14 April 2016</em></h4>
 </div>
-<h4 class="package">Package version: <span style="font-weight: normal">IHWpaper 0.99.0</span></h4>
+<h4 class="package">Package version: <span style="font-weight: normal">IHWpaper 0.99.1</span></h4>
 
 
 <p>One of the differences between BH and IHW is that BH sets a constant rejection threshold across all hypotheses which does not depend on the covariate. The rejection threshold of IHW on the other hand depends on the covariate. In many situations, this means, that the BH rejection threshold will be non-constant as a function of the tdr, while IHW will approximate a constant tdr threshold. Here we want to explore this using a simple simulation.</p>
@@ -79,14 +79,14 @@ sim &lt;- function(m =20000){
   alt_ft_bh &lt;- dnorm(-eff_size+ qnorm(1-t_bh))/dnorm(qnorm(1-t_bh))
   tdr_bh &lt;- alt_ft_bh*(1-pi0)/((1-pi0)*alt_ft_bh + pi0)
   t_ddhw &lt;- thresholds(ihw(pvalue, x, alpha= .1, nbins=20,
-                           nsplits_internal=10, nfolds = 1), levels_only=F)
+                           nsplits_internal=10, nfolds = 1), levels_only=FALSE)
 
   alt_ft_ddhw &lt;- dnorm(-eff_size+ qnorm(1-t_ddhw))/dnorm(qnorm(1-t_ddhw))
   tdr_ddhw &lt;- alt_ft_ddhw*(1-pi0)/((1-pi0)*alt_ft_ddhw + pi0)
 
   alt_ft &lt;- dnorm(qnorm(1-t)-eff_size)/dnorm(qnorm(1-t))
   tdr &lt;- alt_ft*(1-pi0)/((1-pi0)*alt_ft + pi0)
-  return(data.frame(x=x,pi0=pi0, t=t, eff_size=eff_size,H=H, 
+  return(data.frame(x=x,pi0=pi0, t=t, eff_size=eff_size,H=H,
                     Z=Z, pvalue=pvalue, alt_ft=alt_ft, tdr=tdr,
                     tdr_bh=tdr_bh, alt_ft_bh=alt_ft_bh, t_bh=t_bh,
                     t_ddhw=t_ddhw, tdr_ddhw=tdr_ddhw, alt_ft_ddhw=alt_ft_ddhw))
@@ -97,7 +97,7 @@ sim_df &lt;- sim(m=80000)</code></pre>
 <pre><code>## Using only 1 fold! Only use this if you want to learn the weights, but NEVER for testing!</code></pre>
 <p>First plot the rejection thresholds in terms of p-values. Note that BH returns a horizontal line, while IHW does not, because of assignment of non-uniform weights.</p>
 <pre class="r"><code>sim_df_t &lt;- select(sim_df, x, t_bh, t_ddhw ) %&gt;%
-            gather(method, t, -x) %&gt;% 
+            gather(method, t, -x) %&gt;%
             mutate(method=ifelse(method==&quot;t_bh&quot;, &quot;BH&quot;,&quot;IHW&quot;))
 
 ggplot(sim_df_t, aes(x=x, y=t,color=method)) +
@@ -119,8 +119,8 @@ ggplot(sim_df_tdr, aes(x=x, y=tdr,color=method)) +
 <pre class="r"><code>#sim_df$group &lt;- groups_by_filter(sim_df$x, 10)
 #plot(sim_df$x, sim_df$tdr_bh)
 
-#with(filter(sim_df,-log10(pvalue) &gt; 0.001), heatscatter(-log10(pvalue),x, add.contour=T))
-#with(filter(sim_df,tdr&gt;0.2), heatscatter(tdr,x, add.contour=T)) 
+#with(filter(sim_df,-log10(pvalue) &gt; 0.001), heatscatter(-log10(pvalue),x, add.contour=TRUE))
+#with(filter(sim_df,tdr&gt;0.2), heatscatter(tdr,x, add.contour=TRUE)) 
 
 #ggplot(filter(sim_df), aes(x=-log10(pvalue), y=x)) + geom_density2d(aes(color = ..level..)) 
 #ggplot(filter(sim_df, tdr&gt;0.4), aes(x=tdr, y=x)) + geom_density2d(aes(color = ..level..)) </code></pre>

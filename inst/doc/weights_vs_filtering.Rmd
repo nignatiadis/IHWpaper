@@ -45,7 +45,7 @@ The plot below compares the binary threshold with the IHW threshold, which is a 
 
 ```{r fig.width=5, fig.height=5, warning=F}
 df <- rbind( data.frame(covariate = sim$filterstat, weight= ws, method="filtering"),
-             data.frame(covariate = sim$filterstat, weight= weights(ihw_res, levels_only=F), 
+             data.frame(covariate = sim$filterstat, weight= weights(ihw_res, levels_only=FALSE), 
                         method=paste0("IHW; \nlambda=",format(total_regularization_lambda,digits=2))))
 weights_filter_plot <- ggplot(df, aes(x=covariate, y=weight, col=method)) + geom_step(size=1.65)+
                       scale_colour_manual(values=wes_palette("Cavalcanti")[c(1,2)]) +
@@ -62,7 +62,7 @@ dev.off()
 But weights can be even more flexible if we allow the total regularization parameter to vary. Here we use 5fold CV along an equally spaced grid of lambdas to find the best total variation regularization using IHW:
 
 ```{r message=F, warning=F}
-ihw_res2 <- ihw(sim$pvalue, sim$filterstat, .1, lambdas=seq(0,10,length=20), nfolds=1L, nfolds_internal = 5L, nbins=20, quiet=T)
+ihw_res2 <- ihw(sim$pvalue, sim$filterstat, .1, lambdas=seq(0,10,length=20), nfolds=1L, nfolds_internal = 5L, nbins=20, quiet=TRUE)
 ```
 
 The returned regularization parameter is the following:
@@ -73,7 +73,7 @@ ihw_res2@regularization_term
 Now we plot everything:
 ```{r fig.width=5, fig.height=5, warning=F}
 df <- rbind(df,
-            data.frame(covariate = sim$filterstat, weight= weights(ihw_res2, levels_only=F),  
+            data.frame(covariate = sim$filterstat, weight= weights(ihw_res2, levels_only=FALSE),  
                        method=paste0("IHW; \nlambda=",
                                      format(ihw_res2@regularization_term ,digits=2))))
             

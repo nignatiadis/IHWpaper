@@ -26,6 +26,9 @@ gg_unif <- gg_hist_aesthetic(gg_unif)
 
 gg_unif
 
+## ----eval=FALSE----------------------------------------------------------
+#  ggsave(plot=gg_unif, file="stratified_histograms_unif.pdf", width=4, height=3)
+
 ## ------------------------------------------------------------------------
 pv_beta_1 <- data.frame(pvalue=c(runif(9000), rbeta(1000,0.5,7)))
 
@@ -35,6 +38,9 @@ gg_beta_1 <- ggplot(pv_beta_1, aes(x=pvalue)) +
 gg_beta_1 <- gg_hist_aesthetic(gg_beta_1)
 gg_beta_1
 
+## ----eval=FALSE----------------------------------------------------------
+#  ggsave(plot=gg_beta_1, file="stratified_histograms_beta1.pdf", width=4, height=3)
+
 ## ------------------------------------------------------------------------
 pv_beta_2 <- data.frame(pvalue=c(runif(5500), rbeta(4500,1,4)))
 
@@ -43,6 +49,9 @@ gg_beta_2 <- ggplot(pv_beta_2, aes(x=pvalue)) +
               geom_hline(yintercept=5500*binwidth, size=2, col="darkblue")
 gg_beta_2 <- gg_hist_aesthetic(gg_beta_2)
 gg_beta_2
+
+## ----eval=FALSE----------------------------------------------------------
+#  ggsave(plot=gg_beta_2, file="stratified_histograms_beta2.pdf", width=4, height=3)
 
 ## ----fig.width=12, fig.height=4------------------------------------------
 gg_stratified <- plot_grid(gg_unif, gg_beta_1, gg_beta_2,

@@ -20,7 +20,7 @@ ihw_res <- ihw(sim$pvalue, sim$filterstat, .1, lambdas = total_regularization_la
 
 ## ----fig.width=5, fig.height=5, warning=F--------------------------------
 df <- rbind( data.frame(covariate = sim$filterstat, weight= ws, method="filtering"),
-             data.frame(covariate = sim$filterstat, weight= weights(ihw_res, levels_only=F), 
+             data.frame(covariate = sim$filterstat, weight= weights(ihw_res, levels_only=FALSE), 
                         method=paste0("IHW; \nlambda=",format(total_regularization_lambda,digits=2))))
 weights_filter_plot <- ggplot(df, aes(x=covariate, y=weight, col=method)) + geom_step(size=1.65)+
                       scale_colour_manual(values=wes_palette("Cavalcanti")[c(1,2)]) +
@@ -33,14 +33,14 @@ weights_filter_plot
 #  dev.off()
 
 ## ----message=F, warning=F------------------------------------------------
-ihw_res2 <- ihw(sim$pvalue, sim$filterstat, .1, lambdas=seq(0,10,length=20), nfolds=1L, nfolds_internal = 5L, nbins=20, quiet=T)
+ihw_res2 <- ihw(sim$pvalue, sim$filterstat, .1, lambdas=seq(0,10,length=20), nfolds=1L, nfolds_internal = 5L, nbins=20, quiet=TRUE)
 
 ## ----message=F, warning=F------------------------------------------------
 ihw_res2@regularization_term
 
 ## ----fig.width=5, fig.height=5, warning=F--------------------------------
 df <- rbind(df,
-            data.frame(covariate = sim$filterstat, weight= weights(ihw_res2, levels_only=F),  
+            data.frame(covariate = sim$filterstat, weight= weights(ihw_res2, levels_only=FALSE),  
                        method=paste0("IHW; \nlambda=",
                                      format(ihw_res2@regularization_term ,digits=2))))
             

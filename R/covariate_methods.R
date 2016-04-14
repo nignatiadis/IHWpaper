@@ -121,7 +121,8 @@ setMethod("rejected_hypotheses", signature("FDRreg"), rejected_hypotheses.FDRreg
 #'      sum(rejected_hypotheses(obj))
 #'
 #' @export
-#' @import Rcpp
+#' @importFrom Rcpp evalCpp
+#' @importFrom Rcpp sourceCpp
 #' @useDynLib IHWpaper, .registration=TRUE
 ddhf <- function(unadj_p, filterstat, alpha){
   sortedp <- sort(unadj_p)
