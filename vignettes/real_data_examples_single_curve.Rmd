@@ -23,6 +23,9 @@ library("cowplot")
 library("IHWpaper")
 ```
 
+```{r}
+red_col <- scales::hue_pal(h = c(0, 360) + 15, c = 100, l = 65, h.start = 0,direction = 1)(1)
+```
 # DESeq2 Bottomly
 
 Load Bottomly dataset, apply DESeq2, then IHW with 1 fold.
@@ -73,16 +76,17 @@ panel_b <- ggplot(step_df,
                        aes(x=baseMean_left, 
                            xend=baseMean_right, 
                            y=weight, yend=weight)) +
-                geom_segment(size=0.8)+ 
+                geom_segment(size=0.8, color=red_col)+ 
                 geom_segment(data= connect_df, aes(x=baseMean_left, xend=baseMean_right, 
                                                 y=weight_left, yend=weight_right, 
                                                 linetype=dashed),
-                             size=0.8)+
+                                                size=0.8, color=red_col)+
                 scale_x_log10(breaks=c(1,10,100,1000,10000))+
                 xlab("Mean of normalized counts")+
                 theme(legend.position=c(0.8,0.4)) +
                 theme(plot.margin = unit(c(1, 1, 2, 1), "lines")) +
-                guides(linetype=FALSE)
+                guides(linetype=FALSE) + 
+                theme(axis.title = element_text(face="bold") )
 
 panel_b
 ```
@@ -134,20 +138,22 @@ stratum_fun <- function(df){
 
 connecting_df_qtl <- step_df_qtl %>% 
                   do(stratum_fun(.)) %>%
-                  mutate(dashed = factor(ifelse(abs(weight_left - weight_right) > 2 , TRUE, FALSE),
-                         levels=c(FALSE,TRUE)))
+                  mutate(dashed = factor(ifelse(abs(weight_left - weight_right) > 5, 
+                                      TRUE, FALSE),
+                                  levels=c(FALSE,TRUE)))
 
 panel_f <- ggplot(step_df_qtl, aes(x=break_left, xend=break_right,y=weight, yend=weight)) +
-                geom_segment(size=0.8)+                
+                geom_segment(size=0.8, color=red_col)+                
                 geom_segment(data= connecting_df_qtl, aes(x=break_left, xend=break_right, 
                                                 y=weight_left, yend=weight_right, 
                                                 linetype=dashed),
-                             size=0.8)+
+                             size=0.8, color=red_col) +
                 scale_x_log10(breaks=c(10^4, 10^5,10^6,10^7)) +
                 xlab("Genomic distance (bp)")+
                 theme(legend.position=c(0.8,0.4)) +
                 theme(plot.margin = unit(c(1, 1, 2, 1), "lines"))+
-                guides(linetype=FALSE)
+                guides(linetype=FALSE) + 
+                theme(axis.title = element_text(face="bold") )
 
 panel_f
 ```
