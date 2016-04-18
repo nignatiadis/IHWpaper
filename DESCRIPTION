@@ -15,8 +15,9 @@ LazyData: true
 LinkingTo: Rcpp
 Imports:
     Rcpp,
+    stats,
+    splines,
     utils,
-    DESeq,
     DESeq2,
     fdrtool,
     genefilter,
@@ -25,7 +26,7 @@ Imports:
     BiocGenerics,
     BiocParallel,
     dplyr,
-    gridExtra,
+    grid,
     ggplot2,
     cowplot
 VignetteBuilder: knitr
@@ -36,6 +37,7 @@ Suggests: testthat,
           RColorBrewer,
           wesanderson,
           scales,
+          gridExtra,
           BiocStyle,
           knitr,
           rmarkdown,
