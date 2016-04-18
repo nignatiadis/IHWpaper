@@ -16,6 +16,8 @@
 #' @examples sim_df <- du_ttest_sim(20000,0.95, 1.5)
 #'
 #' @export
+#' @importFrom stats pchisq rnorm
+#' @importFrom genefilter rowSds rowttests
 du_ttest_sim <- function(m, pi0, effect_size, n_samples=10, uninformative_filter=FALSE, seed=NULL){
   if (!is.null(seed)) set.seed(seed)
   m0 <- ceiling(m*pi0)
@@ -89,6 +91,7 @@ null_sim_fun <- function(m){
 #' @examples sim_df <- wasserman_normal_sim(20000,0.9, 1, 5)
 #'
 #' @export
+#' @importFrom stats rbinom runif rnorm pnorm
 wasserman_normal_sim <- function(m, pi0, xi_min, xi_max, seed=NULL){
     if (!is.null(seed)) set.seed(seed)
 

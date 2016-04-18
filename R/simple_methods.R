@@ -11,6 +11,7 @@
 #'      sum(rejected_hypotheses(obj))
 #'
 #' @export
+#' @importFrom stats p.adjust
 bh <- function(unadj_p, alpha){
   	adj_p <- p.adjust(unadj_p, method="BH")
   	obj <- list(adj_p = adj_p, alpha = alpha)
@@ -41,6 +42,7 @@ setMethod("rejected_hypotheses", signature("BH"), rejected_hypotheses.BH)
 #'      sum(rejected_hypotheses(obj))
 #'
 #' @export
+#' @importFrom qvalue qvalue
 storey_qvalue <- function(unadj_p, alpha){
 	qval_res <- qvalue(unadj_p, alpha)
 	obj <- list(adj_p = qval_res$qvalues, pi0=qval_res$pi0, alpha=alpha)

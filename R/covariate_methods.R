@@ -67,6 +67,8 @@ continuous_wrap <- function(mt_method, nbins=20){
 #' @references  James G. Scott, Ryan C. Kelly, Matthew A. Smith, Pengcheng Zhou, and Robert E. Kass. 
 #'         "False discovery rate regression: application to neural synchrony detection in primary visual cortex." 
 #'         Journal of the American Statistical Association (2015).
+#' @importFrom splines bs
+#' @importFrom stats model.matrix qnorm
 
 scott_fdrreg <- function(unadj_p, filterstat, alpha, df=3, lambda=0.01){
 	# no automated way to choose function space over which we optimize
@@ -87,7 +89,7 @@ scott_fdrreg <- function(unadj_p, filterstat, alpha, df=3, lambda=0.01){
 	Xs <- model.matrix( ~  b - 1)
 
 
-	fdrreg_res <- FDRreg(qnorm(unadj_p), Xs, control=list(lambda = 0.01))
+	fdrreg_res <- FDRreg::FDRreg(qnorm(unadj_p), Xs, control=list(lambda = 0.01))
 
   # modification to make this method applicable to p-values
   # FDRreg tests in a two-sided way, this means that we might get rejections
@@ -96,7 +98,7 @@ scott_fdrreg <- function(unadj_p, filterstat, alpha, df=3, lambda=0.01){
 
   posterior_probs <- ifelse(unadj_p <= 0.5, fdrreg_res$postprob, 1)
 
-	FDR <- getFDR(fdrreg_res$postprob)$FDR
+	FDR <- FDRreg::getFDR(fdrreg_res$postprob)$FDR
 
   obj <- list(adj_p = FDR,
               pi0_continuous = fdrreg_res$priorprob, pi0=fdrreg_res$p0,

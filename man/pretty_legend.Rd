@@ -12,7 +12,7 @@ pretty_legend(gg, last_vals, xmin, fontsize = 13)
 \item{last_vals, }{data frame with columns 
 label, colour, last_vals (i.e. place label with colour at y-coordinate last_vals)}
 
-\item{xmin}{Numeric, offset}
+\item{xmin}{Numeric, x axis position at which labels should be placed}
 
 \item{fontsize}{Integer, fontsize}
 }
@@ -23,5 +23,19 @@ Another ggplot2 object
 }
 \description{
 helper function to create nice legends
+}
+\examples{
+  labels  <- c("A","B","C")
+  mypoints <- rbind(data.frame(y=1:3, x=1, label=as.factor(labels)),
+                     data.frame(y=2:4, x=2, label=as.factor(labels)))
+  mycolours <- c("#F8766D","#00BA38","#619CFF")
+  gg <- ggplot(mypoints,aes(x=x,y=y,color=label)) + 
+               geom_line(size=2) + 
+               scale_color_manual(values=mycolours) +
+               xlim(c(0,2.2))
+  gg
+  annotation_df <- data.frame(colour=mycolours, last_vals=2:4, label=labels)
+  pretty_legend(gg, annotation_df, 2.1)
+
 }
 

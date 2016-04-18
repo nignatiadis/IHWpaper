@@ -9,7 +9,15 @@ Description: This package conveniently wraps all functions needed to
         Thus it is a companion package to the Bioconductor IHW package.
 Depends:
     R (>= 3.3),
-    IHW,
+    IHW
+License: Artistic-2.0
+LazyData: true
+LinkingTo: Rcpp
+Imports:
+    Rcpp,
+    utils,
+    DESeq,
+    DESeq2,
     fdrtool,
     genefilter,
     qvalue,
@@ -17,15 +25,7 @@ Depends:
     BiocGenerics,
     BiocParallel,
     dplyr,
-    gridExtra,
-    tidyr
-License: Artistic-2.0
-LazyData: true
-LinkingTo: Rcpp
-Imports:
-    Rcpp,
-    DESeq,
-    DESeq2
+    gridExtra
 VignetteBuilder: knitr
 biocViews:
     ReproducibleResearch, MultipleComparison
@@ -41,5 +41,6 @@ Suggests: testthat,
           rmarkdown,
           airway,
           pasilla,
-          FDRreg
+          FDRreg,
+          tidyr
 

@@ -12,6 +12,7 @@
 #' @return data.frame which summarizes results of numerical experiment
 #'
 #' @import dplyr
+#' @importFrom BiocParallel bplapply
 #' @export
 run_evals <- function(sim_funs, fdr_methods, nreps, alphas,...){
 	rbind_all(lapply(sim_funs, function(x) sim_fun_eval(x, fdr_methods, nreps, alphas, ...)))

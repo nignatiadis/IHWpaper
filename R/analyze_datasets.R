@@ -12,17 +12,24 @@
 #' @importFrom BiocGenerics counts
 #' @importFrom DESeq2 DESeqDataSet DESeq DESeqDataSetFromMatrix results
 #' @import genefilter
+#' @importFrom utils data
 #' @export
 analyze_dataset <- function(dataset=c("pasilla","airway","bottomly","pasilla"), res= TRUE) {
 
     if (dataset=="airway") {
-      requireNamespace("airway", quietly = TRUE)
+      airway <- NULL
+      if (!requireNamespace("airway", quietly = TRUE)){
+        stop("airway data package required.")
+      }
       data("airway", package="airway")
       dds <- DESeqDataSet(se = airway, design = ~ cell + dex)
       dds <- DESeq(dds)
 
     } else if (dataset == "pasilla") {
-      requireNamespace("pasilla", quietly=TRUE)
+      pasillaGenes <- NULL
+  if (!requireNamespace("pasilla", quietly = TRUE)){
+        stop("pasilla data package required.")
+      }
       data("pasillaGenes", package="pasilla")
       countData <- counts(pasillaGenes)
       colData <- pData(pasillaGenes)[,c("condition","type")]
@@ -33,6 +40,7 @@ analyze_dataset <- function(dataset=c("pasilla","airway","bottomly","pasilla"), 
                               levels=c("untreated","treated"))
       dds <- DESeq(dds)
     } else if (dataset == "bottomly") {
+      bottomly.eset <- NULL
       load(system.file("real_data_examples/raw_data", "bottomly_eset.RData", package = "IHWpaper"))
       countData <- exprs(bottomly.eset)
       colData <- pData(bottomly.eset)
@@ -40,6 +48,7 @@ analyze_dataset <- function(dataset=c("pasilla","airway","bottomly","pasilla"), 
       dds <- DESeq(dds)
 
     } else if (dataset == "hammer") {
+      hammer.eset <- NULL
       load(system.file("real_data_examples/raw_data", "hammer_eset.RData", package = "IHWpaper"))
       countData <- exprs(hammer.eset)
       colData <- pData(hammer.eset)
