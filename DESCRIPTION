@@ -42,5 +42,6 @@ Suggests: testthat,
           airway,
           pasilla,
           FDRreg,
+          locfdr,
           tidyr
 

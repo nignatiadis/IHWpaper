@@ -214,28 +214,21 @@ setMethod("rejected_hypotheses", signature("Clfdr"), rejected_hypotheses.Clfdr)
 
 # helper function for cai
 #' @importFrom fdrtool fdrtool
+#' @importFrom locfdr locfdr
 lfdr_fit <- function(unadj_p, group, lfdr_estimation="fdrtool"){
 
   pvals_list <- split(unadj_p, group)
 
   if (lfdr_estimation == "fdrtool"){
       lfdr_fun <- function(pv) fdrtool(pv, statistic="pvalue",plot=FALSE,verbose=FALSE)$lfdr
-  } else if (lfdr_estimation == "ConcaveFDR"){
-        if (!requireNamespace("ConcaveFDR", quietly=TRUE)){
-            stop("ConcaveFDR package required for this function to work.")
-        }
-        lfdr_fun <- function(pv) ConcaveFDR::ConcaveFDR(pv, statistic="pvalue",plot=FALSE,verbose=FALSE)$lfdr.log
 
   } else if (lfdr_estimation == "locfdr"){
         if (!requireNamespace("locfdr", quietly=TRUE)){
             stop("locfdr package required for this function to work.")
         }
         lfdr_fun <- function(pv) locfdr::locfdr(qnorm(pv), nulltype=0, plot=0)$fdr
-  } else if (lfdr_estimation == "mixfdr"){
-        if (!requireNamespace("mixfdr", quietly=TRUE)){
-            stop("mixfdr package required for this function to work.")
-        }
-        lfdr_fun <- function(pv) mixFdr(qnorm(pv), theonull=TRUE, plots=FALSE)$fdr
+  } else {
+    stop("This lfdr estimation method is not available.")
   }
 
   lfdr_list <- lapply(pvals_list, lfdr_fun)
