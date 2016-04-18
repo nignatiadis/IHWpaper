@@ -24,4 +24,18 @@ data.frame which summarizes results of numerical experiment
 \description{
 run_evals: Main function to benchmark FDR methods on given simulations.
 }
+\examples{
+   nreps <- 3 # monte carlo replicates
+   ms <- 5000 # number of hypothesis tests
+   eff_sizes <- c(2,3)
+   sim_funs <- lapply(eff_sizes,
+			function(x) du_ttest_sim_fun(ms,0.95,x, uninformative_filter=F))
+	  continuous_methods_list <- list(bh,
+                              	lsl_gbh,
+ 	                          	clfdr,
+                                 ddhf)
+  fdr_methods <- lapply(continuous_methods_list, continuous_wrap)
+ eval_table <- run_evals(sim_funs, fdr_methods, nreps, 0.1, BiocParallel=FALSE)
+
+}
 

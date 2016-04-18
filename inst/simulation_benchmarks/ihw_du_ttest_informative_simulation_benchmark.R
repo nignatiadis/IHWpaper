@@ -36,4 +36,4 @@ eval_table <- mutate(eval_table,
                      eff_size = sapply(strsplit(eval_table$sim_pars,"effect size:"),
                                        function(x) as.numeric(x[2])))
 
-saveRDS(eval_table, file="result_files/ihw_du_ttest_informative_simulation_benchmark.Rds")
+saveRDS(eval_table, file="result_files/ihw_du_ttest_inform_simulation_benchmark.Rds")

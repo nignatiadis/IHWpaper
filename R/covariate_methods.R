@@ -69,7 +69,7 @@ continuous_wrap <- function(mt_method, nbins=20){
 #'         Journal of the American Statistical Association (2015).
 #' @importFrom splines bs
 #' @importFrom stats model.matrix qnorm
-
+#' @importFrom utils packageVersion
 scott_fdrreg <- function(unadj_p, filterstat, alpha, df=3, lambda=0.01){
 	# no automated way to choose function space over which we optimize
 	# so we just use bs(df=3) as done in their analysis
