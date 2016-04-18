@@ -25,16 +25,16 @@ Imports:
     BiocGenerics,
     BiocParallel,
     dplyr,
-    gridExtra
+    gridExtra,
+    ggplot2,
+    cowplot
 VignetteBuilder: knitr
 biocViews:
     ReproducibleResearch, MultipleComparison
 RoxygenNote: 5.0.1
 Suggests: testthat,
-          cowplot,
           RColorBrewer,
           wesanderson,
-          ggplot2,
           scales,
           BiocStyle,
           knitr,
