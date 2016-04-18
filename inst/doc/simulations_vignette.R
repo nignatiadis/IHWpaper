@@ -92,11 +92,11 @@ panel_ab
 
 ## ------------------------------------------------------------------------
 effsize_grb_file <- system.file("simulation_benchmarks/result_files",
-                        "ihw_du_ttest_informative_simulation_benchmark_grb.Rds", package = "IHWpaper")
+                        "ihw_du_ttest_inform_simulation_benchmark_grb.Rds", package = "IHWpaper")
 effsize_e3_file <- system.file("simulation_benchmarks/result_files",
-                        "ihw_du_ttest_informative_simulation_benchmark_E3.Rds", package = "IHWpaper")
+                        "ihw_du_ttest_inform_simulation_benchmark_E3.Rds", package = "IHWpaper")
 effsize_file <- system.file("simulation_benchmarks/result_files",
-                         "ihw_du_ttest_informative_simulation_benchmark.Rds", package = "IHWpaper")
+                         "ihw_du_ttest_inform_simulation_benchmark.Rds", package = "IHWpaper")
 effsize_df <- rbind(readRDS(effsize_grb_file),
                     readRDS(effsize_file),
                     readRDS(effsize_e3_file)) %>%

@@ -19,6 +19,13 @@ label, colour, last_vals (i.e. place label with colour at y-coordinate last_vals
 \value{
 Another ggplot2 object
 
+     This replaces the default legend of a ggplot2 object. In particular,
+   given a ggplot2 object ,it removes the existing legend and then places
+   new labels based on the annotation data frame `last_vals` (see parameter description)
+   at a given x-coordinate of the original plot.
+
+   This function can be attributed to and is described in more detail in 
+   the following blog post:
    http://www.r-bloggers.com/coloring-and-drawing-outside-the-lines-in-ggplot/
 }
 \description{

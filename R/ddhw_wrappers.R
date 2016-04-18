@@ -10,6 +10,18 @@
 #'      obj <- ihw_5fold(sim_df$pvalue, sim_df$filterstat, .1)
 #'      sum(rejected_hypotheses(obj))
 #'
+#' @details
+#'     These are closures, which apply IHW with custom
+#'   prespecified parameters. These correspond to interesting
+#'   settings, for which it is convenient to be able to immediately
+#'   call the corresponding functions, rather than having to specify
+#'   parameters each time. Thus they make it easier to benchmark.
+#'   All of these wrappers are defined in 2 lines of code, 
+#'   so the settings pertaining
+#'   to each one can be inspected by typing the functions name into the
+#'   console.
+#'
+#'
 #' @import IHW
 #' @export
 #' @describeIn ihw_naive IHW naive

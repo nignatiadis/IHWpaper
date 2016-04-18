@@ -24,6 +24,25 @@ data.frame which summarizes results of numerical experiment
 \description{
 run_evals: Main function to benchmark FDR methods on given simulations.
 }
+\details{
+This is the main workhorse function which runs all simulation benchmarks for IHWpaper.
+   It receives input as described above, and the output is a data.frame with the
+   following columns:
+   \itemize{
+		\item{fdr_method: }{Multiple testing method which was used}
+         \item{fdr_pars: }{Custom parameters of the multiple testing method}
+         \item{alpha: }{Nominal significance level at which the benchmark was run}
+         \item{FDR: }{False Discovery Rate of benchmarked method on simulated dataset}
+         \item{power: }{Power of benchmarked method on simulated dataset}
+         \item{rj_ratio: }{Average rejections divided by total number of hypotheses}
+		\item{FPR: }{False positive rate of benchmarked method on simulated dataset}
+         \item{FWER: }{Familywise Error Rate of benchmarked method on simulated dataset}
+         \item{nsuccessful: }{Number of successful evaluations of the method}
+         \item{sim_method: }{Simulation scenario under which benchmark was run}
+         \item{m: }{Total number of hypotheses}
+         \item{sim_pars: }{Custom parameters of the simulation scenario}
+   }
+}
 \examples{
    nreps <- 3 # monte carlo replicates
    ms <- 5000 # number of hypothesis tests
@@ -31,9 +50,9 @@ run_evals: Main function to benchmark FDR methods on given simulations.
    sim_funs <- lapply(eff_sizes,
 			function(x) du_ttest_sim_fun(ms,0.95,x, uninformative_filter=FALSE))
 	  continuous_methods_list <- list(bh,
-                              	lsl_gbh,
- 	                          	clfdr,
-                                 ddhf)
+                              	  lsl_gbh,
+ 	                          	  clfdr,
+                                   ddhf)
   fdr_methods <- lapply(continuous_methods_list, continuous_wrap)
  eval_table <- run_evals(sim_funs, fdr_methods, nreps, 0.1, BiocParallel=FALSE)
 

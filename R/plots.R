@@ -8,7 +8,14 @@
 #'
 #' @return Another ggplot2 object
 #'
-#  @details As described in the following blog post:
+#  @details
+#'      This replaces the default legend of a ggplot2 object. In particular,
+#'    given a ggplot2 object ,it removes the existing legend and then places
+#'    new labels based on the annotation data frame `last_vals` (see parameter description)
+#'    at a given x-coordinate of the original plot.
+#'
+#'    This function can be attributed to and is described in more detail in 
+#'    the following blog post:
 #'    http://www.r-bloggers.com/coloring-and-drawing-outside-the-lines-in-ggplot/
 #'
 #' @examples

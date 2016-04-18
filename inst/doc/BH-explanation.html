@@ -10,7 +10,7 @@
 
 <meta name="author" content="Nikos Ignatiadis" />
 
-<meta name="date" content="2016-04-18" />
+<meta name="date" content="2016-04-19" />
 
 <title>BH explanation / visualization</title>
 
@@ -51,7 +51,7 @@ document.addEventListener("DOMContentLoaded", function() {
 <div id="header">
 <h1 class="title">BH explanation / visualization</h1>
 <h4 class="author"><em>Nikos Ignatiadis</em></h4>
-<h4 class="date"><em>18 April 2016</em></h4>
+<h4 class="date"><em>19 April 2016</em></h4>
 </div>
 <h4 class="package">Package version: <span style="font-weight: normal">IHWpaper 0.99.2</span></h4>
 
@@ -64,12 +64,32 @@ document.addEventListener("DOMContentLoaded", function() {
 </div>
 
 <p>Below we just generate the necessary plot to explain how BH works.</p>
-<pre class="r"><code>library(&quot;ggplot2&quot;)
-library(&quot;dplyr&quot;)
-library(&quot;wesanderson&quot;)
+<pre class="r"><code>library(&quot;ggplot2&quot;)</code></pre>
+<pre><code>## Stackoverflow is a great place to get help:
+## http://stackoverflow.com/tags/ggplot2.</code></pre>
+<pre><code>## 
+## Attaching package: 'ggplot2'</code></pre>
+<pre><code>## The following object is masked from 'package:IHW':
+## 
+##     alpha</code></pre>
+<pre class="r"><code>library(&quot;dplyr&quot;)</code></pre>
+<pre><code>## 
+## Attaching package: 'dplyr'</code></pre>
+<pre><code>## The following objects are masked from 'package:stats':
+## 
+##     filter, lag</code></pre>
+<pre><code>## The following objects are masked from 'package:base':
+## 
+##     intersect, setdiff, setequal, union</code></pre>
+<pre class="r"><code>library(&quot;wesanderson&quot;)
 library(&quot;grid&quot;)
-library(&quot;gridExtra&quot;)
-library(&quot;IHW&quot;)</code></pre>
+library(&quot;gridExtra&quot;)</code></pre>
+<pre><code>## 
+## Attaching package: 'gridExtra'</code></pre>
+<pre><code>## The following object is masked from 'package:dplyr':
+## 
+##     combine</code></pre>
+<pre class="r"><code>library(&quot;IHW&quot;)</code></pre>
 <div id="b.sc.-thesis-plot-low-pi_0" class="section level1">
 <h1><span class="header-section-number">1</span> B.Sc. thesis plot (low <span class="math">\(\pi_0\)</span>)</h1>
 <p>Plot as in B.Sc. thesis with very low <span class="math">\(\pi_0\)</span>. (Using this so it can be clearly demonstrated that the BH threshold is an intermediate threshold between the Bonferroni threshold and the uncorrected one, also such <span class="math">\(\pi_0\)</span> allows to show all p-values in the second plot and still observe the interesting behaviour.)</p>
