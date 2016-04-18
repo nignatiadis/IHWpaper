@@ -40,13 +40,15 @@ last_vals_a <- group_by(panel_a_df, fdr_method) %>% summarize(last_vals = max(FD
                     colour = colors[anticonservative_idx])
 
 panel_a <- ggplot(panel_a_df, aes(x=alpha, y=FDR, col=fdr_method)) +
-                         geom_line() +
+                         geom_line(size=1.2) +
                          geom_abline(linetype="dashed") + 
                          xlab(expression(bold(paste("Nominal ",alpha)))) + 
                          scale_x_continuous(limits= c(0.01,0.1), breaks=seq(0.01,0.09,length=5)) +
                          ylim(0,0.9) +
                          theme(plot.margin = unit(c(3, 7.5, .2, .2), "lines"))+
-                         scale_color_manual(values=colors[anticonservative_idx])
+                         scale_color_manual(values=colors[anticonservative_idx])+
+                         theme(axis.title = element_text(face="bold") )
+
 
 panel_a <- pretty_legend(panel_a, last_vals_a, 0.102)
 panel_a
@@ -62,10 +64,12 @@ last_vals_b <- group_by(panel_b_df, fdr_method) %>% summarize(last_vals = max(FD
 
 panel_b <- ggplot(panel_b_df, aes(x=alpha, y=FDR, col=fdr_method)) +
                          geom_abline(linetype="dashed") + 
-                         geom_line() +
+                         geom_line(size=1.2) +
                          xlab(expression(bold(paste("Nominal ",alpha)))) + 
                          theme(plot.margin = unit(c(3, 7.5, .2, .2), "lines"))+
-                         scale_color_manual(values=colors[conservative_idx])
+                         scale_color_manual(values=colors[conservative_idx])+
+                         theme(axis.title = element_text(face="bold") )
+
 
 panel_b <- pretty_legend(panel_b, last_vals_b, 0.102 )
 panel_b
@@ -111,10 +115,12 @@ last_vals_c <- group_by(panel_c_df, fdr_method) %>% summarize(last_vals =  FDR[w
 
 panel_c <- ggplot(panel_c_df, aes(x=eff_size, y=FDR, col=fdr_method)) +
                          geom_hline(yintercept=0.1, linetype="dashed") + 
-                         geom_line() +
+                         geom_line(size=1.2) +
                          xlab("Effect size") + 
                          theme(plot.margin = unit(c(3, 7.5, .2, .2), "lines"))+
-                         scale_color_manual(values=colors[conservative_idx])
+                         scale_color_manual(values=colors[conservative_idx])+
+                         theme(axis.title = element_text(face="bold") )
+
 
 panel_c <- pretty_legend(panel_c, last_vals_c, 2.52 )
 panel_c
@@ -129,11 +135,12 @@ last_vals_d <- group_by(panel_d_df, fdr_method) %>% summarize(last_vals = power[
 
 
 panel_d <- ggplot(panel_c_df, aes(x=eff_size, y=power, col=fdr_method)) +
-                         geom_line() +
+                         geom_line(size=1.2) +
                          xlab("Effect size") + 
                          ylab("Power")+
                          theme(plot.margin = unit(c(3, 7.5, .2, .2), "lines"))+
-                         scale_color_manual(values=colors[conservative_idx])
+                         scale_color_manual(values=colors[conservative_idx])+
+                         theme(axis.title = element_text(face="bold") )
 
 panel_d <- pretty_legend(panel_d, last_vals_d, 2.52 )
 panel_d
@@ -181,10 +188,12 @@ last_vals_e <- group_by(panel_e_df, fdr_method) %>% summarize(last_vals = FDR[wh
 
 panel_e <- ggplot(panel_e_df, aes(x=xi_max, y=FDR, col=fdr_method)) +
                          geom_hline(yintercept=0.1, linetype="dashed") + 
-                         geom_line() +
+                         geom_line(size=1.2) +
                          xlab(expression(bold(xi[max])))+
                          theme(plot.margin = unit(c(3, 7.5, .2, .2), "lines"))+
-                         scale_color_manual(values=colors[conservative_idx])
+                         scale_color_manual(values=colors[conservative_idx])+
+                         theme(axis.title = element_text(face="bold") )
+
 
 panel_e <- pretty_legend(panel_e, last_vals_e, 6.02 )
 panel_e
@@ -198,11 +207,13 @@ last_vals_f <- group_by(panel_f_df, fdr_method) %>% summarize(last_vals = normal
                       colour = colors[conservative_idx])
 
 panel_f <- ggplot(panel_f_df, aes(x=xi_max, y=normalized, col=fdr_method)) +
-                         geom_line() +
+                         geom_line(size=1.2) +
                          ylab(expression(bold(log[2](Power/Power[BH]))))+
                          xlab(expression(bold(xi[max])))+
                          theme(plot.margin = unit(c(3, 7.5, .2, .2), "lines"))+
-                         scale_color_manual(values=colors[conservative_idx])
+                         scale_color_manual(values=colors[conservative_idx])+
+                         theme(axis.title = element_text(face="bold") )
+
 
 panel_f <- pretty_legend(panel_f, last_vals_f, 6.02 )
 panel_f
@@ -228,6 +239,25 @@ main_sim_fig
 ## ----eval=FALSE----------------------------------------------------------
 #  ggsave(plot=main_sim_fig, file="main_simulations.pdf", width=12, height=16)
 
+## ---- fig.width=12, fig.height=16----------------------------------------
+main_sim_fig <- plot_grid(panel_a,panel_b,
+                          panel_c,panel_d,
+                          panel_e, panel_f,
+                          nrow=3,
+                          labels= c("a)", "b)", "c)",
+                              "d)","e)","f)"))
+
+main_sim_fig
+
+## ----eval=FALSE----------------------------------------------------------
+#  ggsave(plot=main_sim_fig, file="main_simulations.pdf", width=12, height=16)
+
+## ------------------------------------------------------------------------
+# Supplementary Effect Size Simulation
+
+## Supplementary panel a)
+
+
 ## ------------------------------------------------------------------------
 sup_panel_a_df <- filter(effsize_df, fdr_method %in% anticonservative_methods)
 
@@ -239,10 +269,12 @@ sup_last_vals_a <- group_by(sup_panel_a_df, fdr_method) %>%
 
 sup_panel_a <- ggplot(sup_panel_a_df, aes(x=eff_size, y=FDR, col=fdr_method)) +
                          geom_hline(yintercept=0.1, linetype="dashed") + 
-                         geom_line() +
+                         geom_line(size=1.2) +
                          xlab("Effect size") + 
                          theme(plot.margin = unit(c(3, 7.5, .2, .2), "lines"))+
-                         scale_color_manual(values=colors[anticonservative_idx])
+                         scale_color_manual(values=colors[anticonservative_idx])+
+                         theme(axis.title = element_text(face="bold") )
+
 
 sup_panel_a <- pretty_legend(sup_panel_a, sup_last_vals_a, 2.52 )
 sup_panel_a
@@ -258,11 +290,13 @@ sup_last_vals_b <- group_by(sup_panel_b_df, fdr_method) %>%
 
 
 sup_panel_b <- ggplot(sup_panel_b_df, aes(x=eff_size, y=power, col=fdr_method)) +
-                         geom_line() +
+                         geom_line(size=1.2) +
                          xlab("Effect size") + 
                          ylab("Power")+
                          theme(plot.margin = unit(c(3, 7.5, .2, .2), "lines"))+
-                         scale_color_manual(values=colors[anticonservative_idx])
+                         scale_color_manual(values=colors[anticonservative_idx])+
+                         theme(axis.title = element_text(face="bold") )
+
 
 sup_panel_b <- pretty_legend(sup_panel_b, sup_last_vals_b, 2.52 )
 sup_panel_b
@@ -290,11 +324,13 @@ sup_last_vals_c <- group_by(sup_panel_c_df, fdr_method) %>%
 
 sup_panel_c <- ggplot(sup_panel_c_df, aes(x=xi_max, y=FDR, col=fdr_method)) +
                          geom_hline(yintercept=0.1, linetype="dashed") + 
-                         geom_line() +
+                         geom_line(size=1.2) +
                          xlim(3,6)+
                          xlab(expression(bold(xi[max])))+
                          theme(plot.margin = unit(c(3, 7.5, .2, .2), "lines"))+
-                         scale_color_manual(values=colors[anticonservative_idx])
+                         scale_color_manual(values=colors[anticonservative_idx])+
+                         theme(axis.title = element_text(face="bold") )
+
 
 sup_panel_c <- pretty_legend(sup_panel_c, sup_last_vals_c, 6.02 )
 sup_panel_c
@@ -309,13 +345,15 @@ sup_last_vals_d <- group_by(sup_panel_d_df, fdr_method) %>%
                       colour = colors[anticonservative_idx])
 
 sup_panel_d <- ggplot(sup_panel_d_df, aes(x=xi_max, y=normalized, col=fdr_method)) +
-                         geom_line() +
+                         geom_line(size=1.2) +
                          ylab(expression(bold(log[2](Power/Power[BH]))))+
                          xlab(expression(bold(xi[max])))+
                          xlim(3,6)+
                          ylim(-0.1,+0.3)+
                          theme(plot.margin = unit(c(3, 7.5, .2, .2), "lines"))+
-                         scale_color_manual(values=colors[anticonservative_idx])
+                         scale_color_manual(values=colors[anticonservative_idx])+
+                         theme(axis.title = element_text(face="bold") )
+
 
 sup_panel_d <- pretty_legend(sup_panel_d, sup_last_vals_d, 6.02 )
 sup_panel_d
@@ -337,6 +375,17 @@ sup_panel_cd
 ## ----fig.width=12, fig.height=12-----------------------------------------
 sup_sim_fig <- plot_grid(sup_panel_ab,sup_panel_cd, nrow=2)
 sup_sim_fig
+
+## ----eval=FALSE----------------------------------------------------------
+#  cowplot::ggsave(plot=sup_sim_fig, file="suppl_simulations.pdf", width=12, height=12)
+
+## ----fig.width=12, fig.height=12-----------------------------------------
+sup_sim_fig <- plot_grid(sup_panel_a,sup_panel_b,
+                          sup_panel_c,sup_panel_d,
+                          nrow=2,
+                          labels= c("a)", "b)", "c)",
+                              "d)"))
+  sup_sim_fig
 
 ## ----eval=FALSE----------------------------------------------------------
 #  cowplot::ggsave(plot=sup_sim_fig, file="suppl_simulations.pdf", width=12, height=12)

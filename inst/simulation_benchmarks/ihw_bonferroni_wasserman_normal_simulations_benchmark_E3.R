@@ -36,6 +36,6 @@ eval_table <- run_evals(sim_funs, fdr_methods, nreps, alphas, BiocParallel=T)
 eval_table$xi_max = sapply(strsplit(eval_table$sim_pars,"xi_max:"),
                 function(x) as.numeric(x[2]))
 
-file_name <- file.path("result_files","ihw_bonferroni_wasserman_normal",
+file_name <- file.path("result_files","ihw_bonf_wasserman_normal",
                         paste0("par_setting_",idx,".Rds"))
 saveRDS(eval_table, file=file_name)

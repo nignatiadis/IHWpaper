@@ -40,6 +40,6 @@ eval_table <- mutate(eval_table,
                 function(x) as.numeric(x[2])))
 eval_table <- mutate(eval_table, idx=idx)
 
-file_name <- file.path("result_files","ihw_bonferroni_du_ttest_informative",
+file_name <- file.path("result_files","ihw_bonf_du_ttest_informative",
                         paste0("par_setting_",idx,".Rds"))
 saveRDS(eval_table, file=file_name)

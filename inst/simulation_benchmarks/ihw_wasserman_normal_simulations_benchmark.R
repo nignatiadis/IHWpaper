@@ -24,7 +24,7 @@ continuous_methods_list <- list(bh,
                                 tst_gbh,
                                 stratified_bh,
                                 clfdr,
-                                scott_fdrreg,
+                                IHWpaper:::scott_fdrreg,
                                 ddhf,
                                 ihw_5fold)
 

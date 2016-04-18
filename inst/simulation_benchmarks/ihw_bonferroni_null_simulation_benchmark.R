@@ -35,7 +35,7 @@ fdr_methods <- lapply(continuous_methods_list, continuous_wrap)
 #-----------------------------------------------------------------------------
 eval_table <- run_evals(sim_funs, fdr_methods, nreps, alphas, BiocParallel=TRUE)
 
-file_name <- file.path("result_files","ihw_bonferroni_null",
+file_name <- file.path("result_files","ihw_bonf_null",
                         paste0("par_setting_",idx,".Rds"))
 
 saveRDS(eval_table, file=file_name)

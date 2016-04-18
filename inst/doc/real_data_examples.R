@@ -6,6 +6,7 @@ library("grid")
 library("tidyr")
 library("cowplot")
 library("RColorBrewer")
+library("scales")
 library("IHWpaper")
 
 ## ------------------------------------------------------------------------
@@ -30,10 +31,12 @@ last_vals_a <- group_by(panel_a_data, method) %>%
 panel_a <- ggplot(panel_a_data, aes(x=alpha,y=rejections,col=method)) +  
                 geom_line(size=1.2) +
                 xlab(expression(bold(paste("Nominal ",alpha)))) +
-                ylab("Rejections") +
+                ylab("Discoveries") +
                 scale_color_manual(values=pretty_colors)+
                 scale_x_continuous(expand=c(0,0)) +
-                theme(plot.margin = unit(c(1, 7.5, 2, 1), "lines"))
+                theme(plot.margin = unit(c(1, 7.5, 2, 1), "lines"))+
+                theme(axis.title = element_text(face="bold" ))
+
 
 panel_a <- pretty_legend(panel_a, last_vals_a, 0.102)
 panel_a
@@ -80,9 +83,12 @@ panel_b <- ggplot(filter(step_df, alpha==0.1),
                              size=0.8)+
                 scale_x_log10(breaks=c(1,10,100,1000,10000))+
                 xlab("Mean of normalized counts")+
+                ylab("Weight")+
                 theme(legend.position=c(0.8,0.4)) +
                 theme(plot.margin = unit(c(1, 1, 2, 1), "lines")) +
-                guides(linetype=FALSE)
+                guides(linetype=FALSE)+
+                theme(axis.title = element_text(face="bold" ))
+
 
 panel_b
 
@@ -103,10 +109,12 @@ last_vals_c <- group_by(panel_c_data, method) %>%
 panel_c <- ggplot(panel_c_data, aes(x=alpha,y=rejections,col=method)) +  
                 geom_line(size=1.2) +
                 xlab(expression(bold(paste("Nominal ",alpha)))) +
-                ylab("Rejections") +
+                ylab("Discoveries") +
                 scale_color_manual(values=pretty_colors)+
                 scale_x_continuous(expand=c(0,0))+
-                theme(plot.margin = unit(c(1, 7.5, 2, 1), "lines"))
+                theme(plot.margin = unit(c(1, 7.5, 2, 1), "lines"))+
+                theme(axis.title = element_text(face="bold" ))
+
 
 panel_c <- pretty_legend(panel_c, last_vals_c, 0.102)
 panel_c
@@ -150,9 +158,12 @@ panel_d <- ggplot(step_df, aes(x=break_left, xend=break_right,y=weight, yend=wei
                              size=0.8)+
                 scale_x_log10(breaks=c(1, 10,100,400)) +
                 xlab("Number of peptides quantified")+
+                ylab("Weight")+
                 theme(legend.position=c(0.8,0.4)) +
                 theme(plot.margin = unit(c(1, 1, 2, 1), "lines"))+
-                guides(linetype=FALSE)
+                guides(linetype=FALSE)+
+                theme(axis.title = element_text(face="bold" ))
+
 
 panel_d
 
@@ -168,9 +179,12 @@ map <- setNames(pretty_names,
                c("rejections","bh_rejections","threshold:10000","threshold:2e+05", "threshold:1e+06"))
 
 ## ------------------------------------------------------------------------
+
+hqtl_summary <- mutate(hqtl_summary, method = map[method], 
+                       method= factor(method, levels = pretty_names))
+
 last_vals_e <- group_by(hqtl_summary, method) %>% 
                summarize(last_vals = max(rejections))  %>%
-               mutate(method = map[method]) %>%
                mutate(last_vals = last_vals + c(0,0, 250, 0, -350), # offset to make it look nice
                       label = method,
                       colour = pretty_colors[match(label, pretty_names)])
@@ -179,9 +193,12 @@ last_vals_e <- group_by(hqtl_summary, method) %>%
 panel_e <- ggplot(hqtl_summary, aes(x=alpha,y=rejections,col=method)) +  
                 geom_line(size=1.2) +
                 xlab(expression(bold(paste("Nominal ",alpha)))) +
-                ylab("Rejections") +
+                ylab("Discoveries") +
                 scale_x_continuous(expand=c(0,0))+
-                theme(plot.margin = unit(c(1, 7.5, 2, 1), "lines"))
+                scale_color_manual(values=pretty_colors)+
+                theme(plot.margin = unit(c(1, 7.5, 2, 1), "lines"))+
+                theme(axis.title = element_text(face="bold" ))
+
 
 
 panel_e <- pretty_legend(panel_e, last_vals_e, 0.102)
@@ -223,24 +240,37 @@ panel_f <- ggplot(step_df, aes(x=break_left, xend=break_right,y=weight, yend=wei
                                                 y=weight_left, yend=weight_right, 
                                                 linetype=dashed),
                              size=0.8)+
-                scale_x_log10(breaks=c(10^4, 10^5,10^6,10^7)) +
+                scale_x_log10(breaks=c(10^4, 10^5,10^6,10^7), 
+                              labels = trans_format("log10", math_format(10^.x))) +
                 xlab("Genomic distance (bp)")+
+                ylab("Weight")+
                 theme(legend.position=c(0.8,0.4)) +
                 theme(plot.margin = unit(c(1, 1, 2, 1), "lines"))+
+                theme(axis.title = element_text(face="bold" ))+
                 guides(linetype=FALSE)
 
 panel_f
 
 
-## ----fig.width=12, fig.height=14-----------------------------------------
-full_fig <- plot_grid(panel_a, panel_b,
-                      panel_c, panel_d,
+## ----fig.width=12, fig.height=10-----------------------------------------
+full_fig <- plot_grid(panel_a, 
+                      panel_c, 
                       panel_e, panel_f,
                       labels= c("a)", "b)", "c)",
-                              "d)", "e)", "f)"),
-                      nrow=3)
+                              "d)"),
+                      nrow=2)
 full_fig
 
 ## ----eval=FALSE----------------------------------------------------------
-#  ggsave(plot=full_fig, file="data_examples.pdf", width=12, height=14)
+#  ggsave(plot=full_fig, file="data_examples.pdf", width=12, height=10)
+
+## ----fig.width=12, fig.height=5------------------------------------------
+suppl_fig <- plot_grid(panel_b,
+                       panel_d,
+                       labels= c("a)", "b)"),
+                       nrow=1)
+suppl_fig
+
+## ----eval=FALSE----------------------------------------------------------
+#  ggsave(plot=suppl_fig, file="data_examples_suppl.pdf", width=12, height=5)
 

@@ -11,7 +11,7 @@ colors <- wes_palette("Cavalcanti")[c(3,5)]
 
 ## ------------------------------------------------------------------------
 
-null_folder <- system.file("simulation_benchmarks/result_files/ihw_bonferroni_null",
+null_folder <- system.file("simulation_benchmarks/result_files/ihw_bonf_null",
                         package = "IHWpaper")
 null_sim <- rbind_all(lapply(file.path(null_folder,list.files(null_folder)), function(x) readRDS(x))) %>%
             mutate(fdr_method = ifelse(fdr_method == "IHW-Bonferroni E3", "IHW-Bonferroni", fdr_method))
@@ -35,7 +35,7 @@ panel_a <- pretty_legend(panel_a, last_vals_a, 0.102)
 panel_a
 
 ## ------------------------------------------------------------------------
-ttest_folder <- system.file("simulation_benchmarks/result_files/ihw_bonferroni_du_ttest_informative",
+ttest_folder <- system.file("simulation_benchmarks/result_files/ihw_bonf_du_ttest_informative",
                      package = "IHWpaper")
 ttest_sim <- rbind_all(lapply(file.path(ttest_folder,list.files(ttest_folder)), function(x) readRDS(x))) %>%
             mutate(fdr_method = ifelse(fdr_method == "IHW-Bonferroni E3", "IHW-Bonferroni", fdr_method))
@@ -74,7 +74,7 @@ panel_c <- pretty_legend(panel_c, last_vals_c, 2.52 )
 panel_c
 
 ## ------------------------------------------------------------------------
-size_investing_folder <- system.file("simulation_benchmarks/result_files/ihw_bonferroni_wasserman_normal",
+size_investing_folder <- system.file("simulation_benchmarks/result_files/ihw_bonf_wasserman_normal",
                               package = "IHWpaper")
 size_investing_sim <- rbind_all(lapply(file.path(size_investing_folder,
                                              list.files(size_investing_folder)), function(x) readRDS(x))) %>%

@@ -67,15 +67,25 @@ continuous_wrap <- function(mt_method, nbins=20){
 #' @references  James G. Scott, Ryan C. Kelly, Matthew A. Smith, Pengcheng Zhou, and Robert E. Kass. 
 #'         "False discovery rate regression: application to neural synchrony detection in primary visual cortex." 
 #'         Journal of the American Statistical Association (2015).
-#' @import FDRreg
-#' @export
+
 scott_fdrreg <- function(unadj_p, filterstat, alpha, df=3, lambda=0.01){
 	# no automated way to choose function space over which we optimize
 	# so we just use bs(df=3) as done in their analysis
 	# also no automated way of choosing ridge regularization parameter
 
+  if (!requireNamespace("FDRreg", quietly=TRUE)){
+     stop("FDRreg package required for this function to work.")
+  }
+
+  if (! packageVersion("FDRreg") %in% c("0.2.1","0.2")){
+     stop(paste("Benchmarks were run against version 0.2 of FDRreg",
+                "available on github via:",
+                "devtools::install_github(repo= 'jgscott/FDRreg', subdir='R_pkg/', ref = 'a63cebae6faecb1fb0ebee634195296f39faa11b')"
+                ))
+  }
 	b <- bs(filterstat, df=df)
 	Xs <- model.matrix( ~  b - 1)
+
 
 	fdrreg_res <- FDRreg(qnorm(unadj_p), Xs, control=list(lambda = 0.01))
 

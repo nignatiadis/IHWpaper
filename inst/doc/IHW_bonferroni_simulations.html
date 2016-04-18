@@ -10,7 +10,7 @@
 
 <meta name="author" content="Nikos Ignatiadis" />
 
-<meta name="date" content="2016-04-14" />
+<meta name="date" content="2016-04-18" />
 
 <title>IHW-Bonferroni simulations</title>
 
@@ -51,9 +51,9 @@ document.addEventListener("DOMContentLoaded", function() {
 <div id="header">
 <h1 class="title">IHW-Bonferroni simulations</h1>
 <h4 class="author"><em>Nikos Ignatiadis</em></h4>
-<h4 class="date"><em>14 April 2016</em></h4>
+<h4 class="date"><em>18 April 2016</em></h4>
 </div>
-<h4 class="package">Package version: <span style="font-weight: normal">IHWpaper 0.99.1</span></h4>
+<h4 class="package">Package version: <span style="font-weight: normal">IHWpaper 0.99.2</span></h4>
 
 <h1>Contents</h1>
 <div id="TOC">
@@ -84,7 +84,7 @@ library(&quot;wesanderson&quot;)</code></pre>
 <h1><span class="header-section-number">1</span> Null simulation</h1>
 <div id="fwer-control" class="section level2">
 <h2><span class="header-section-number">1.1</span> FWER control</h2>
-<pre class="r"><code>null_folder &lt;- system.file(&quot;simulation_benchmarks/result_files/ihw_bonferroni_null&quot;,
+<pre class="r"><code>null_folder &lt;- system.file(&quot;simulation_benchmarks/result_files/ihw_bonf_null&quot;,
                         package = &quot;IHWpaper&quot;)
 null_sim &lt;- rbind_all(lapply(file.path(null_folder,list.files(null_folder)), function(x) readRDS(x))) %&gt;%
             mutate(fdr_method = ifelse(fdr_method == &quot;IHW-Bonferroni E3&quot;, &quot;IHW-Bonferroni&quot;, fdr_method))
@@ -113,7 +113,7 @@ panel_a</code></pre>
 <h1><span class="header-section-number">2</span> Effect size simulation (t-test)</h1>
 <div id="fwer-control-1" class="section level2">
 <h2><span class="header-section-number">2.1</span> FWER control</h2>
-<pre class="r"><code>ttest_folder &lt;- system.file(&quot;simulation_benchmarks/result_files/ihw_bonferroni_du_ttest_informative&quot;,
+<pre class="r"><code>ttest_folder &lt;- system.file(&quot;simulation_benchmarks/result_files/ihw_bonf_du_ttest_informative&quot;,
                      package = &quot;IHWpaper&quot;)
 ttest_sim &lt;- rbind_all(lapply(file.path(ttest_folder,list.files(ttest_folder)), function(x) readRDS(x))) %&gt;%
             mutate(fdr_method = ifelse(fdr_method == &quot;IHW-Bonferroni E3&quot;, &quot;IHW-Bonferroni&quot;, fdr_method))
@@ -160,7 +160,7 @@ panel_c</code></pre>
 </div>
 <div id="fwer-control-2" class="section level1">
 <h1><span class="header-section-number">5</span> FWER control</h1>
-<pre class="r"><code>size_investing_folder &lt;- system.file(&quot;simulation_benchmarks/result_files/ihw_bonferroni_wasserman_normal&quot;,
+<pre class="r"><code>size_investing_folder &lt;- system.file(&quot;simulation_benchmarks/result_files/ihw_bonf_wasserman_normal&quot;,
                               package = &quot;IHWpaper&quot;)
 size_investing_sim &lt;- rbind_all(lapply(file.path(size_investing_folder,
                                              list.files(size_investing_folder)), function(x) readRDS(x))) %&gt;%
