@@ -40,6 +40,9 @@ analyze_dataset <- function(dataset=c("pasilla","airway","bottomly","pasilla"), 
                               levels=c("untreated","treated"))
       dds <- DESeq(dds)
     } else if (dataset == "bottomly") {
+      if (!requireNamespace("DESeq", quietly = TRUE)){
+        stop("DESeq data package required.")
+      }
       bottomly.eset <- NULL
       load(system.file("real_data_examples/raw_data", "bottomly_eset.RData", package = "IHWpaper"),
         envir= environment())
@@ -49,6 +52,9 @@ analyze_dataset <- function(dataset=c("pasilla","airway","bottomly","pasilla"), 
       dds <- DESeq(dds)
 
     } else if (dataset == "hammer") {
+      if (!requireNamespace("DESeq", quietly = TRUE)){
+        stop("DESeq data package required.")
+      }
       hammer.eset <- NULL
       load(system.file("real_data_examples/raw_data", "hammer_eset.RData", package = "IHWpaper"),
                         envir=environment())

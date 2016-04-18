@@ -43,6 +43,7 @@ Suggests: testthat,
           rmarkdown,
           airway,
           pasilla,
+          DESeq,
           FDRreg,
           locfdr,
           tidyr
