@@ -29,7 +29,7 @@ run_evals: Main function to benchmark FDR methods on given simulations.
    ms <- 5000 # number of hypothesis tests
    eff_sizes <- c(2,3)
    sim_funs <- lapply(eff_sizes,
-			function(x) du_ttest_sim_fun(ms,0.95,x, uninformative_filter=F))
+			function(x) du_ttest_sim_fun(ms,0.95,x, uninformative_filter=FALSE))
 	  continuous_methods_list <- list(bh,
                               	lsl_gbh,
  	                          	clfdr,
