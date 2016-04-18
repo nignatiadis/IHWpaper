@@ -12,11 +12,12 @@
 #'    http://www.r-bloggers.com/coloring-and-drawing-outside-the-lines-in-ggplot/
 #'
 #' @examples
+#'   library("ggplot2")
 #'   labels  <- c("A","B","C")
 #'   mypoints <- rbind(data.frame(y=1:3, x=1, label=as.factor(labels)),
 #'                      data.frame(y=2:4, x=2, label=as.factor(labels)))
 #'   mycolours <- c("#F8766D","#00BA38","#619CFF")
-#'   gg <- ggplot2::ggplot(mypoints,aes(x=x,y=y,color=label)) + 
+#'   gg <- ggplot(mypoints,aes(x=x,y=y,color=label)) + 
 #'                geom_line(size=2) + 
 #'                scale_color_manual(values=mycolours) +
 #'                xlim(c(0,2.2))
