@@ -21,16 +21,16 @@ analyze_dataset <- function(dataset=c("pasilla","airway","bottomly","pasilla"), 
       if (!requireNamespace("airway", quietly = TRUE)){
         stop("airway data package required.")
       }
-      data("airway", package="airway")
+      data("airway", package="airway",envir=environment())
       dds <- DESeqDataSet(se = airway, design = ~ cell + dex)
       dds <- DESeq(dds)
 
     } else if (dataset == "pasilla") {
       pasillaGenes <- NULL
-  if (!requireNamespace("pasilla", quietly = TRUE)){
+      if (!requireNamespace("pasilla", quietly = TRUE)){
         stop("pasilla data package required.")
       }
-      data("pasillaGenes", package="pasilla")
+      data("pasillaGenes", package="pasilla", envir=environment())
       countData <- counts(pasillaGenes)
       colData <- pData(pasillaGenes)[,c("condition","type")]
       dds <- DESeqDataSetFromMatrix(countData = countData,
@@ -41,7 +41,8 @@ analyze_dataset <- function(dataset=c("pasilla","airway","bottomly","pasilla"), 
       dds <- DESeq(dds)
     } else if (dataset == "bottomly") {
       bottomly.eset <- NULL
-      load(system.file("real_data_examples/raw_data", "bottomly_eset.RData", package = "IHWpaper"))
+      load(system.file("real_data_examples/raw_data", "bottomly_eset.RData", package = "IHWpaper"),
+        envir= environment())
       countData <- exprs(bottomly.eset)
       colData <- pData(bottomly.eset)
       dds <- DESeqDataSetFromMatrix(countData = countData, colData = colData , design = ~strain)
@@ -49,7 +50,8 @@ analyze_dataset <- function(dataset=c("pasilla","airway","bottomly","pasilla"), 
 
     } else if (dataset == "hammer") {
       hammer.eset <- NULL
-      load(system.file("real_data_examples/raw_data", "hammer_eset.RData", package = "IHWpaper"))
+      load(system.file("real_data_examples/raw_data", "hammer_eset.RData", package = "IHWpaper"),
+                        envir=environment())
       countData <- exprs(hammer.eset)
       colData <- pData(hammer.eset)
       dds <- DESeqDataSetFromMatrix(countData = countData, colData = colData , design = ~protocol)
