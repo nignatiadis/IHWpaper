@@ -16,7 +16,7 @@
 #'   mypoints <- rbind(data.frame(y=1:3, x=1, label=as.factor(labels)),
 #'                      data.frame(y=2:4, x=2, label=as.factor(labels)))
 #'   mycolours <- c("#F8766D","#00BA38","#619CFF")
-#'   gg <- ggplot(mypoints,aes(x=x,y=y,color=label)) + 
+#'   gg <- ggplot2::ggplot(mypoints,aes(x=x,y=y,color=label)) + 
 #'                geom_line(size=2) + 
 #'                scale_color_manual(values=mycolours) +
 #'                xlim(c(0,2.2))

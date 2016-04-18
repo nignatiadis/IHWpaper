@@ -214,7 +214,6 @@ setMethod("rejected_hypotheses", signature("Clfdr"), rejected_hypotheses.Clfdr)
 
 # helper function for cai
 #' @importFrom fdrtool fdrtool
-#' @importFrom locfdr locfdr
 lfdr_fit <- function(unadj_p, group, lfdr_estimation="fdrtool"){
 
   pvals_list <- split(unadj_p, group)
