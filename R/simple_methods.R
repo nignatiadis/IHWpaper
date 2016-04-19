@@ -12,6 +12,7 @@
 #'
 #' @export
 #' @importFrom stats p.adjust
+#' @import methods
 bh <- function(unadj_p, alpha){
   	adj_p <- p.adjust(unadj_p, method="BH")
   	obj <- list(adj_p = adj_p, alpha = alpha)

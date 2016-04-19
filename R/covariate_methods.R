@@ -89,7 +89,7 @@ scott_fdrreg <- function(unadj_p, filterstat, alpha, df=3, lambda=0.01){
 	Xs <- model.matrix( ~  b - 1)
 
 
-	fdrreg_res <- FDRreg::FDRreg(qnorm(unadj_p), Xs, control=list(lambda = 0.01))
+	fdrreg_res <- FDRreg:::FDRreg(qnorm(unadj_p), Xs, control=list(lambda = 0.01))
 
   # modification to make this method applicable to p-values
   # FDRreg tests in a two-sided way, this means that we might get rejections

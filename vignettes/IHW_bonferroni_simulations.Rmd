@@ -40,15 +40,17 @@ last_vals_a <- group_by(null_sim, fdr_method) %>% summarize(last_vals = max(FDR)
                     colour = colors)
 
 panel_a <- ggplot(null_sim, aes(x=alpha, y=FDR, col=fdr_method)) +
-                         geom_line() +
+                         geom_line(size=1.2) +
                          geom_abline(linetype="dashed") + 
                          xlab(expression(bold(paste("Nominal ",alpha)))) + 
                          ylab("FWER")+
                          scale_x_continuous(limits= c(0.01,0.1), breaks=seq(0.01,0.09,length=5)) +
                          #ylim(0,0.9) +
                          theme(plot.margin = unit(c(3, 7.5, .2, .2), "lines"))+
-                         scale_color_manual(values=colors)
+                         scale_color_manual(values=colors)+
+                         theme(axis.title = element_text(face="bold") )
 
+  
 panel_a <- pretty_legend(panel_a, last_vals_a, 0.102)
 panel_a
 ```
@@ -68,11 +70,12 @@ last_vals_b <- group_by(ttest_sim, fdr_method) %>% summarize(last_vals =  FDR[wh
 
 panel_b <- ggplot(ttest_sim, aes(x=eff_size, y=FDR, col=fdr_method)) +
                          geom_hline(yintercept=0.1, linetype="dashed") + 
-                         geom_line() +
+                         geom_line(size=1.2) +
                          xlab("Effect size") + 
                           ylab("FWER")+
                          theme(plot.margin = unit(c(3, 7.5, .2, .2), "lines"))+
-                         scale_color_manual(values=colors)
+                         scale_color_manual(values=colors) + 
+                         theme(axis.title = element_text(face="bold") )
 
 panel_b <- pretty_legend(panel_b, last_vals_b, 2.52 )
 panel_b
@@ -87,11 +90,12 @@ last_vals_c <- group_by(ttest_sim, fdr_method) %>% summarize(last_vals = power[w
 
 
 panel_c <- ggplot(ttest_sim, aes(x=eff_size, y=power, col=fdr_method)) +
-                         geom_line() +
+                         geom_line(size=1.2) +
                          xlab("Effect size") + 
                          ylab("Power")+
                          theme(plot.margin = unit(c(3, 7.5, .2, .2), "lines"))+
-                         scale_color_manual(values=colors)
+                         scale_color_manual(values=colors)+
+                         theme(axis.title = element_text(face="bold") )
 
 panel_c <- pretty_legend(panel_c, last_vals_c, 2.52 )
 panel_c
@@ -113,12 +117,13 @@ last_vals_d <- group_by(size_investing_sim, fdr_method) %>% summarize(last_vals 
                       colour = colors)
 
 panel_d <- ggplot(size_investing_sim, aes(x=xi_max, y=log10(FDR), col=fdr_method)) +
-                         geom_line() +
+                         geom_line(size=1.2) +
                          xlab(expression(bold(xi[max])))+
                          ylab("log10(FWER)")+
                          geom_hline(yintercept=-1, linetype="dashed") + 
                          theme(plot.margin = unit(c(3, 7.5, .2, .2), "lines"))+
-                         scale_color_manual(values=colors)
+                         scale_color_manual(values=colors) + 
+                         theme(axis.title = element_text(face="bold") )
 
 panel_d <- pretty_legend(panel_d, last_vals_d, 6.02 )
 panel_d
@@ -132,11 +137,13 @@ last_vals_e <- group_by(size_investing_sim, fdr_method) %>% summarize(last_vals 
                       colour = colors)
 
 panel_e <- ggplot(size_investing_sim, aes(x=xi_max, y=power, col=fdr_method)) +
-                         geom_line() +
+                         geom_line(size=1.2) +
                          ylab("Power") +
                          xlab(expression(bold(xi[max])))+
                          theme(plot.margin = unit(c(3, 7.5, .2, .2), "lines"))+
-                         scale_color_manual(values=colors)
+                         scale_color_manual(values=colors) +
+                         theme(axis.title = element_text(face="bold") )
+
 
 panel_e <- pretty_legend(panel_e, last_vals_e, 6.02 )
 panel_e
