@@ -20,6 +20,7 @@ Imports:
     methods,
     utils,
     DESeq2,
+    SummarizedExperiment,
     fdrtool,
     genefilter,
     qvalue,
@@ -32,7 +33,7 @@ Imports:
     cowplot
 VignetteBuilder: knitr
 biocViews:
-    ReproducibleResearch, ExperimentData
+    ReproducibleResearch, ExperimentData, RNASeqData
 RoxygenNote: 5.0.1
 Suggests: testthat,
           RColorBrewer,
@@ -45,7 +46,6 @@ Suggests: testthat,
           airway,
           pasilla,
           DESeq,
-          FDRreg,
           locfdr,
           tidyr
 

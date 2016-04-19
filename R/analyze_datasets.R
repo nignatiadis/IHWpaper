@@ -9,7 +9,8 @@
 #' @examples pasilla <- analyze_dataset("pasilla")
 #'
 #' @importFrom Biobase pData exprs rowMax rowMin
-#' @importFrom BiocGenerics counts
+#' @importFrom SummarizedExperiment assay colData
+#' @importFrom BiocGenerics counts updateObject
 #' @importFrom DESeq2 DESeqDataSet DESeq DESeqDataSetFromMatrix results
 #' @import genefilter
 #' @importFrom utils data
@@ -22,7 +23,16 @@ analyze_dataset <- function(dataset=c("pasilla","airway","bottomly","pasilla"), 
         stop("airway data package required.")
       }
       data("airway", package="airway",envir=environment())
-      dds <- DESeqDataSet(se = airway, design = ~ cell + dex)
+      dds <- DESeqDataSetFromMatrix(countData = assay(airway),
+                                    colData = colData(airway),
+                                    design = ~ cell + dex)
+      # have to use hack above, because
+      # dds <- DESeqDataSet(se = airway, design = ~ cell + dex)
+      # throws the following error for some reason:
+      # "Error in checkSlotAssignment(object, name, value) : 
+      #  assignment of an object of class “ShallowSimpleListAssays”
+      #  is not valid for slot ‘assays’ in an 
+      #  object of class “DESeqDataSet”; is(value, "Assays") is not TRUE
       dds <- DESeq(dds)
 
     } else if (dataset == "pasilla") {
@@ -73,7 +83,7 @@ analyze_dataset <- function(dataset=c("pasilla","airway","bottomly","pasilla"), 
     resDf$var <- vars
     resDf$max <- rowMax(counts(dds,normalized=TRUE))
     resDf$min <- rowMin(counts(dds,normalized=TRUE))
-    resDf <-subset(resDf, !is.na(pvalue)) #maybe remove that since IHW should be able to handle NAs anyway
+    resDf <-subset(resDf, !is.na(resDf$pvalue)) #maybe remove that since IHW should be able to handle NAs anyway
     return (resDf)
   } else {
     return (dds)
