@@ -75,10 +75,6 @@ scott_fdrreg <- function(unadj_p, filterstat, alpha, df=3, lambda=0.01){
 	# so we just use bs(df=3) as done in their analysis
 	# also no automated way of choosing ridge regularization parameter
 
-  if (!require("FDRreg", quietly=TRUE)){
-     stop("FDRreg package required for this function to work.")
-  }
-
   if (! packageVersion("FDRreg") %in% c("0.2.1","0.2")){
      stop(paste("Benchmarks were run against version 0.2 of FDRreg",
                 "available on github via:",
