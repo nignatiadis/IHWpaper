@@ -33,7 +33,7 @@ Imports:
     cowplot
 VignetteBuilder: knitr
 biocViews:
-    ReproducibleResearch, ExperimentData, RNASeqData
+    ReproducibleResearch, ExperimentData, RNASeqData, ExpressionData
 RoxygenNote: 5.0.1
 Suggests: testthat,
           RColorBrewer,

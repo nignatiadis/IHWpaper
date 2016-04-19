@@ -1,17 +1,17 @@
-*bottomly_eset.RData
+*IHWpaper/inst/extdata/real_data/bottomly_eset.RData
 From Recount project (http://bowtie-bio.sourceforge.net/recount/)
 
-*hammer_eset.RData
+*IHWpaper/inst/extdata/real_data/hammer_eset.RData
 From Recount project (http://bowtie-bio.sourceforge.net/recount/)
 
-*science_signaling.csv
+*IHWpaper/inst/extdata/real_data/science_signaling.csv
 Proteomics example, Csv extracted from "2002548TableS1.xlsx" table in supplementary materials for:
 Hyperplexing: A Method for Higher-Order Multiplexed Quantitative Proteomics Provides 
 a Map of the Dynamic Response to Rapamycin in Yeast
 Noah Dephoure and Steven P. Gygi*
 (http://stke.sciencemag.org/content/5/217)
 
-* hqtl_pvalue_filtered.Rds
+*IHWpaper/inst/extdata/real_data/hqtl_pvalue_filtered.Rds
 For the hQTL example, here only p-values <= 0.005 are retained and the columns
 pvalue, dist and group  (pvalue for the snp-peak pair, distance of that pair
 and stratum into which it was categorized based on distance). The original number

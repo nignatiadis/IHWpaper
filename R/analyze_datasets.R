@@ -54,7 +54,7 @@ analyze_dataset <- function(dataset=c("pasilla","airway","bottomly","pasilla"), 
         stop("DESeq data package required.")
       }
       bottomly.eset <- NULL
-      load(system.file("real_data_examples/raw_data", "bottomly_eset.RData", package = "IHWpaper"),
+      load(system.file("extdata/real_data", "bottomly_eset.RData", package = "IHWpaper"),
         envir= environment())
       countData <- exprs(bottomly.eset)
       colData <- pData(bottomly.eset)
@@ -66,7 +66,7 @@ analyze_dataset <- function(dataset=c("pasilla","airway","bottomly","pasilla"), 
         stop("DESeq data package required.")
       }
       hammer.eset <- NULL
-      load(system.file("real_data_examples/raw_data", "hammer_eset.RData", package = "IHWpaper"),
+      load(system.file("extdata/real_data", "hammer_eset.RData", package = "IHWpaper"),
                         envir=environment())
       countData <- exprs(hammer.eset)
       colData <- pData(hammer.eset)

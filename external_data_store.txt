@@ -1,1 +1,1 @@
-inst/real_data_examples/raw_data
+inst/extdata/real_data

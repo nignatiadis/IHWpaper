@@ -73,7 +73,7 @@ panel_b
 #  ggsave(panel_b, filename="bottomly_1fold_weight_function.pdf", width=7, height=5)
 
 ## ------------------------------------------------------------------------
-hqtl_filt <- system.file("real_data_examples/raw_data",
+hqtl_filt <- system.file("extdata/real_data",
                         "hqtl_pvalue_filtered.Rds", package = "IHWpaper")
 hqtl_filt <- readRDS(hqtl_filt)
 m_groups <- attr(hqtl_filt, "m_groups")

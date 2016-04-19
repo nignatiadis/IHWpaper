@@ -100,7 +100,7 @@ ggsave(panel_b, filename="bottomly_1fold_weight_function.pdf", width=7, height=5
 Next we load the data for the hQTL example. Here we load the data-frame with the snps, genes and pvalue information. Note that because of memory concerns (the full data-frame is 3 GB) it contains only the p-values below 0.005. However, before doing this reduction we counted the number of hypotheses `m_groups` in each stratum (strata as defined in group column). Thus we can apply `IHW` to the reduced dataset, see also the advanced section of the IHW vignette ("Advanced usage: Working with incomplete p-value lists"). 
 
 ```{r}
-hqtl_filt <- system.file("real_data_examples/raw_data",
+hqtl_filt <- system.file("extdata/real_data",
                         "hqtl_pvalue_filtered.Rds", package = "IHWpaper")
 hqtl_filt <- readRDS(hqtl_filt)
 m_groups <- attr(hqtl_filt, "m_groups")
