@@ -36,13 +36,13 @@ weights_filter_plot
 ihw_res2 <- ihw(sim$pvalue, sim$filterstat, .1, lambdas=seq(0,10,length=20), nfolds=1L, nfolds_internal = 5L, nbins=20, quiet=TRUE)
 
 ## ----message=F, warning=F------------------------------------------------
-ihw_res2@regularization_term
+regularization_term(ihw_res2)
 
 ## ----fig.width=5, fig.height=5, warning=F--------------------------------
 df <- rbind(df,
             data.frame(covariate = sim$filterstat, weight= weights(ihw_res2, levels_only=FALSE),  
                        method=paste0("IHW; \nlambda=",
-                                     format(ihw_res2@regularization_term ,digits=2))))
+                                     format(regularization_term(ihw_res2) ,digits=2))))
             
 weights_filter_plot <- ggplot(df, aes(x=covariate, y=weight, col=method)) + geom_step(size=1.65)+
                       scale_colour_manual(values=wes_palette("Cavalcanti")[c(1,2,3)]) +
