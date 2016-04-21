@@ -1,0 +1,26 @@
+Package: IHWpaper
+Title: Reproduce figures in IHW paper
+Version: 0.99.4
+Authors@R: person("Nikos", "Ignatiadis", email =
+        "nikos.ignatiadis01@gmail.com", role = c("aut", "cre"))
+Description: This package conveniently wraps all functions needed to
+        reproduce the figures in the IHW preprint, available on biorXiv
+        under http://biorxiv.org/content/early/2016/03/30/034330. Thus
+        it is a companion package to the Bioconductor IHW package.
+Depends: R (>= 3.3), IHW
+License: Artistic-2.0
+LazyData: true
+LinkingTo: Rcpp
+Imports: Rcpp, stats, splines, methods, utils, DESeq2,
+        SummarizedExperiment, fdrtool, genefilter, qvalue, Biobase,
+        BiocGenerics, BiocParallel, dplyr, grid, ggplot2, cowplot
+VignetteBuilder: knitr
+biocViews: ReproducibleResearch, ExperimentData, RNASeqData,
+        ExpressionData
+RoxygenNote: 5.0.1
+Suggests: testthat, RColorBrewer, wesanderson, scales, gridExtra,
+        BiocStyle, knitr, rmarkdown, airway, pasilla, DESeq, locfdr,
+        tidyr
+NeedsCompilation: yes
+Author: Nikos Ignatiadis [aut, cre]
+Maintainer: Nikos Ignatiadis <nikos.ignatiadis01@gmail.com>

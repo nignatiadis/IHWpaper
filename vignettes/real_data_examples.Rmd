@@ -1,0 +1,327 @@
+---
+title: "Real data examples"
+author: "Nikos Ignatiadis"
+date: "`r doc_date()`"
+package: "`r pkg_ver('IHWpaper')`"
+output: BiocStyle::html_document
+vignette: >
+  %\VignetteIndexEntry{"Real data examples"}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\usepackage[utf8]{inputenc}
+---
+
+In this vignette we will reproduce Figure 1 of the paper, which includes applications of IHW to RNASeq, proteomics and hQTL data.
+
+```{r warning=F, message=F}
+library("IHW")
+library("dplyr")
+library("ggplot2")
+library("grid")
+library("tidyr")
+library("cowplot")
+library("RColorBrewer")
+library("scales")
+library("IHWpaper")
+```
+
+Define colors and names for methods we will be using throughout this vignette.
+```{r}
+pretty_colors <- scales::hue_pal(h = c(0, 360) + 15, c = 100, l = 65, h.start = 0,direction = 1)(5)
+pretty_names <- c("IHW", "BH", "Indep. Filt. \n 10 kb", "Indep. Filt. \n 200 kb", "Indep. Filt. \n 1 Mb")
+```
+
+```{r}
+
+rnaseq_file <- system.file("real_data_examples/result_files", "RNAseq_benchmark.Rds", package = "IHWpaper")
+rnaseq_data <- readRDS(file=rnaseq_file)
+panel_a_data <- group_by(rnaseq_data$alpha_df, alpha) %>% summarize(BH = max(bh_rejections), IHW=max(rejections)) %>% 
+                     gather(method, rejections, BH, IHW) %>%
+                     mutate(method = factor(as.character(method), levels=pretty_names))
+```
+
+#RNAseq example
+## Panel a)
+
+```{r}
+last_vals_a <- group_by(panel_a_data, method) %>% 
+               summarize(last_vals = max(rejections)) %>%
+               mutate(label = method,
+                   colour = pretty_colors[match(label, pretty_names)])
+
+
+panel_a <- ggplot(panel_a_data, aes(x=alpha,y=rejections,col=method)) +  
+                geom_line(size=1.2) +
+                xlab(expression(bold(paste("Nominal ",alpha)))) +
+                ylab("Discoveries") +
+                scale_color_manual(values=pretty_colors)+
+                scale_x_continuous(expand=c(0,0)) +
+                theme(plot.margin = unit(c(1, 7.5, 2, 1), "lines"))+
+                theme(axis.title = element_text(face="bold" ))
+
+
+panel_a <- pretty_legend(panel_a, last_vals_a, 0.102)
+panel_a
+```
+
+## Panel b)
+
+```{r}
+breaks <- rnaseq_data$breaks
+break_min <- rnaseq_data$break_min
+
+breaks_left <- c(break_min,breaks[-length(breaks)])
+
+step_df <- mutate(rnaseq_data$alpha_df, baseMean_left = breaks_left[stratum], baseMean_right = breaks[stratum],
+                 baseMean_ratio = baseMean_right/baseMean_left , 
+                 baseMean_left = baseMean_left * baseMean_ratio^.2,
+                 baseMean_right = baseMean_right *baseMean_ratio^(-.2))
+
+stratum_fun <- function(df){
+  stratum <- df$stratum
+  weight <- df$weight
+  stratum_left <- stratum[stratum != length(stratum)]
+  weight_left  <- weight[stratum_left]
+  baseMean_left <- df$baseMean_right[stratum_left]
+  stratum_right <- stratum[stratum != 1]
+  weight_right <- weight[stratum_right]
+  baseMean_right <- df$baseMean_left[stratum_right]
+  data.frame(stratum_left= stratum_left, weight_left= weight_left, 
+             stratum_right = stratum_right, weight_right = weight_right,
+             baseMean_left = baseMean_left, baseMean_right = baseMean_right)
+}
+
+connect_df <- filter(step_df, alpha==0.1) %>% group_by(fold) %>% 
+                  do(stratum_fun(.)) %>%
+                  mutate(dashed = factor(ifelse(abs(weight_left - weight_right) > 10^(-4) , TRUE, FALSE),
+                         levels=c(FALSE,TRUE)))
+
+
+panel_b <- ggplot(filter(step_df, alpha==0.1), 
+                       aes(x=baseMean_left, 
+                           xend=baseMean_right, 
+                           y=weight, yend=weight, col=fold)) +
+                geom_segment(size=0.8)+ 
+                geom_segment(data= connect_df, aes(x=baseMean_left, xend=baseMean_right, 
+                                                y=weight_left, yend=weight_right, 
+                                                linetype=dashed),
+                             size=0.8)+
+                scale_x_log10(breaks=c(1,10,100,1000,10000))+
+                xlab("Mean of normalized counts")+
+                ylab("Weight")+
+                theme(legend.position=c(0.8,0.4)) +
+                theme(plot.margin = unit(c(1, 1, 2, 1), "lines")) +
+                guides(linetype=FALSE)+
+                theme(axis.title = element_text(face="bold" ))
+
+
+panel_b
+```
+
+# Proteomics Example
+
+```{r}
+proteomics_file <- system.file("real_data_examples/result_files", "proteomics_benchmark.Rds", package = "IHWpaper")
+proteomics_data <- readRDS(file=proteomics_file)
+panel_c_data <- group_by(proteomics_data$alpha_df, alpha) %>% summarize(BH = max(bh_rejections), IHW=max(rejections)) %>% 
+                     gather(method, rejections, BH, IHW) %>%
+                     mutate(method = factor(as.character(method), levels=pretty_names))
+```
+
+## panel c)
+```{r}
+last_vals_c <- group_by(panel_c_data, method) %>% 
+               summarize(last_vals = max(rejections)) %>%
+               mutate(label = method,
+                   colour = pretty_colors[match(label, pretty_names)])
+
+
+panel_c <- ggplot(panel_c_data, aes(x=alpha,y=rejections,col=method)) +  
+                geom_line(size=1.2) +
+                xlab(expression(bold(paste("Nominal ",alpha)))) +
+                ylab("Discoveries") +
+                scale_color_manual(values=pretty_colors)+
+                scale_x_continuous(expand=c(0,0))+
+                theme(plot.margin = unit(c(1, 7.5, 2, 1), "lines"))+
+                theme(axis.title = element_text(face="bold" ))
+
+
+panel_c <- pretty_legend(panel_c, last_vals_c, 0.102)
+panel_c
+```
+
+## Panel d)
+```{r}
+breaks <- proteomics_data$breaks
+break_min <- proteomics_data$break_min
+
+breaks_left <- c(break_min,breaks[-length(breaks)])
+
+step_df <- mutate(filter(proteomics_data$alpha_df , alpha==0.1), break_left = breaks_left[stratum],
+                 break_right = breaks[stratum],
+                 break_ratio = break_right/break_left , 
+                 break_left =break_left * break_ratio^.1,
+                 break_right = break_right *break_ratio^(-.1))
+
+stratum_fun <- function(df){
+  stratum <- df$stratum
+  weight <- df$weight
+  stratum_left <- stratum[stratum != length(stratum)]
+  weight_left  <- weight[stratum_left]
+  break_left <- df$break_right[stratum_left]
+  stratum_right <- stratum[stratum != 1]
+  weight_right <- weight[stratum_right]
+  break_right <- df$break_left[stratum_right]
+  data.frame(stratum_left= stratum_left, weight_left= weight_left, 
+             stratum_right = stratum_right, weight_right = weight_right,
+             break_left = break_left, break_right = break_right)
+}
+
+connecting_df <- step_df %>% group_by(fold) %>% 
+                  do(stratum_fun(.)) %>%
+                  mutate(dashed = factor(ifelse(abs(weight_left - weight_right) > 10^(-5) , TRUE, FALSE),
+                         levels=c(FALSE,TRUE)))
+
+panel_d <- ggplot(step_df, aes(x=break_left, xend=break_right,y=weight, yend=weight, col=fold)) +
+                geom_segment(size=0.8)+                
+                geom_segment(data= connecting_df, aes(x=break_left, xend=break_right, 
+                                                y=weight_left, yend=weight_right, 
+                                                linetype=dashed),
+                             size=0.8)+
+                scale_x_log10(breaks=c(1, 10,100,400)) +
+                xlab("Number of peptides quantified")+
+                ylab("Weight")+
+                theme(legend.position=c(0.8,0.4)) +
+                theme(plot.margin = unit(c(1, 1, 2, 1), "lines"))+
+                guides(linetype=FALSE)+
+                theme(axis.title = element_text(face="bold" ))
+
+
+panel_d
+```
+
+
+# hQTL Example
+
+## Load in data
+```{r}
+hqtl_file <- system.file("real_data_examples/result_files", "hQTL_benchmark.Rds", package = "IHWpaper")
+hqtl_data <- readRDS(file=hqtl_file)
+hqtl_summary <- group_by(hqtl_data$alpha_df, alpha) %>%  gather(method, rejections, 6:10) %>%
+                select(alpha, method, rejections)
+
+# will use below later to convert to nicer names for our plot
+# see http://stackoverflow.com/questions/7547597/dictionary-style-replace-multiple-items-in-r
+map <- setNames(pretty_names,
+               c("rejections","bh_rejections","threshold:10000","threshold:2e+05", "threshold:1e+06"))
+```
+
+## Panel e)
+```{r}
+
+hqtl_summary <- mutate(hqtl_summary, method = map[method], 
+                       method= factor(method, levels = pretty_names))
+
+last_vals_e <- group_by(hqtl_summary, method) %>% 
+               summarize(last_vals = max(rejections))  %>%
+               mutate(last_vals = last_vals + c(0,0, 250, 0, -350), # offset to make it look nice
+                      label = method,
+                      colour = pretty_colors[match(label, pretty_names)])
+
+
+panel_e <- ggplot(hqtl_summary, aes(x=alpha,y=rejections,col=method)) +  
+                geom_line(size=1.2) +
+                xlab(expression(bold(paste("Nominal ",alpha)))) +
+                ylab("Discoveries") +
+                scale_x_continuous(expand=c(0,0))+
+                scale_color_manual(values=pretty_colors)+
+                theme(plot.margin = unit(c(1, 7.5, 2, 1), "lines"))+
+                theme(axis.title = element_text(face="bold" ))
+
+
+
+panel_e <- pretty_legend(panel_e, last_vals_e, 0.102)
+panel_e 
+```
+
+## Panel f)
+
+```{r}
+breaks <-   hqtl_data$breaks
+breaks <- breaks[-1]
+break_min <- hqtl_data$break_min
+breaks_left <- c(break_min,breaks[-length(breaks)])
+step_df <- mutate(filter(hqtl_data$alpha_df,alpha==0.1), break_left = breaks_left[stratum],
+                 break_right = breaks[stratum],
+                 break_ratio = break_right/break_left , 
+                 break_left =break_left * break_ratio^.2,
+                 break_right = break_right *break_ratio^(-.2))
+
+stratum_fun <- function(df){
+  stratum <- df$stratum
+  weight <- df$weight
+  stratum_left <- stratum[stratum != length(stratum)]
+  weight_left  <- weight[stratum_left]
+  break_left <- df$break_right[stratum_left]
+  stratum_right <- stratum[stratum != 1]
+  weight_right <- weight[stratum_right]
+  break_right <- df$break_left[stratum_right]
+  data.frame(stratum_left= stratum_left, weight_left= weight_left, 
+             stratum_right = stratum_right, weight_right = weight_right,
+             break_left = break_left, break_right = break_right)
+}
+
+connecting_df <- step_df %>% group_by(fold) %>% 
+                  do(stratum_fun(.)) %>%
+                  mutate(dashed = factor(ifelse(abs(weight_left - weight_right) > 2 , TRUE, FALSE),
+                         levels=c(FALSE,TRUE)))
+
+panel_f <- ggplot(step_df, aes(x=break_left, xend=break_right,y=weight, yend=weight, col=fold)) +
+                geom_segment(size=0.8)+                
+                geom_segment(data= connecting_df, aes(x=break_left, xend=break_right, 
+                                                y=weight_left, yend=weight_right, 
+                                                linetype=dashed),
+                             size=0.8)+
+                scale_x_log10(breaks=c(10^4, 10^5,10^6,10^7), 
+                              labels = trans_format("log10", math_format(10^.x))) +
+                xlab("Genomic distance (bp)")+
+                ylab("Weight")+
+                theme(legend.position=c(0.8,0.4)) +
+                theme(plot.margin = unit(c(1, 1, 2, 1), "lines"))+
+                theme(axis.title = element_text(face="bold" ))+
+                guides(linetype=FALSE)
+
+panel_f
+
+```
+
+# Put all panels together for main fig!
+
+```{r fig.width=12, fig.height=10}
+full_fig <- plot_grid(panel_a, 
+                      panel_c, 
+                      panel_e, panel_f,
+                      labels= c("a)", "b)", "c)",
+                              "d)"),
+                      nrow=2)
+full_fig
+````
+
+```{r eval=FALSE}
+ggsave(plot=full_fig, file="data_examples.pdf", width=12, height=10)
+```
+
+# Put all panels together for suppl fig.
+
+
+
+```{r fig.width=12, fig.height=5}
+suppl_fig <- plot_grid(panel_b,
+                       panel_d,
+                       labels= c("a)", "b)"),
+                       nrow=1)
+suppl_fig
+```
+
+```{r eval=FALSE}
+ggsave(plot=suppl_fig, file="data_examples_suppl.pdf", width=12, height=5)
+```
