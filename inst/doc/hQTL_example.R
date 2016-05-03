@@ -1,0 +1,143 @@
+## ----warning=F, message=F------------------------------------------------
+library("IHW")
+library("dplyr")
+library("ggplot2")
+library("grid")
+library("tidyr")
+library("cowplot")
+library("IHWpaper")
+library("scales")
+
+## ------------------------------------------------------------------------
+qtls <- system.file("extdata/real_data",
+                        "hqtl_pvalue_filtered.Rds", package = "IHWpaper")
+qtls <- readRDS(qtls)
+m_groups <- attr(qtls, "m_groups")
+m <- sum(m_groups)
+my_breaks <- attr(qtls, "breaks")
+
+## ------------------------------------------------------------------------
+alphas <- seq(0.05,0.1,length=5)
+filter_thresholds <- c(10^4, 2*10^5, 10^6)
+dfs <- list()
+
+## ------------------------------------------------------------------------
+for (i in seq_along(alphas)){
+  alpha <- alphas[i]
+  print(paste0("alpha:",alpha))
+  x <- ihw(qtls$pvalue, qtls$group, alpha, lambdas=Inf, m_groups=m_groups)
+  print("IHW finished")
+  ws <- weights(x, levels_only=TRUE)
+  group_levels <- levels(groups_factor(x))
+  folds  <- factor(1:x@nfolds)
+  df <- expand.grid(stratum=1:nlevels(groups_factor(x)),
+                    fold=folds)
+  df$group <- group_levels[df$stratum]
+  df$weight <- mapply(function(x,y) ws[x,y], df$stratum, df$fold)
+  df$alpha <- alpha
+  df$rejections <-rejections(x)
+  df$bh_rejections <- sum(p.adjust(qtls$pvalue, method="BH", n=m) <= alpha, na.rm=T)
+  for (filter_t in filter_thresholds){
+    filter_f <- tail(which( my_breaks <= filter_t),1)-1
+    filt_pvalue <- qtls$pvalue[as.numeric(qtls$group) <= filter_f]
+    unique_groups <- unique(qtls$group[as.numeric(qtls$group) <= filter_f])
+    m_filt <- sum(m_groups[unique_groups])
+    df[paste0("threshold:", filter_t)] <- sum(p.adjust(filt_pvalue, method="BH", n=m_filt) <= alpha, na.rm=T)
+  }
+  dfs[[i]] <- df
+}
+
+hqtl_data <- list(alpha_df = rbind_all(dfs),
+                breaks   = my_breaks,
+                break_min = 5000)
+
+## ------------------------------------------------------------------------
+# http://beyoncepalettes.tumblr.com/
+beyonce_colors <- c("#b72da0", "#7c5bd2", "#0097ed","#00c6c3",
+                   "#9cd78a", "#f7f7a7", "#ebab5f", "#e24344",
+                   "#04738d")#,"#d8cdc9")
+beyonce_colors[6] <- c("#dbcb09") # thicker yellow
+pretty_colors <- beyonce_colors[c(2,1,3:5)]
+pretty_names <- c("IHW", "BH", "Indep. Filt. \n 10 kb", "Indep. Filt. \n 200 kb", "Indep. Filt. \n 1 Mb")
+pretty_names <- c("IHW", "BH", "10 kb", "200 kb", "1 Mb")
+
+## ------------------------------------------------------------------------
+hqtl_summary <- group_by(hqtl_data$alpha_df, alpha) %>%  gather(method, rejections, 6:10) %>%
+                select(alpha, method, rejections)
+
+map <- setNames(pretty_names,
+               c("rejections","bh_rejections","threshold:10000","threshold:2e+05", "threshold:1e+06"))
+
+hqtl_summary <- mutate(hqtl_summary, method = map[method], 
+                       method= factor(method, levels = pretty_names))
+
+last_vals_e <- group_by(hqtl_summary, method) %>% 
+               summarize(last_vals = max(rejections))  %>%
+               mutate(last_vals = last_vals + c(0,0, 250, 0, -350), # offset to make it look nice
+                      label = method,
+                      colour = pretty_colors[match(label, pretty_names)])
+
+
+panel_e <- ggplot(hqtl_summary, aes(x=alpha,y=rejections,col=method)) +  
+                geom_line(size=1.2) +
+                xlab(expression(bold(paste("Nominal ",alpha)))) +
+                ylab("Discoveries") +
+                scale_x_continuous(expand=c(0,0), breaks=c(0.06,0.08,0.10))+
+                scale_color_manual(values=pretty_colors)+
+                theme(plot.margin = unit(c(2, 4, 1, 2), "lines"))+
+                theme(axis.title = element_text(face="bold" )) 
+
+
+
+panel_e <- pretty_legend(panel_e, last_vals_e, 0.102)
+panel_e 
+
+## ------------------------------------------------------------------------
+breaks <-   hqtl_data$breaks
+breaks <- breaks[-1]
+break_min <- hqtl_data$break_min
+breaks_left <- c(break_min,breaks[-length(breaks)])
+step_df <- mutate(filter(hqtl_data$alpha_df,alpha==0.1), break_left = breaks_left[stratum],
+                 break_right = breaks[stratum],
+                 break_ratio = break_right/break_left , 
+                 break_left =break_left * break_ratio^.2,
+                 break_right = break_right *break_ratio^(-.2))
+
+stratum_fun <- function(df){
+  stratum <- df$stratum
+  weight <- df$weight
+  stratum_left <- stratum[stratum != length(stratum)]
+  weight_left  <- weight[stratum_left]
+  break_left <- df$break_right[stratum_left]
+  stratum_right <- stratum[stratum != 1]
+  weight_right <- weight[stratum_right]
+  break_right <- df$break_left[stratum_right]
+  data.frame(stratum_left= stratum_left, weight_left= weight_left, 
+             stratum_right = stratum_right, weight_right = weight_right,
+             break_left = break_left, break_right = break_right)
+}
+
+connecting_df <- step_df %>% group_by(fold) %>% 
+                  do(stratum_fun(.)) %>%
+                  mutate(dashed = factor(ifelse(abs(weight_left - weight_right) > 2 , TRUE, FALSE),
+                         levels=c(FALSE,TRUE)))
+
+panel_f <- ggplot(step_df, aes(x=break_left, xend=break_right,y=weight, yend=weight, col=fold)) +
+                geom_segment(size=0.8)+                
+                geom_segment(data= connecting_df, aes(x=break_left, xend=break_right, 
+                                                y=weight_left, yend=weight_right, 
+                                                linetype=dashed),
+                             size=0.8)+
+                scale_x_log10(breaks=c(10^4, 10^5,10^6,10^7), 
+                              labels = trans_format("log10", math_format(10^.x))) +
+                xlab("Genomic distance (bp)")+
+                ylab("Weight")+
+                theme(legend.position=c(0.8,0.6)) +
+                theme(plot.margin = unit(c(2, 1.5, 1, 2.5), "lines"))+
+                theme(axis.title = element_text(face="bold" ))+
+                scale_color_manual(values=pretty_colors)+
+                guides(linetype=FALSE)
+
+panel_f
+
+

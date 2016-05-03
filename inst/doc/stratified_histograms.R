@@ -8,6 +8,12 @@ set.seed(1)
 m <- 10000
 binwidth <- 0.025
 
+# http://beyoncepalettes.tumblr.com/
+beyonce_colors <- c("#b72da0", "#7c5bd2", "#0097ed","#00c6c3",
+                   "#9cd78a", "#f7f7a7", "#ebab5f", "#e24344",
+                   "#04738d")
+
+beyonce_colors <- c("black", beyonce_colors[5])
 # generic function to add some properties to gg histograms
 gg_hist_aesthetic <-  function(gg_obj, ylim_max=650) {
     gg_obj + 
@@ -84,7 +90,8 @@ gg_hist_aesthetic <-  function(gg_obj, ylim_max=6) {
 ## ------------------------------------------------------------------------
 pv_unif <- data.frame(pvalue=runif(m))
 gg_unif <- ggplot(pv_unif, aes(x=pvalue)) + 
-            geom_histogram(binwidth = binwidth, boundary = 0, colour=grey, fill="lightgrey")
+            geom_histogram(binwidth = binwidth, boundary = 0, 
+                           colour=beyonce_colors[1], fill=beyonce_colors[2])
 gg_unif <- gg_hist_aesthetic(gg_unif)
  
 
@@ -94,7 +101,8 @@ gg_unif
 pv_beta_a <- data.frame(pvalue=c(runif(9000), rbeta(1000,0.5,4)))
 
 gg_beta_a <- ggplot(pv_beta_a, aes(x=pvalue)) + 
-              geom_histogram(binwidth = binwidth, boundary = 0, colour=grey, fill="lightgrey")
+              geom_histogram(binwidth = binwidth, boundary = 0, 
+                             colour=beyonce_colors[1], fill=beyonce_colors[2])
 gg_beta_a <- gg_hist_aesthetic(gg_beta_a)
 gg_beta_a
 
@@ -102,7 +110,8 @@ gg_beta_a
 pv_beta_b <- data.frame(pvalue=c(runif(8000), rbeta(2000,0.5,11)))
 
 gg_beta_b <- ggplot(pv_beta_b, aes(x=pvalue)) + 
-              geom_histogram(binwidth = binwidth, boundary = 0, colour=grey, fill="lightgrey")
+              geom_histogram(binwidth = binwidth, boundary = 0, 
+                             colour=beyonce_colors[1], fill=beyonce_colors[2])
 
 gg_beta_b <- gg_hist_aesthetic(gg_beta_b, ylim_max=5.5)
 gg_beta_b
@@ -110,7 +119,9 @@ gg_beta_b
 ## ------------------------------------------------------------------------
 pv_all <- rbind(pv_unif, pv_beta_b, pv_beta_a) 
 gg_all <- ggplot(pv_all, aes(x=pvalue)) + 
-              geom_histogram(binwidth = binwidth, boundary = 0, colour=grey, fill="lightgrey")
+              geom_histogram(binwidth = binwidth, boundary = 0, 
+                             colour=beyonce_colors[1], fill=beyonce_colors[2])
+
 gg_all <- gg_hist_aesthetic(gg_all)
 gg_all
 

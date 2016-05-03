@@ -1,9 +1,16 @@
-################################################################################
-# Note: This is the only example in the paper which is not reproducible yet,
-# since many of the files are too large to include. We will provide a solution
-# at a later time point, but include the code so all the steps can at least
-# be followed.
-################################################################################
+###################################################################################
+# Note: This demonstrates how we originally run the hQTL benchmark. In particular,
+# we first generated the p-values using matrix eQTL and 
+# then applied the IHW method to a data frame of all 18 million p-values. Because of size
+# constraints we do not include the whole data frame here. 
+# 
+# However, as explained in the IHW vignette in principle we only need the "low" p-values,
+# as long as we keep track of the original number of hypotheses in each bin.
+#
+# Therefore we also provide a data frame which includes only the p-values <= 0.005.
+# The results are essentially equivalent to what was produced by the below script on
+# the full dataset. This analysis can be found in the vignette hQTL_example.Rmd.
+####################################################################################
 
 ##########################################################
 # Step 1: Get the hQTL p-values using matrix eQTL

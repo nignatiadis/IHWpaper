@@ -26,8 +26,8 @@ panel_a <- ggplot(null_sim, aes(x=alpha, y=FDR, col=fdr_method)) +
                          geom_abline(linetype="dashed") + 
                          xlab(expression(bold(paste("Nominal ",alpha)))) + 
                          ylab("FWER")+
-                         scale_x_continuous(limits= c(0.01,0.1), breaks=seq(0.01,0.09,length=5)) +
-                         #ylim(0,0.9) +
+                         scale_x_continuous(limits= c(0.005,0.1), breaks=seq(0.01,0.09,length=3)) +
+                         scale_y_continuous(limits= c(0.005,0.1), breaks=seq(0.01,0.09,length=3)) +
                          theme(plot.margin = unit(c(3, 7.5, .2, .2), "lines"))+
                          scale_color_manual(values=colors)+
                          theme(axis.title = element_text(face="bold") )
@@ -120,14 +120,17 @@ panel_e <- ggplot(size_investing_sim, aes(x=xi_max, y=power, col=fdr_method)) +
 panel_e <- pretty_legend(panel_e, last_vals_e, 6.02 )
 panel_e
 
-## ---- fig.width=12, fig.height=16----------------------------------------
-fwer_sim_fig <- plot_grid(panel_a, ggdraw(),
-                         panel_b, panel_c,
-                         panel_d, panel_e, 
-                         nrow=3,
-                         labels=c("a)", "", "b)", "c)","d)", "e)"))
+## ---- fig.width=12, fig.height=8-----------------------------------------
+fwer_sim_fig <- plot_grid(panel_a, 
+                         panel_b, 
+                         panel_d, 
+                         ggdraw(),
+                         panel_c,
+                         panel_e, 
+                         nrow=2,
+                         labels=c("a)", "b)", "d)","","c)", "e)"))
 fwer_sim_fig
 
 ## ----eval=FALSE----------------------------------------------------------
-#  ggsave(plot=fwer_sim_fig, file="fwer_simulations.pdf", width=12, height=16)
+#  ggsave(plot=fwer_sim_fig, file="fwer_simulations.pdf", width=12, height=8)
 
