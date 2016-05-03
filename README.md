@@ -10,11 +10,11 @@ This is a package which reproduces all IHW paper figures (as well as some additi
 
 All vignettes can be found in the /vignettes directory. For the vignettes which reproduce figures in our manuscript, we also provide a link to the rendered html page below:
 
-* Figure 1: [Stratified Histograms](https://rawgit.com/nignatiadis/IHWpaper/master/inst/doc/stratified_histograms.html)
-* Figure 2, S1, S2 : [Benchmarking result](https://rawgit.com/nignatiadis/IHWpaper/master/inst/doc/benchmark_figure.html)
+* Figure 1: [Stratified Histograms](https://rawgit.com/nignatiadis/IHWpaper/202b7ff89b329e02c9074624388f2d0c85b53f60/inst/doc/stratified_histograms.html)
+* Figure 2, S1, S2 : [Benchmarking result](https://rawgit.com/nignatiadis/IHWpaper/202b7ff89b329e02c9074624388f2d0c85b53f60/inst/doc/benchmark_figure.html)
 * Figure 3: Schematic figure, no code used for its generation
-* Figures S3 and S4: [Explaining tdr](https://rawgit.com/nignatiadis/IHWpaper/master/inst/doc/explaining_tdr.html)
-* Figure S5: [IHW-Bonferroni simulations](https://rawgit.com/nignatiadis/IHWpaper/master/inst/doc/IHW_bonferroni_simulations.html)
+* Figures S3 and S4: [Explaining tdr](https://rawgit.com/nignatiadis/IHWpaper/202b7ff89b329e02c9074624388f2d0c85b53f60/inst/doc/explaining_tdr.html)
+* Figure S5: [IHW-Bonferroni simulations](https://rawgit.com/nignatiadis/IHWpaper/202b7ff89b329e02c9074624388f2d0c85b53f60/inst/doc/IHW_bonferroni_simulations.html)
 
 # Installing the package and reproducing all simulations
 
