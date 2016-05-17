@@ -49,7 +49,7 @@ panel_a_data <- group_by(rnaseq_data$alpha_df, alpha) %>% summarize(BH = max(bh_
 #RNAseq example
 ## Panel a)
 
-```{r}
+```{r fig.width=5, fig.height=5}
 last_vals_a <- group_by(panel_a_data, method) %>% 
                summarize(last_vals = max(rejections)) %>%
                mutate(label = method,
@@ -70,6 +70,10 @@ panel_a <- pretty_legend(panel_a, last_vals_a, 0.102)
 panel_a
 ```
 
+```{r}
+ggsave(panel_a + theme(plot.margin = unit(c(1, 3, 1, 0), "lines"))
+      ,filename="DESeq2_benchmark.pdf", width = 4, height=4)
+```
 ## Panel b)
 
 ```{r}
@@ -252,6 +256,10 @@ panel_e <- pretty_legend(panel_e, last_vals_e, 0.102)
 panel_e 
 ```
 
+```{r}
+ggsave(panel_e + theme(plot.margin = unit(c(1, 3, 1, 0), "lines"))
+      ,filename="hqtl_benchmark.pdf", width = 4, height=4)
+```
 ## Panel f)
 
 ```{r}

@@ -85,14 +85,7 @@ scott_fdrreg <- function(unadj_p, filterstat, alpha, df=3, lambda=0.01){
 	Xs <- model.matrix( ~  b - 1)
 
 
-	fdrreg_res <- FDRreg(qnorm(unadj_p), Xs, control=list(lambda = 0.01))
-
-  # modification to make this method applicable to p-values
-  # FDRreg tests in a two-sided way, this means that we might get rejections
-  # due to the right tail (high p-values) which have a z-score > 0 !
-  # for this reason, just set local-fdr to 1 or equivalently the posterior prob to 0
-
-  posterior_probs <- ifelse(unadj_p <= 0.5, fdrreg_res$postprob, 1)
+	fdrreg_res <- FDRreg(qnorm(unadj_p), Xs, control=list(lambda = lambda))
 
 	FDR <- getFDR(fdrreg_res$postprob)$FDR
 

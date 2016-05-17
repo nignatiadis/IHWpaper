@@ -1,5 +1,6 @@
 library("IHWpaper")
 library("IHW")
+library("dplyr")
 
 proteomics_file <- system.file("extdata/real_data",
                                 "science_signaling.csv", package = "IHWpaper")

@@ -107,11 +107,11 @@ m <- 10000
 binwidth <- 0.05
 grey <- "grey41"
 # generic function to add some properties to gg histograms
-gg_hist_aesthetic <-  function(gg_obj, ylim_max=6) {
+gg_hist_aesthetic <-  function(gg_obj, ylim_max=4) {
     gg_obj + 
              aes(y=..density..)+
              scale_x_continuous(expand = c(0.02, 0), breaks=c(0,0.5,1)) + 
-             scale_y_continuous(expand = c(0.02, 0), limits=c(0,ylim_max)) + 
+             scale_y_continuous(expand = c(0.02, 0), breaks=c(0,1,2,3,4), limits=c(0,ylim_max)) + 
              xlab("p-value")+
              ylab("Density")+
              theme(axis.title = element_text(face="bold",size=rel(0.7)))
@@ -146,7 +146,7 @@ gg_beta_b <- ggplot(pv_beta_b, aes(x=pvalue)) +
               geom_histogram(binwidth = binwidth, boundary = 0, 
                              colour=beyonce_colors[1], fill=beyonce_colors[2])
 
-gg_beta_b <- gg_hist_aesthetic(gg_beta_b, ylim_max=5.5)
+gg_beta_b <- gg_hist_aesthetic(gg_beta_b)#, ylim_max=5.5)
 gg_beta_b
 ```
 

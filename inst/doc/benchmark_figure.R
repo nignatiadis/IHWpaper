@@ -28,7 +28,7 @@ panel_a_data <- group_by(rnaseq_data$alpha_df, alpha) %>% summarize(BH = max(bh_
                      gather(method, rejections, BH, IHW) %>%
                      mutate(method = factor(as.character(method), levels=pretty_names))
 
-## ------------------------------------------------------------------------
+## ----fig.width=5, fig.height=5-------------------------------------------
 last_vals_a <- group_by(panel_a_data, method) %>% 
                summarize(last_vals = max(rejections)) %>%
                mutate(label = method,
@@ -47,6 +47,10 @@ panel_a <- ggplot(panel_a_data, aes(x=alpha,y=rejections,col=method)) +
 
 panel_a <- pretty_legend(panel_a, last_vals_a, 0.102)
 panel_a
+
+## ------------------------------------------------------------------------
+ggsave(panel_a + theme(plot.margin = unit(c(1, 3, 1, 0), "lines"))
+      ,filename="DESeq2_benchmark.pdf", width = 4, height=4)
 
 ## ------------------------------------------------------------------------
 breaks <- rnaseq_data$breaks
@@ -212,6 +216,10 @@ panel_e <- ggplot(hqtl_summary, aes(x=alpha,y=rejections,col=method)) +
 
 panel_e <- pretty_legend(panel_e, last_vals_e, 0.102)
 panel_e 
+
+## ------------------------------------------------------------------------
+ggsave(panel_e + theme(plot.margin = unit(c(1, 3, 1, 0), "lines"))
+      ,filename="hqtl_benchmark.pdf", width = 4, height=4)
 
 ## ------------------------------------------------------------------------
 breaks <-   hqtl_data$breaks
