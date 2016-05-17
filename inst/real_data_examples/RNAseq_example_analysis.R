@@ -1,3 +1,10 @@
+# To get exactly the same results as shown in paper, will have to use
+# older IHW and DESeq2 versions, e.g. by:
+#
+# devtools::install_github("Bioconductor-mirror/DESeq2", ref="3b2535232344f07ec02f1d4d1b4f60d6990bf438")
+# devtools::install_github("nignatiadis/IHW", ref="c68d76d866f72fb4f21b69713f4229a9b39cafb6")
+
+
 library("IHW")
 library("IHWpaper")
 library("dplyr")

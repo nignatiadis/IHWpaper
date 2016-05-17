@@ -1,3 +1,8 @@
+# To get exactly the same results as shown in paper, will have to use
+# older IHW version, e.g. by:
+
+# devtools::install_github("nignatiadis/IHW", ref="c68d76d866f72fb4f21b69713f4229a9b39cafb6")
+
 library("IHWpaper")
 library("IHW")
 library("dplyr")
