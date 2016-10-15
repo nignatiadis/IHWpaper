@@ -135,10 +135,10 @@ saveRDS(qtls, file="qtls_chrom_21.Rds")
 library("IHW")
 
 
-qtls <- readRDS(file="qtls_chrom_21.Rds")
+qtls <- readRDS(file = "qtls_chrom_21.Rds")
 print("qtls loaded into memory")
   
-  # up to 300k in 10 bins
+## up to 300k in 10 bins
 my_breaks <- c(-1, 
                  seq(from=10000,to=290000, by=10000) , 
                  seq(from=300000, to=0.9*10^6, by=100000),
@@ -173,9 +173,9 @@ for (i in seq_along(alphas)){
   dfs[[i]] <- df
 }
 
-res <- list(alpha_df = rbind_all(dfs),
+res <- list(alpha_df = bind_rows(dfs),
             breaks   = my_breaks,
             break_min = 5000)
 
-saveRDS(res, file=paste(projectFolder,"hQTL_benchmark.Rds", sep=""))
+saveRDS(res, file = paste0(projectFolder, "hQTL_benchmark.Rds"))
 
