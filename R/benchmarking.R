@@ -47,7 +47,7 @@
 #' @importFrom BiocParallel bplapply
 #' @export
 run_evals <- function(sim_funs, fdr_methods, nreps, alphas,...){
-	rbind_all(lapply(sim_funs, function(x) sim_fun_eval(x, fdr_methods, nreps, alphas, ...)))
+	bind_rows(lapply(sim_funs, function(x) sim_fun_eval(x, fdr_methods, nreps, alphas, ...)))
 }
 
 sim_fun_eval <- function(sim_fun, fdr_methods, nreps, alphas, BiocParallel=TRUE){
@@ -57,7 +57,7 @@ sim_fun_eval <- function(sim_fun, fdr_methods, nreps, alphas, BiocParallel=TRUE)
 	} else {
 		evaluated_sims <- lapply(sim_seeds, function(x) sim_eval(sim_fun, x, fdr_methods, alphas))
 	}
-	df <- dplyr::rbind_all(evaluated_sims)
+	df <- dplyr::bind_rows(evaluated_sims)
 	df <- dplyr::summarize(group_by(df, fdr_method, fdr_pars, alpha), FDR = mean(FDP),
 		 power= mean(power), rj_ratio = mean(rj_ratio), FPR = mean(FPR), FDR_sd = sd(FDP), 
 		 FWER=mean(FWER), nsuccessful = n())
@@ -77,18 +77,18 @@ sim_eval <- function(sim_fun, seed, fdr_methods, alphas, print_dir = NULL){
 			df <- readRDS(file_name)
 		} else {
 			sim <- sim_fun(seed) 
-			df <- rbind_all(lapply(fdr_methods, function(fdr_method) sim_fdrmethod_eval(sim, fdr_method, alphas)))
+			df <- bind_rows(lapply(fdr_methods, function(fdr_method) sim_fdrmethod_eval(sim, fdr_method, alphas)))
 			saveRDS(df, file=file_name)
 		}
 	} else {
 		sim <- sim_fun(seed) 
-		df <- rbind_all(lapply(fdr_methods, function(fdr_method) sim_fdrmethod_eval(sim, fdr_method, alphas)))
+		df <- bind_rows(lapply(fdr_methods, function(fdr_method) sim_fdrmethod_eval(sim, fdr_method, alphas)))
 	}
 	df
 }
 
 sim_fdrmethod_eval <- function(sim, fdr_method, alphas){
-	rbind_all(lapply(alphas, function(a) sim_alpha_eval(sim, fdr_method, a)))
+	bind_rows(lapply(alphas, function(a) sim_alpha_eval(sim, fdr_method, a)))
 }
 
 sim_alpha_eval <- function(sim, fdr_method, alpha){

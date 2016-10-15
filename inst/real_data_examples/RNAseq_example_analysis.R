@@ -29,7 +29,7 @@ get_alpha_df <- function(alpha, pvalue, filter_statistic, filter_thresholds,...)
   df
 }
 
-alpha_df <- rbind_all(lapply(seq(0.05,0.1,length=5), get_alpha_df, 
+alpha_df <- bind_rows(lapply(seq(0.05,0.1,length=5), get_alpha_df, 
                              bottomly$pvalue, bottomly$baseMean, c(100,1000), nbins=13,
                              nsplits_internal=5))
 
