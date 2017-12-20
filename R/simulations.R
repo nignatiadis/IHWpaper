@@ -171,7 +171,7 @@ dependence_by_groups_sim <- function(m, pi0, rho=0.0, latent_factors=1,
   xi_min_range <- xi_min + (0:(latent_factors-1))*(xi_max-xi_min)/latent_factors
   xi_max_range <- c(xi_min_range[-1], xi_max)
 
-  sim_df <- rbind_all(mapply(wasserman_normal_prds_sim,
+  sim_df <- bind_rows(mapply(wasserman_normal_prds_sim,
                              mgroups, pi0, rho, 1, xi_min_range,
                              xi_max_range,
                              SIMPLIFY=FALSE))

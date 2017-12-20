@@ -84,7 +84,6 @@ scott_fdrreg <- function(unadj_p, filterstat, alpha, df=3, lambda=0.01){
 	b <- bs(filterstat, df=df)
 	Xs <- model.matrix( ~  b - 1)
 
-
 	fdrreg_res <- FDRreg(qnorm(unadj_p), Xs, control=list(lambda = lambda))
 
 	FDR <- getFDR(fdrreg_res$postprob)$FDR

@@ -7,6 +7,7 @@ library("IHWpaper")
 library("IHW")
 library("dplyr")
 
+
 proteomics_file <- system.file("extdata/real_data",
                                 "science_signaling.csv", package = "IHWpaper")
 
@@ -40,7 +41,7 @@ get_alpha_df <- function(alpha, pvalue, filter_statistic, filter_thresholds,...)
 }
 
 
-alpha_df <- rbind_all(lapply(seq(0.05,0.1,length=5), get_alpha_df, proteomics_df$pvalue, 
+alpha_df <- bind_rows(lapply(seq(0.05, 0.1, length = 5), get_alpha_df, proteomics_df$pvalue, 
                             proteomics_df$X..peptides,
                             c(), nbins=4, 
                             nsplits_internal=5, 
@@ -54,5 +55,6 @@ res <- list(alpha_df = alpha_df,
             break_min = break_min,
             ihw_res  = ihw_res
             )
+
 
 saveRDS(res, file="result_files/proteomics_benchmark.Rds")

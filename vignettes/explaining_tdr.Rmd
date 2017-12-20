@@ -61,7 +61,7 @@ plot_tdr <- function(x,pi0,xthreshold=0.05){
   pars <- sim_pars(x,pi0)
   df <- data.frame(t=seq(0.001,1, length=1000))
   df <- mutate(df, f1 = pars$alt_density(t), f=pars$density(t), tdr = pars$tdr(t))
-  
+
   plot_pv <- ggplot(df, aes(x=t, y=f)) + 
                      geom_line()  + 
                      expand_limits(x = 0)  +
@@ -73,7 +73,8 @@ plot_tdr <- function(x,pi0,xthreshold=0.05){
                      scale_y_continuous(limits=c(0,4))+
                      scale_x_continuous(expand=c(0,0),breaks=c(0, 0.25,0.5, 0.75,1),
                                         labels= c("0","0.25","0.5","0.75","1"))   
-  
+
+
   plot_pv_vs_tdr <- ggplot(df, aes(x=t, y= tdr)) + 
                     geom_line() +
                     ylab("tdr")+
@@ -81,6 +82,7 @@ plot_tdr <- function(x,pi0,xthreshold=0.05){
                     expand_limits(x = 0)  +
                     scale_x_continuous(expand=c(0,0),breaks=c(0, 0.25,0.5, 0.75,1),
                                         labels= c("0","0.25","0.5","0.75","1"))   
+
   # now also generate empirical histogram plots
   a = sim_pars(eff_size,pi0)
   m=100000
@@ -111,6 +113,7 @@ plot_tdr <- function(x,pi0,xthreshold=0.05){
                                         labels= c("0","0.25","0.5","0.75","1"))   +
               xlab("tdr") + 
               ylab("Density")
+
   list(plot_pv=plot_pv,  plot_pv_vs_tdr=plot_pv_vs_tdr, pv_hist=pv_hist, tdr_hist=tdr_hist)
 }
 ```
@@ -167,6 +170,7 @@ plot_tdr_inversed1 <- ggplot(df, aes(x=tdr, y= t,color=test)) +
                                         labels =  expression(H[1] , H[2]))
 
 
+
 plot_density1 <- ggplot(df, aes(x=t, y= f,color=test)) + 
                     geom_line() +
                     xlab("p-value")+
@@ -179,6 +183,7 @@ plot_density1 <- ggplot(df, aes(x=t, y= f,color=test)) +
                                        limits=c(0,4))   +  
                     scale_colour_manual(values =wes_palette("Chevalier")[c(1,4)], name='',
                                          expression(H[1] , H[2]))
+
 
 
 plot_cdf1 <- ggplot(df, aes(x=t, y= CDF,color=test)) + 
@@ -223,6 +228,9 @@ plot_tdr_inversed <- ggplot(df, aes(x=tdr, y= t,color=test)) +
                                        labels= c("0","0.25","0.5","0.75","1"))   +  
                     scale_colour_manual(values =wes_palette("Chevalier")[c(1,4)], name='',
                                           labels = expression(H[1] , H[2]))
+                    scale_x_continuous(expand = c(0, 0)) +
+                      scale_colour_manual(values =wes_palette("Chevalier")[c(1,4)], name='',
+                                          labels = expression(H , tilde(H)))
 
 
 
@@ -238,6 +246,7 @@ plot_density <- ggplot(df, aes(x=t, y= f1,color=test)) +
                                        limits=c(0,0))   +  
                     scale_colour_manual(values =wes_palette("Chevalier")[c(1,4)], name='',
                                         labels =  expression(H[1] , H[2]))
+
 
 
 plot_cdf <- ggplot(df, aes(x=t, y= CDF,color=test)) + 

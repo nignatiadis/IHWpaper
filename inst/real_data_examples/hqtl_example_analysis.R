@@ -3,7 +3,7 @@
 # we first generated the p-values using matrix eQTL and 
 # then applied the IHW method to a data frame of all 18 million p-values. Because of size
 # constraints we do not include the whole data frame here. 
-# 
+#
 # However, as explained in the IHW vignette in principle we only need the "low" p-values,
 # as long as we keep track of the original number of hypotheses in each bin.
 #
@@ -142,10 +142,17 @@ saveRDS(qtls, file="qtls_chrom_21.Rds")
 library("IHW")
 
 
+<<<<<<< HEAD
 qtls <- readRDS(file="qtls_chrom_21.Rds")
 print("qtls loaded into memory")
   
   # up to 300k in 10 bins
+=======
+qtls <- readRDS(file = "qtls_chrom_21.Rds")
+print("qtls loaded into memory")
+  
+## up to 300k in 10 bins
+>>>>>>> upstream/master
 my_breaks <- c(-1, 
                  seq(from=10000,to=290000, by=10000) , 
                  seq(from=300000, to=0.9*10^6, by=100000),
@@ -180,9 +187,9 @@ for (i in seq_along(alphas)){
   dfs[[i]] <- df
 }
 
-res <- list(alpha_df = rbind_all(dfs),
+
+res <- list(alpha_df = bind_rows(dfs),
             breaks   = my_breaks,
             break_min = 5000)
 
-saveRDS(res, file=paste(projectFolder,"hQTL_benchmark.Rds", sep=""))
-
+saveRDS(res, file = paste0(projectFolder, "hQTL_benchmark.Rds"))

@@ -11,7 +11,7 @@ vignette: >
 ---
 
 In this vignette, we want to estimate the weight~covariate function on the RNASeq and eQTL datasets, without using the k-fold strategy. The below plots are mainly useful for presentations.
- 
+
 
 ```{r warning=F, message=F}
 library("IHW")

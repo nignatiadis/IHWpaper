@@ -31,7 +31,8 @@ colors <- wes_palette("Cavalcanti")[c(3,5)]
 
 null_folder <- system.file("simulation_benchmarks/result_files/ihw_bonf_null",
                         package = "IHWpaper")
-null_sim <- rbind_all(lapply(file.path(null_folder,list.files(null_folder)), function(x) readRDS(x))) %>%
+
+null_sim <- bind_rows(lapply(file.path(null_folder,list.files(null_folder)), function(x) readRDS(x))) %>%
             mutate(fdr_method = ifelse(fdr_method == "IHW-Bonferroni E3", "IHW-Bonferroni", fdr_method))
 
 last_vals_a <- group_by(null_sim, fdr_method) %>% summarize(last_vals = max(FDR)) %>%
@@ -60,7 +61,8 @@ panel_a
 ```{r}
 ttest_folder <- system.file("simulation_benchmarks/result_files/ihw_bonf_du_ttest_informative",
                      package = "IHWpaper")
-ttest_sim <- rbind_all(lapply(file.path(ttest_folder,list.files(ttest_folder)), function(x) readRDS(x))) %>%
+
+ttest_sim <- bind_rows(lapply(file.path(ttest_folder,list.files(ttest_folder)), function(x) readRDS(x))) %>%
             mutate(fdr_method = ifelse(fdr_method == "IHW-Bonferroni E3", "IHW-Bonferroni", fdr_method))
 
 last_vals_b <- group_by(ttest_sim, fdr_method) %>% summarize(last_vals =  FDR[which.max(eff_size)]) %>%
@@ -106,7 +108,8 @@ panel_c
 ```{r}
 size_investing_folder <- system.file("simulation_benchmarks/result_files/ihw_bonf_wasserman_normal",
                               package = "IHWpaper")
-size_investing_sim <- rbind_all(lapply(file.path(size_investing_folder,
+
+size_investing_sim <- bind_rows(lapply(file.path(size_investing_folder,
                                              list.files(size_investing_folder)), function(x) readRDS(x))) %>%
             mutate(fdr_method = ifelse(fdr_method == "IHW-Bonferroni E3", "IHW-Bonferroni", fdr_method))
 
@@ -151,17 +154,18 @@ panel_e
 
 # Composite panel:
 ```{r, fig.width=12, fig.height=8}
-fwer_sim_fig <- plot_grid(panel_a, 
-                         panel_b, 
-                         panel_d, 
+fwer_sim_fig <- plot_grid(panel_a,
+                         panel_b,
+                         panel_d,
                          ggdraw(),
                          panel_c,
-                         panel_e, 
+                         panel_e,
                          nrow=2,
                          labels=c("a)", "b)", "d)","","c)", "e)"))
+
 fwer_sim_fig
 ```
 
 ```{r eval=FALSE}
-ggsave(plot=fwer_sim_fig, file="fwer_simulations.pdf", width=12, height=8)
+ggsave(plot=fwer_sim_fig, file="fwer_simulations.pdf", width=12, height=16)
 ```
