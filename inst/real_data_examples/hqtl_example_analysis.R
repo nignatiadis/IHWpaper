@@ -142,17 +142,12 @@ saveRDS(qtls, file="qtls_chrom_21.Rds")
 library("IHW")
 
 
-<<<<<<< HEAD
-qtls <- readRDS(file="qtls_chrom_21.Rds")
-print("qtls loaded into memory")
-  
-  # up to 300k in 10 bins
-=======
+
 qtls <- readRDS(file = "qtls_chrom_21.Rds")
 print("qtls loaded into memory")
   
 ## up to 300k in 10 bins
->>>>>>> upstream/master
+
 my_breaks <- c(-1, 
                  seq(from=10000,to=290000, by=10000) , 
                  seq(from=300000, to=0.9*10^6, by=100000),
