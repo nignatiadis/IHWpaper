@@ -25,8 +25,8 @@ Null simulation: Generate uniformly distributed p-values and covariates
 \itemize{
 \item \code{null_sim_fun}: Creates a closure function for a given seed
 }}
+
 \examples{
 sim_df <- null_sim(20000)
 
 }
-

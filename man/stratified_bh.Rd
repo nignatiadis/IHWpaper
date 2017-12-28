@@ -33,4 +33,3 @@ Sun, Lei, et al. "Stratified false discovery control for large-scale hypothesis 
 Yoo, Yun J., et al. "Were genome-wide linkage studies a waste of time? Exploiting candidate regions within genome-wide
    association studies." Genetic epidemiology 34.2 (2010): 107-118.
 }
-

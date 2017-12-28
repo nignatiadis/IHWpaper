@@ -17,7 +17,7 @@ Imports: Rcpp, stats, splines, methods, utils, DESeq2,
 VignetteBuilder: knitr
 biocViews: ReproducibleResearch, ExperimentData, RNASeqData,
         ExpressionData
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1
 Suggests: testthat, RColorBrewer, wesanderson, scales, gridExtra,
         BiocStyle, knitr, rmarkdown, airway, pasilla, DESeq, locfdr,
         tidyr

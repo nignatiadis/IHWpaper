@@ -23,4 +23,3 @@ bh: Wrapper for Benjamini Hochberg
      sum(rejected_hypotheses(obj))
 
 }
-

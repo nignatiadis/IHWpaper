@@ -20,4 +20,3 @@ LSL (Least-Slope) pi0 estimator
      lsl_pi0_est(sim_df$pvalue)
 
 }
-
