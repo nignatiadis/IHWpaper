@@ -23,4 +23,3 @@ bonf: Wrapper for Bonferroni
      sum(rejected_hypotheses(obj))
 
 }
-

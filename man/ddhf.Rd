@@ -25,4 +25,3 @@ ddhf: Greedy independent filtering
      sum(rejected_hypotheses(obj))
 
 }
-

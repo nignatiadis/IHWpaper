@@ -46,4 +46,3 @@ helper function to create nice legends
   pretty_legend(gg, annotation_df, 2.1)
 
 }
-

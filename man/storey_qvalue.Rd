@@ -23,4 +23,3 @@ storey_qvalue: Wrapper for Storey's qvalue package
      sum(rejected_hypotheses(obj))
 
 }
-

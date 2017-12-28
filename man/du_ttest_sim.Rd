@@ -37,8 +37,8 @@ t-test simulation: Simulate rowwise t-tests
 \itemize{
 \item \code{du_ttest_sim_fun}: Creates a closure function for a given seed
 }}
+
 \examples{
 sim_df <- du_ttest_sim(20000,0.95, 1.5)
 
 }
-

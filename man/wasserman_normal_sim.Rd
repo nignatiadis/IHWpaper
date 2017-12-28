@@ -29,8 +29,8 @@ Normal simulation: Covariate is effect size under alternative
 \itemize{
 \item \code{wasserman_normal_sim_fun}: Creates a closure function for a given seed
 }}
+
 \examples{
 sim_df <- wasserman_normal_sim(20000,0.9, 1, 5)
 
 }
-

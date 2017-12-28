@@ -57,4 +57,3 @@ This is the main workhorse function which runs all simulation benchmarks for IHW
  eval_table <- run_evals(sim_funs, fdr_methods, nreps, 0.1, BiocParallel=FALSE)
 
 }
-

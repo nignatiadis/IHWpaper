@@ -32,4 +32,3 @@ clfdr: Cai's local fdr based method
 Cai, T. Tony, and Wenguang Sun. "Simultaneous testing of grouped hypotheses: Finding needles in multiple haystacks." 
           Journal of the American Statistical Association 104.488 (2009).
 }
-

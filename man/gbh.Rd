@@ -2,8 +2,8 @@
 % Please edit documentation in R/stratified_methods.R
 \name{gbh}
 \alias{gbh}
-\alias{lsl_gbh}
 \alias{tst_gbh}
+\alias{lsl_gbh}
 \title{gbh: Grouped Benjamini Hochberg}
 \usage{
 gbh(unadj_p, groups, alpha, method = "TST", pi0_global = "weighted_average")
@@ -42,6 +42,7 @@ lsl_gbh: wrapper for gbh with method="LSL"
 
 \item \code{lsl_gbh}: Wrapper of GBH with LSL pi0 estimator
 }}
+
 \examples{
      sim_df <- du_ttest_sim(20000,0.95, 1.5)
      sim_df$group <- groups_by_filter(sim_df$filterstat, 20)
@@ -53,4 +54,3 @@ lsl_gbh: wrapper for gbh with method="LSL"
 Hu, James X., Hongyu Zhao, and Harrison H. Zhou. "False discovery rate control with groups." 
         Journal of the American Statistical Association 105.491 (2010).
 }
-

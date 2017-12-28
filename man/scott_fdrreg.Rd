@@ -28,4 +28,3 @@ James G. Scott, Ryan C. Kelly, Matthew A. Smith, Pengcheng Zhou, and Robert E. K
         "False discovery rate regression: application to neural synchrony detection in primary visual cortex." 
         Journal of the American Statistical Association (2015).
 }
-

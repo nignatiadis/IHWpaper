@@ -33,4 +33,3 @@ Benchmarking wrapper: Given a multiple testing method, convert it so that it tak
      sum(rejected_hypotheses(obj2))
 
 }
-
