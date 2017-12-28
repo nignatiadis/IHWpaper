@@ -48,6 +48,7 @@ continuous_wrap <- function(mt_method, nbins=20){
     stop("unknown covariate handling")
   }
 
+  attr(f, "fdr_pars") <- attr(mt_method, "fdr_pars")
   f
 }
 
