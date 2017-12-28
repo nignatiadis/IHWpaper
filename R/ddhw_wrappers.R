@@ -71,7 +71,7 @@ attr(ihw_5fold_reg, "fdr_method")        <- "IHW E3"
 
 
 
-########################### IHW-Bonferroni
+#--------------- IHW-Bonferroni----------------------------------------
 
 #' @describeIn ihw_naive  IHW-Bonferroni (E1-E2-E3) with 5 folds
 #' @export
@@ -84,4 +84,19 @@ ihw_bonf_5fold_reg <- function(unadj_p, filterstat, alpha){
 
 attr(ihw_bonf_5fold_reg, "testing covariate") <- "continuous"
 attr(ihw_bonf_5fold_reg, "fdr_method")        <- "IHW-Bonferroni E3"
+
+
+#------------------ IHW-Storey ------------------------------------------
+#' @describeIn ihw_naive  IHW (E1-E2) with 5 folds and Storey's pi0 estimator
+#' @export
+ihw_storey_5fold <- function(unadj_p, filterstat, alpha){
+    obj <- ihw(unadj_p, filterstat, alpha, nbins=20, nfolds=5, lambdas=Inf,
+        distrib_estimator="grenander", lp_solver="lpsymphony",
+        null_proportion=TRUE, null_proportion_level = 0.5)
+    obj
+}
+
+attr(ihw_storey_5fold, "testing covariate") <- "continuous"
+attr(ihw_storey_5fold, "fdr_method")        <- "IHW-Storey"
+
 
