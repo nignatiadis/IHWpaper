@@ -1,0 +1,81 @@
+---
+title: "IHW-censoring & Storey simulations"
+author: "Nikos Ignatiadis"
+date: "`r doc_date()`"
+package: "`r pkg_ver('IHWpaper')`"
+output: BiocStyle::html_document
+vignette: >
+  %\VignetteIndexEntry{"IHW-Bonferroni simulations"}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\usepackage[utf8]{inputenc}
+---
+
+```{r warning=F, message=F}
+library("ggplot2")
+library("grid")
+library("dplyr")
+library("tidyr")
+library("cowplot")
+library("IHWpaper")
+library("wesanderson")
+```
+
+```{r}
+colors <- wes_palette("Cavalcanti")
+```
+
+```{r}
+sim_folder <- system.file("simulation_benchmarks/theory_paper",
+                              package = "IHWpaper")
+sim_df <- readRDS(file.path(sim_folder, "ihwc_wasserman_normal_sim.Rds"))
+```
+
+```{r}
+taus_df <- expand.grid(fdr_pars = unique(sim_df$fdr_pars), 
+                       fdr_method = c("BH","IHW","IHW-Storey"),
+                       sim_pars = unique(sim_df$sim_pars)) %>%
+           na.exclude() 
+
+df1 <- left_join(taus_df, select(sim_df, -fdr_pars), by=c("fdr_method","sim_pars"))  %>%
+             select(-fdr_pars.y) %>% rename(fdr_pars = fdr_pars.x)
+df <- full_join(df1, filter(sim_df, fdr_method %in% c("IHWc_Storey","IHWc"))) %>%
+      mutate( fdr_method = ifelse(fdr_method=="IHWc_Storey","IHWc-Storey", fdr_method))
+```
+
+# To pretty print pi0
+```{r}
+pi0s <- sapply(strsplit(df$sim_pars, split="[[:punct:]]"), function(x) paste0(x[[2]],".",x[[3]]))
+df$pi0s <- pi0s
+```
+
+```{r}
+df_merged <- select(df, fdr_pars,  fdr_method, sim_pars, alpha, FDR, power, pi0s) %>%
+             gather(type, value, -fdr_pars, -sim_pars, -fdr_method, -alpha, -pi0s)
+```
+```{r}
+fdr_plot <- ggplot(df_merged, aes(x=fdr_pars, y=value, col=fdr_method)) + geom_line() + 
+                facet_grid(type~pi0s, scales="free_y", switch="y",
+                           labeller=label_bquote(cols=pi[0] == .(pi0s))) + 
+                scale_x_log10() + 
+                scale_color_manual(values=colors) +
+                theme(legend.title=element_blank()) + 
+                xlab(expression(tau~"(censoring threshold)")) +
+                ylab("")
+fdr_plot
+```
+
+```{r}
+power_plot <- ggplot(df, aes(x=fdr_pars, y=power, col=fdr_method)) + geom_line() + 
+                facet_grid(.~pi0s, labeller=label_bquote(cols=pi[0] == .(pi0s))) + 
+                scale_x_log10() + 
+                scale_color_manual(values=colors) +
+                theme(legend.title=element_blank()) + 
+                xlab(expression(tau~"(censoring threshold)")) + 
+                ylab("Power")
+power_plot
+```
+
+
+```{r}
+save_plot("censoring_simulations.pdf", fdr_plot, base_height = 6, base_width=8)
+```
