@@ -11,7 +11,7 @@ bioc_required: true
 bioc_use_devel: true
 
 r_github_packages:
-  - jgscott/FDRreg/R_pkg
+  - jgscott/FDRreg/tree/master/R_pkg
   - jimhester/covr
 bioc_packages:
   - BiocCheck
