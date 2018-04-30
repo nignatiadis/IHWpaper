@@ -1,6 +1,6 @@
 Package: IHWpaper
 Title: Reproduce figures in IHW paper
-Version: 1.8.0
+Version: 1.9.0
 Authors@R: person("Nikos", "Ignatiadis", email =
         "nikos.ignatiadis01@gmail.com", role = c("aut", "cre"))
 Description: This package conveniently wraps all functions needed to
