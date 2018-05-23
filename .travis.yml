@@ -1,0 +1,28 @@
+# Sample .travis.yml for R projects
+
+language: r
+sudo: false
+cache: packages
+
+r:
+  - devel
+warnings_are_errors: true
+bioc_required: true
+bioc_use_devel: true
+
+r_github_packages:
+  - jgscott/FDRreg/tree/master/R_pkg
+  - jimhester/covr
+bioc_packages:
+  - BiocCheck
+
+after_script:
+  - Rscript -e 'covr::codecov()'
+  - ls -lah
+  - FILE=$(ls -1t *.tar.gz | head -n 1)
+  - Rscript -e "library(BiocCheck); BiocCheck(\"${FILE}\")"
+
+notifications:
+  email:
+    on_success: always
+    on_failure: always
