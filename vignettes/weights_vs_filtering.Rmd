@@ -48,7 +48,7 @@ df <- rbind( data.frame(covariate = sim$filterstat, weight= ws, method="filterin
              data.frame(covariate = sim$filterstat, weight= weights(ihw_res, levels_only=FALSE), 
                         method=paste0("IHW; \nlambda=",format(total_regularization_lambda,digits=2))))
 weights_filter_plot <- ggplot(df, aes(x=covariate, y=weight, col=method)) + geom_step(size=1.65)+
-                      scale_colour_manual(values=wes_palette("Cavalcanti")[c(1,2)]) +
+                      scale_colour_manual(values=wes_palette("Cavalcanti1")[c(1,2)]) +
                       theme_classic(16)
 weights_filter_plot
 ```
@@ -78,7 +78,7 @@ df <- rbind(df,
                                      format(regularization_term(ihw_res2) ,digits=2))))
             
 weights_filter_plot <- ggplot(df, aes(x=covariate, y=weight, col=method)) + geom_step(size=1.65)+
-                      scale_colour_manual(values=wes_palette("Cavalcanti")[c(1,2,3)]) +
+                      scale_colour_manual(values=wes_palette("Cavalcanti1")[c(1,2,3)]) +
                       theme_classic(16)
 
 weights_filter_plot

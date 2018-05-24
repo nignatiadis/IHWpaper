@@ -22,7 +22,7 @@ library("wesanderson")
 ```
 
 ```{r}
-colors <- wes_palette("Cavalcanti")[c(3,5)]
+colors <- wes_palette("Cavalcanti1")[c(3,5)]
 ```
 
 # Null simulation
