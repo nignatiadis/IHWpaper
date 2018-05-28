@@ -8,7 +8,7 @@
 #' @return Preprocessed dataset
 #' @examples pasilla <- analyze_dataset("pasilla")
 #'
-#' @importFrom Biobase pData exprs rowMax rowMin
+#' @importFrom Biobase pData rowMax rowMin
 #' @importFrom SummarizedExperiment assay colData
 #' @importFrom BiocGenerics counts updateObject
 #' @importFrom DESeq2 DESeqDataSet DESeq DESeqDataSetFromMatrix results
@@ -56,7 +56,7 @@ analyze_dataset <- function(dataset=c("pasilla","airway","bottomly","pasilla"), 
       bottomly.eset <- NULL
       load(system.file("extdata/real_data", "bottomly_eset.RData", package = "IHWpaper"),
         envir= environment())
-      countData <- exprs(bottomly.eset)
+      countData <- Biobase::exprs(bottomly.eset)
       colData <- pData(bottomly.eset)
       dds <- DESeqDataSetFromMatrix(countData = countData, colData = colData , design = ~strain)
       dds <- DESeq(dds)
@@ -68,7 +68,7 @@ analyze_dataset <- function(dataset=c("pasilla","airway","bottomly","pasilla"), 
       hammer.eset <- NULL
       load(system.file("extdata/real_data", "hammer_eset.RData", package = "IHWpaper"),
                         envir=environment())
-      countData <- exprs(hammer.eset)
+      countData <- Biobase::exprs(hammer.eset)
       colData <- pData(hammer.eset)
       dds <- DESeqDataSetFromMatrix(countData = countData, colData = colData , design = ~protocol)
       dds <- dds[, dds$Time == "2 months"]
