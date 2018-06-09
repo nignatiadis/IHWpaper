@@ -5,7 +5,7 @@ date: "`r doc_date()`"
 package: "`r pkg_ver('IHWpaper')`"
 output: BiocStyle::html_document
 vignette: >
-  %\VignetteIndexEntry{"Real data examples: 1-fold weight function"}
+  %\VignetteIndexEntry{"Various: Real data examples: 1-fold weight function"}
   %\VignetteEngine{knitr::rmarkdown}
   %\usepackage[utf8]{inputenc}
 ---

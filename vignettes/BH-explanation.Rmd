@@ -5,7 +5,7 @@ date: "`r doc_date()`"
 package: "`r pkg_ver('IHWpaper')`"
 output: BiocStyle::html_document
 vignette: >
-  %\VignetteIndexEntry{"BH explanation / visualization"}
+  %\VignetteIndexEntry{"Various: BH explanation / visualization"}
   %\VignetteEngine{knitr::rmarkdown}
   %\usepackage[utf8]{inputenc}
 ---

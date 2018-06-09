@@ -6,7 +6,7 @@ package: "`r pkg_ver('IHWpaper')`"
 output: BiocStyle::html_document
 bibliography: bibliography.bib
 vignette: >
-  %\VignetteIndexEntry{"IHW-Bonferroni simulations"}
+  %\VignetteIndexEntry{"Stats paper: IHW-censoring & Storey simulations"}
   %\VignetteEngine{knitr::rmarkdown}
   %\usepackage[utf8]{inputenc}
 ---

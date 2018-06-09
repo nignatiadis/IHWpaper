@@ -13,13 +13,12 @@ citEntry(entry="article",
                "Nature Methods 13:577, doi: 10.1038/nmeth.3885"))
 
 citEntry(entry="article",
-         title = "Covariate-powered weighted multiple testing with false discovery rate control",
+         title = "Covariate powered cross-weighted multiple testing with false discovery rate control",
          author = personList( as.person("Nikolaos Ignatiadis"),
                               as.person("Wolfgang Huber")),
-         year = 2017,
+         year = 2018,
          journal = "arXiv",
-         doi = "arXiv:1701.05179",
          textVersion =
-         paste("Nikolaos Ignatiadis and Wolfgang Huber (2016):",
+         paste("Nikolaos Ignatiadis and Wolfgang Huber (2018):",
                "Covariate-powered weighted multiple testing with false discovery rate control.",
                "arXiv:1701.05179"))

@@ -5,7 +5,7 @@ date: "`r doc_date()`"
 package: "`r pkg_ver('IHWpaper')`"
 output: BiocStyle::html_document
 vignette: >
-  %\VignetteIndexEntry{"tdr and pvalue rejection regions"}
+  %\VignetteIndexEntry{"Various: tdr and pvalue rejection regions"}
   %\VignetteEngine{knitr::rmarkdown}
   %\usepackage[utf8]{inputenc}
 ---

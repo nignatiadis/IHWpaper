@@ -5,7 +5,7 @@ date: "`r doc_date()`"
 package: "`r pkg_ver('IHWpaper')`"
 output: BiocStyle::html_document
 vignette: >
-  %\VignetteIndexEntry{"Grenander Estimator as applied to IHW (vs ECDF)"}
+  %\VignetteIndexEntry{"Various: Grenander Estimator as applied to IHW (vs ECDF)"}
   %\VignetteEngine{knitr::rmarkdown}
   %\usepackage[utf8]{inputenc}
 ---
