@@ -1,0 +1,589 @@
+---
+title: "hQTL analysis with IHW-Benjamini-Yekutieli"
+author: "Nikos Ignatiadis"
+date: "`r doc_date()`"
+package: "`r pkg_ver('IHWpaper')`"
+output: BiocStyle::html_document
+bibliography: bibliography.bib
+vignette: >
+  %\VignetteIndexEntry{"Stats paper: hQTL analysis with IHW-Benjamini-Yekutieli"}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\usepackage[utf8]{inputenc}
+---
+
+
+```{r warning=FALSE, message=FALSE}
+library(ggbio)
+library(dplyr)
+library(IHW)
+library(fdrtool)
+library(cowplot)
+library(tidyr)
+library(scales)
+```
+
+Let us start by loading in the data:
+
+```{r}
+file_loc <- system.file("extdata","real_data", "hqtl_chrom1_chrom2", package = "IHWpaper")
+```
+
+First the two tables with the p-values corresponding to the two chromosomes. Note that only p-values <= 1e-4 are stored in these.
+```{r}
+chr1_df <- readRDS(file.path(file_loc, "chr1_subset.Rds"))
+chr2_df <- readRDS(file.path(file_loc, "chr2_subset.Rds"))
+```
+
+```{r}
+pval_threshold <- 10^(-4)
+```
+
+Also recall each hypothesis corresponds to a peak (which we call gene below) and a SNP. Hence let us load files about each of the SNPs and peaks:
+
+```{r}
+snp_chr1 <- readRDS(file.path(file_loc, "snppos_chr1.Rds"))
+snp_chr2 <-  readRDS(file.path(file_loc, "snppos_chr2.Rds"))
+
+all_peaks <- readRDS(file.path(file_loc, "peak_locations.Rds"))
+peaks_chr1 <- dplyr::filter(all_peaks, chr=="chr1")
+peaks_chr2 <- dplyr::filter(all_peaks, chr=="chr2")
+```
+
+
+
+We can use these both to infer how many hypotheses were conducted in total (or at a given distance), but also to calculate our covariates which are a function of SNP and peak (their distance).
+
+
+Now let us attach the new column with the covariate (distance) to the data frames.
+
+```{r}
+chr1_df <- left_join(chr1_df, select(snp_chr1, snp, pos), by=(c("SNP"="snp"))) %>%
+       left_join(peaks_chr1, by=(c("gene"="id"))) %>%
+       mutate( dist = pmin( abs(pos-start), abs(pos-end)))
+
+chr2_df <- left_join(chr2_df, select(snp_chr2, snp, pos), by=(c("SNP"="snp"))) %>%
+       left_join(peaks_chr2, by=(c("gene"="id"))) %>%
+       mutate( dist = pmin( abs(pos-start), abs(pos-end)))
+```
+
+Now let us convert the distance to a categorical covariate by binning:
+
+```{r}
+my_breaks <- c(-1, 
+                 seq(from=10000,to=290000, by=10000) , 
+                 seq(from=300000, to=0.9*10^6, by=100000),
+                 seq(from=10^6, to=25.1*10^7, by=10^7))
+myf1 <- cut(chr1_df$dist, my_breaks)
+myf2 <- cut(chr2_df$dist, my_breaks)
+```
+
+To apply our method despite the fact that only small p-values are available, we will count how many hypotheses there are in each of the bins. The above code is not very efficient, so we have precomputed these and do not run the below chunk.
+
+```{r eval=FALSE}
+cnt = 0
+ms <- ms*0
+pb = txtProgressBar(min = 0, max = nrow(peaks_chr1), initial = 0) 
+
+for (i in 1:nrow(peaks_chr1)){
+  setTxtProgressBar(pb,i)
+  start_pos <- peaks_chr1$start[i]
+  end_pos <- peaks_chr1$end[i]
+  dist_vec <- pmin( abs(snp_chr1$pos - start_pos), abs(snp_chr1$pos - end_pos) )
+  ms <- ms + table(cut(dist_vec, my_breaks))
+}
+
+saveRDS( ms, file = "m_groups_chr1.Rds" )
+
+
+cnt = 0
+ms_chr2 <- table(myf2)*0
+pb = txtProgressBar(min = 0, max = nrow(peaks_chr2), initial = 0) 
+
+for (i in 1:nrow(peaks_chr2)){
+  setTxtProgressBar(pb,i)
+  start_pos <- peaks_chr1$start[i]
+  end_pos <- peaks_chr1$end[i]
+  dist_vec <- pmin( abs(snp_chr2$pos - start_pos), abs(snp_chr2$pos - end_pos) )
+  ms_chr2 <- ms_chr2 + table(cut(dist_vec, my_breaks))
+}
+
+saveRDS( ms_chr2, file = "m_groups_chr2.Rds" )
+```
+
+Let us load the result from the above execution:
+
+```{r}
+ms_chr1 <- readRDS(file.path(file_loc, "m_groups_chr1.Rds"))
+ms_chr2 <- readRDS(file.path(file_loc, "m_groups_chr2.Rds"))
+```
+
+
+Let us put the data for the two chromosomes together:
+
+```{r}
+chr1_chr2_df <- rbind(chr1_df, chr2_df)
+chr1_chr2_groups <- as.factor(c(myf1,myf2))
+folds_vec <- as.factor(c(rep(1, nrow(chr1_df)), rep(2, nrow(chr2_df))))
+m_groups <- cbind(ms_chr1, ms_chr2)
+```
+```{r}
+m <- sum(m_groups) #total number of hypotheses
+m
+```
+
+# Histogram plots
+
+Get our colors:
+```{r}
+beyonce_colors <- c("#b72da0", "#7c5bd2", "#0097ed","#00c6c3",
+                   "#9cd78a", "#f7f7a7", "#ebab5f", "#e24344",
+                   "#04738d")#,"#d8cdc9")
+beyonce_colors[6] <- c("#dbcb09") # thicker yellow
+pretty_colors <- beyonce_colors[c(2,1,3:5)]
+```
+
+
+```{r}
+set.seed(1)
+n_subsample <- 10000
+chr1_chr2_df_sub <- sample_n(filter(chr1_chr2_df, pvalue <= 1e-7),n_subsample)
+qs <- c(0.25,0.5, 0.75)
+cutoffs <- c(0, quantile(chr1_chr2_df_sub$dist,qs), Inf)
+cov_scatter_gg <- ggplot(chr1_chr2_df_sub, aes(x=rank(dist),y=-log10(pvalue))) +
+     geom_point(alpha=0.2, col=pretty_colors[1]) + 
+     geom_vline(xintercept=qs*n_subsample, linetype="dashed") + 
+     ylab(expression(paste(-log[10],"(p-value)"))) +
+     xlab(expression(paste("Rank of distance")))
+cov_scatter_gg
+```
+```{r eval=FALSE}
+ggsave(cov_scatter_gg, filename="cov_scatter_gg.pdf", width=6,height=4)
+```
+
+
+```{r}
+chr1_chr2_df$cutoff_groups <- cut(chr1_chr2_df$dist, cutoffs)
+table(chr1_chr2_df$cutoff_groups)
+```
+
+
+
+
+
+First let us plot the marginal histogram:
+
+```{r}
+gg_marginal_hist <- ggplot(chr1_chr2_df, aes(x=pvalue*10^4)) + 
+         geom_histogram(aes(y=..density..), alpha=0.5, binwidth=0.05, boundary = 0, colour="black",fill=pretty_colors[1]) +
+          scale_x_continuous(expand = c(0.02, 0), breaks=c(0,0.5,1)) + 
+          scale_y_continuous(expand = c(0.02, 0), limits=c(0,2.5)) + 
+          ylab(expression(paste("Density")))+
+          xlab(expression(paste("p-value (", 10^-4, ")"))) 
+gg_marginal_hist
+```
+```{r eval=FALSE}
+ggsave(gg_marginal_hist, filename="gg_marginal_hist.pdf", width=6,height=4)
+```
+
+
+```{r}
+gg_stratified_hist <- ggplot(chr1_chr2_df, aes(x=pvalue*10^4)) + 
+         geom_histogram(aes(y=..density..), alpha=0.5, binwidth=0.05, boundary = 0, colour="black",fill=pretty_colors[1]) +
+          scale_x_continuous(expand = c(0.02, 0), breaks=c(0,0.5,1)) + 
+          scale_y_continuous(expand = c(0.02, 0), limits=c(0,11)) + 
+          ylab("Density")+
+          xlab(expression(paste("p-value (", 10^-4, ")"))) +
+          facet_grid(~cutoff_groups) + 
+          theme(strip.background = element_blank(), strip.text.y = element_blank()) + 
+          theme(panel.spacing = unit(2, "lines"))
+gg_stratified_hist      
+```
+
+```{r eval=FALSE}
+ggsave(gg_stratified_hist, filename="gg_stratified_hist.pdf", width=12,height=4)
+```
+
+
+# Apply IHW-BY and BY
+
+We want to apply the Benjamini-Yekutieli at α=0.1, thus we will apply Benjamini-Hochberg at the corrected level:
+
+```{r}
+alpha <- .01/(log(m)+1)
+```
+
+Now let us run the IHW procedure:
+```{r}
+ihw_chr1_chr2 <- ihw(chr1_chr2_df$pvalue, chr1_chr2_groups, alpha, folds=folds_vec,
+                     m_groups=m_groups, lambdas=2000)
+```
+
+
+Rejections of BH:
+
+```{r}
+sum(p.adjust(chr1_chr2_df$pvalue, n = m, method="BH") <= alpha)
+```
+
+Rejections of IHW-BY:
+
+```{r}
+rejections(ihw_chr1_chr2)
+```
+
+So we see that we more than doubled discoveries!
+
+# Pick out some of the hypotheses
+
+For our table we need we one hypothesis in Chr1 that gets rejected both times (by BH and IHW):
+```{r}
+ idx <- which(rejected_hypotheses(ihw_chr1_chr2) & (p.adjust(chr1_chr2_df$pvalue, n = m, method="BH") > alpha) &
+                (covariates(ihw_chr1_chr2)==3) & (ihw_chr1_chr2@df$fold == 1))
+idx_max <- which.max(pvalues(ihw_chr1_chr2)[idx])
+
+ihw_chr1_chr2@df[idx[idx_max],]
+```
+```{r}
+chr1_df[idx[idx_max],]
+```
+
+We need one in chr1 that gets weight 0:
+
+```{r}
+ idx <- which( !rejected_hypotheses(ihw_chr1_chr2) & (p.adjust(chr1_chr2_df$pvalue, n = m, method="BH") > alpha) &
+                (covariates(ihw_chr1_chr2)==15) & (ihw_chr1_chr2@df$fold == 1))
+idx_max <- which.max(pvalues(ihw_chr1_chr2)[idx])
+
+ihw_chr1_chr2@df[idx[idx_max],]
+
+ihw_chr1_chr2@df[idx[idx_max],]
+```
+```{r}
+chr1_df[idx[idx_max],]
+```
+
+One which get rejected in both cases from Chr2 :
+
+```{r}
+ihw_chr1_chr2@df[idx[9],]
+```
+
+```{r}
+chr2_df[idx[9]-nrow(chr1_df),]
+```
+
+
+And another one that only gets rejected in one case
+```{r}
+idx <- which( rejected_hypotheses(ihw_chr1_chr2) & (p.adjust(chr1_chr2_df$pvalue, n = m, method="BH") > alpha) &
+                (covariates(ihw_chr1_chr2)==1) & (ihw_chr1_chr2@df$fold == 2))
+idx_max <- which.max(pvalues(ihw_chr1_chr2)[idx])
+
+ihw_chr1_chr2@df[idx[idx_max],]
+```
+```{r}
+chr2_df[idx[idx_max]-nrow(chr1_df),]
+```
+
+# Set out to do the weight/threshold/lfdr plots
+
+
+First get the threshold below which BY rejects:
+
+```{r}
+t_bh <- get_bh_threshold(chr1_chr2_df$pvalue, alpha, mtests = m)
+t_bh
+```
+
+Next write a function to estimate the local fdr at a given threshold:
+```{r}
+get_local_fdr <- function(fold, group){
+  idx <- (chr1_chr2_groups == group) & (folds_vec == fold)
+  pvals <- sort(chr1_chr2_df$pvalue[idx])
+  m_true <-  m_groups[group,fold]
+  gren <- IHW:::presorted_grenander(pvals, m_true)
+  myt <- thresholds(ihw_chr1_chr2, levels_only=TRUE)[group,fold]
+  id_ihw_myt <- which(myt < gren$x.knots)[1]
+  local_fdr_ihw <- ifelse(myt == 0, 0, 1/gren$slope.knots[id_ihw_myt-1])
+  
+  
+  id_bh_thresh <- which(t_bh < gren$x.knots)[1]
+  local_fdr_bh <- 1/gren$slope.knots[id_bh_thresh-1]
+  
+  pi0 <- (m_true - length(pvals))/(1-10^(-4))/m_true
+  data.frame(fold=fold, group=group, pi0=pi0, t_ihw=myt, local_fdr_ihw =  local_fdr_ihw, 
+             local_fdr_bh = local_fdr_bh)
+}
+```
+
+```{r}
+fold_groups <- expand.grid(1:62, 1:2)
+```
+
+Precompute the below too because it takes a while:
+```{r eval=FALSE}
+lfdrs <- bind_rows(mapply(get_local_fdr, fold_groups[[2]], fold_groups[[1]], SIMPLIFY = FALSE))
+saveRDS(lfdrs,file="hqtl_estimated_lfdrs.Rds")
+```
+
+```{r}
+lfdrs <-  readRDS(file.path(file_loc, "hqtl_estimated_lfdrs.Rds"))
+```
+
+```{r}
+lfdrs <- mutate(lfdrs, Chromosome=paste0("chr", fold), stratum=group, t_bh=t_bh)
+```
+
+# Start the plotting
+
+```{r}
+breaks <-   my_breaks/10^3
+breaks <- breaks[-1]
+break_min <- 3000/10^3
+breaks_left <- c(break_min,breaks[-length(breaks)])
+stratum <- 1:62
+step_df_weight <- data.frame(stratum=stratum, chr2=weights(ihw_chr1_chr2,levels_only=TRUE)[,1], 
+                                       chr1=weights(ihw_chr1_chr2, levels_only=TRUE)[,2] ) %>%
+           gather(Chromosome, weight , -stratum)
+
+step_df_threshold <- data.frame(stratum=stratum,
+                                chr2=thresholds(ihw_chr1_chr2,levels_only=TRUE)[,2], 
+                                chr1=thresholds(ihw_chr1_chr2, levels_only=TRUE)[,1] ) %>%
+           gather(Chromosome, threshold , -stratum)
+
+step_df <- left_join(step_df_weight, step_df_threshold) %>% left_join(lfdrs)
+
+step_df <- step_df %>% mutate(break_left = breaks_left[stratum],
+                 break_right = breaks[stratum],
+                 break_ratio = break_right/break_left , 
+                 break_left =break_left * break_ratio^.2,
+                 break_right = break_right *break_ratio^(-.2))
+
+stratum_fun <- function(df, colname="weight"){
+  stratum <- df$stratum
+  weight <- df[[colname]]
+  stratum_left <- stratum[stratum != length(stratum)]
+  weight_left  <- weight[stratum_left]
+  break_left <- df$break_right[stratum_left]
+  stratum_right <- stratum[stratum != 1]
+  weight_right <- weight[stratum_right]
+  break_right <- df$break_left[stratum_right]
+  data.frame(stratum_left= stratum_left, weight_left= weight_left, 
+             stratum_right = stratum_right, weight_right = weight_right,
+             break_left = break_left, break_right = break_right)
+}
+
+
+
+
+connecting_df_weights <- step_df %>% group_by(Chromosome) %>% 
+                  do(stratum_fun(.)) %>%
+                  mutate(dashed = factor(ifelse(abs(weight_left - weight_right) > 0.5 , TRUE, FALSE),
+                         levels=c(FALSE,TRUE)))
+
+weights_panel <- ggplot(step_df, aes(x=break_left, xend=break_right,y=weight, yend=weight, col=Chromosome)) +
+                geom_segment(size=0.8)+                
+                geom_segment(data= connecting_df_weights, aes(x=break_left, xend=break_right, 
+                                                y=weight_left, yend=weight_right, 
+                                                linetype=dashed),
+                             size=0.8)+
+                scale_x_log10(breaks=c(10^4, 10^5,10^6,10^7,10^8), 
+                              labels = trans_format("log10", math_format(10^.x))) +
+                xlab("Genomic distance (bp)")+
+                ylab("Weight")+
+                theme(legend.position=c(0.8,0.6)) +
+                theme(plot.margin = unit(c(2, 1.5, 1, 2.5), "lines"))+
+                theme(axis.title = element_text(face="bold" ))+
+                scale_color_manual(values=pretty_colors)+
+                guides(linetype=FALSE)
+
+weights_panel
+
+```
+# Weights chromosome 1
+
+```{r}
+weights_panel_1 <- ggplot(filter(step_df, Chromosome == "chr1"), aes(x=break_left, xend=break_right,y=weight, yend=weight, col=Chromosome)) +
+                geom_segment(size=0.8,lineend="round")+                
+                geom_segment(data= filter(connecting_df_weights, Chromosome=="chr1"), aes(x=break_left, xend=break_right, 
+                                                y=weight_left, yend=weight_right, 
+                                                linetype=dashed),
+                             size=0.8,lineend="round")+
+                scale_x_log10(breaks=c(10, 10^2,10^3,10^4), 
+                              labels = trans_format("log10", math_format(10^.x))) +
+                scale_y_continuous(breaks=c(0,1000,2000))+
+                xlab(expression(paste("Distance (kbp)")))+
+                ylab(expression(paste("Weight")))+
+                theme(legend.position="none") +
+                theme(plot.margin = unit(c(2, 1.5, 1, 2.5), "lines"))+
+                theme(axis.title = element_text(face="bold" ))+
+                scale_color_manual(values=pretty_colors)+
+                guides(linetype=FALSE)
+
+weights_panel_1
+```
+```{r eval=FALSE}
+ggsave(weights_panel_1, filename="chr1_weights.pdf", width=3.5,height=2.5)
+```
+
+```{r}
+weights_panel_2 <- ggplot(filter(step_df, Chromosome == "chr2"), aes(x=break_left, xend=break_right,y=weight, yend=weight, col=Chromosome)) +
+                geom_segment(size=0.8, lineend="round")+                
+                geom_segment(data= filter(connecting_df_weights, Chromosome=="chr2"), aes(x=break_left, xend=break_right, 
+                                                y=weight_left, yend=weight_right, 
+                                                linetype=dashed),
+                             size=0.8, lineend="round")+
+                scale_x_log10(breaks=c(10, 10^2,10^3,10^4), 
+                              labels = trans_format("log10", math_format(10^.x))) +
+                scale_y_continuous(breaks=c(0,1000,2000))+
+                xlab(expression(paste("Distance (kbp)")))+
+                ylab(expression(paste("Weight")))+
+                theme(legend.position="none") +
+                theme(plot.margin = unit(c(2, 1.5, 1, 2.5), "lines"))+
+                theme(axis.title = element_text(face="bold" ))+
+                scale_color_manual(values=pretty_colors)+
+                guides(linetype=FALSE)
+
+weights_panel_2
+```
+```{r eval=FALSE}
+ggsave(weights_panel_2, filename="chr2_weights.pdf", width=3.5,height=2.5)
+```
+
+```{r}
+connecting_df_thresholds_ihw <- step_df %>% group_by(Chromosome) %>% 
+                  do(stratum_fun(., colname="t_ihw")) %>%
+                  mutate(dashed = FALSE)#factor(ifelse(abs(weight_left - weight_right) > 10^{-7} , TRUE, FALSE),
+                        # levels=c(FALSE,TRUE)))
+
+thresholds_ihw_panel <- ggplot(step_df, aes(x=break_left, xend=break_right,y=t_ihw*10^6, yend=t_ihw*10^6, col=Chromosome)) +
+                geom_segment(size=0.8, lineend="round")+                
+                geom_segment(data= connecting_df_thresholds_ihw, aes(x=break_left, xend=break_right, 
+                                                y=weight_left*10^6, yend=weight_right*10^6, 
+                                                linetype=dashed),
+                             size=0.8, lineend="round")+
+                scale_x_log10(breaks=c(10, 10^2,10^3,10^4), 
+                              labels = trans_format("log10", math_format(10^.x))) +
+                scale_y_continuous(limits=c(0,1.8), breaks=c(0,1))+
+                xlab(expression(paste("Distance (kbp)")))+
+                ylab(expression(paste("IHW t(x) (",10^-6,")")))+
+                theme(legend.position=c(0.6,0.7), legend.title = element_blank()) +
+                theme(plot.margin = unit(c(2, 1.5, 1, 2.5), "lines"))+
+                theme(axis.title = element_text(face="bold" ))+
+                scale_color_manual(values=pretty_colors)+
+                guides(linetype=FALSE)
+
+thresholds_ihw_panel
+```
+
+```{r eval=FALSE}
+ggsave(thresholds_ihw_panel, filename="ihw_by_threshold.pdf", width=3.5,height=2.5)
+```
+
+```{r}
+connecting_df_thresholds_bh <- step_df %>% group_by(Chromosome) %>% 
+                  do(stratum_fun(., colname="t_bh")) %>%
+                  mutate(dashed = FALSE)#factor(ifelse(abs(weight_left - weight_right) > 10^{-11} , TRUE, TRUE),
+                         #levels=c(FALSE,TRUE)))
+
+scientific_10 = function(x) {ifelse(x==0, "0", parse(text=gsub("[+]", "", gsub("e", " %*% 10^", scientific_format()(x)))))} 
+thresholds_bh_panel <- ggplot(step_df, aes(x=break_left, xend=break_right,y=10^10*t_bh, yend=10^10*t_bh, col=Chromosome)) +
+                geom_segment(size=0.8)+                
+                geom_segment(data= connecting_df_thresholds_bh, aes(x=break_left, xend=break_right, 
+                                                y=weight_left*10^10, yend=weight_right*10^10, 
+                                                linetype=dashed),
+                             size=0.8)+
+                scale_x_log10(breaks=c(10, 10^2,10^3,10^4), 
+                              labels = trans_format("log10", math_format(10^.x))) +
+                scale_y_continuous(limits=c(0,5), breaks=c(0,2,4))+
+                xlab(expression(paste("Distance (kbp)")))+
+                ylab(expression(paste("BY t(x) (",10^-10,")")))+
+                theme(legend.position=c(0.6,0.7), legend.title = element_blank()) +
+                theme(plot.margin = unit(c(2, 1.5, 1, 2.5), "lines"))+
+                theme(axis.title = element_text(face="bold" ))+
+                scale_color_manual(values=pretty_colors)+
+                guides(linetype=FALSE)
+
+thresholds_bh_panel
+```
+```{r}
+ggsave(thresholds_bh_panel, filename="by_threshold.pdf", width=3.5,height=2.5)
+```
+
+```{r}
+connecting_df_lfdr_ihw <- step_df %>% group_by(Chromosome) %>% 
+                  do(stratum_fun(., colname="local_fdr_ihw")) %>%
+                  mutate(dashed = FALSE)
+
+lfdr_ihw_panel <- ggplot(step_df, aes(x=break_left, xend=break_right,y=10^1*local_fdr_ihw, yend=10^1*local_fdr_ihw, col=Chromosome)) +
+                geom_segment(size=0.8, lineend="round")+                
+                geom_segment(data= connecting_df_lfdr_ihw, aes(x=break_left, xend=break_right, 
+                                                y=10^1*weight_left, yend=10^1*weight_right, 
+                                                linetype=dashed),
+                             size=0.8,lineend="round")+
+                scale_x_log10(breaks=c(10, 10^2,10^3,10^4), 
+                              labels = trans_format("log10", math_format(10^.x))) +
+                xlab(expression(paste("Distance (kbp)")))+
+                ylab(expression(paste("IHW fdr(t(x) | x)")))+
+                theme(legend.position=c(0.6,0.7), legend.title = element_blank()) +
+                theme(plot.margin = unit(c(2, 1.5, 1, 2.5), "lines"))+
+                theme(axis.title = element_text(face="bold" ))+
+                scale_color_manual(values=pretty_colors)+
+                guides(linetype=FALSE)
+
+lfdr_ihw_panel
+```
+```{r eval=FALSE}
+ggsave(lfdr_ihw_panel, filename="ihw_by_fdr.pdf", width=3.5,height=2.5)
+```
+
+
+```{r}
+connecting_df_lfdr_bh <- step_df %>% group_by(Chromosome) %>% 
+                  do(stratum_fun(., colname="local_fdr_bh")) %>%
+                  mutate(dashed = FALSE)#factor(ifelse(abs(weight_left - weight_right) > 0.5*10^(-6) , TRUE, FALSE),
+                        # levels=c(FALSE,TRUE)))
+
+lfdr_bh_panel <- ggplot(step_df, aes(x=break_left, xend=break_right,y=local_fdr_bh, yend=local_fdr_bh, col=Chromosome)) +
+                geom_segment(size=0.8, lineend="round")+                
+                geom_segment(data= connecting_df_lfdr_bh, aes(x=break_left, xend=break_right, 
+                                                y=weight_left, yend=weight_right, 
+                                                linetype=dashed),
+                             size=0.8, lineend="round")+
+                scale_x_log10(breaks=c(10, 10^2,10^3,10^4), 
+                              labels = trans_format("log10", math_format(10^.x))) +
+                scale_y_log10( labels = trans_format("log10", math_format(10^.x)))+
+                xlab(expression(paste("Distance (kbp)")))+
+                ylab(expression(paste("BY fdr(t(x) | x)")))+
+                theme(legend.position=c(0.6,0.4), legend.title = element_blank()) +
+                theme(plot.margin = unit(c(2, 1.5, 1, 2.5), "lines"))+
+                theme(axis.title = element_text(face="bold" ))+
+                scale_color_manual(values=pretty_colors)+
+                guides(linetype=FALSE)
+
+lfdr_bh_panel
+```
+
+```{r eval=FALSE}
+ggsave(lfdr_bh_panel, filename="by_fdr.pdf", width=3.5,height=2.5)
+```
+
+
+# Figure of chromosomes 1 and 2
+
+Below we use ggbio to create the ideograms of Human chromosomes 1 and 2.
+
+
+```{r eval = FALSE}
+#ggbio seems to be broken right now, fix later.
+
+chr1_ideo <- Ideogram(genome = "hg19", subchr="chr1")@ggplot + 
+                    xlab(paste0("SNPs: ", nrow(snp_chr1), "\n", 
+                                "Peaks: ", nrow(peaks_chr1)))  
+chr2_ideo <- Ideogram(genome = "hg19", subchr="chr2")@ggplot + xlab("bla") + 
+                    xlab(paste0("SNPs: ", nrow(snp_chr2), "\n", 
+                                "Peaks: ", nrow(peaks_chr2)))  
+chrs_ideo <- plot_grid(chr1_ideo, chr2_ideo, nrow=2)
+chrs_ideo
+```
+
