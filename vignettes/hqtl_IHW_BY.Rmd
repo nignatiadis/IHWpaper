@@ -207,7 +207,7 @@ ggsave(gg_stratified_hist, filename="gg_stratified_hist.pdf", width=9,height=3)
 
 # Apply IHW-BY and BY
 
-We want to apply the Benjamini-Yekutieli at α=0.1, thus we will apply Benjamini-Hochberg at the corrected level:
+We want to apply the Benjamini-Yekutieli at alpha=0.1, thus we will apply Benjamini-Hochberg at the corrected level:
 
 ```{r}
 alpha <- .01/(log(m)+1)
