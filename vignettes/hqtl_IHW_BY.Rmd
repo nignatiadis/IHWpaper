@@ -20,6 +20,7 @@ library(fdrtool)
 library(cowplot)
 library(tidyr)
 library(scales)
+library(latex2exp)
 ```
 
 Let us start by loading in the data:
@@ -157,7 +158,7 @@ cov_scatter_gg <- ggplot(chr1_chr2_df_sub, aes(x=rank(dist),y=-log10(pvalue))) +
 cov_scatter_gg
 ```
 ```{r eval=FALSE}
-ggsave(cov_scatter_gg, filename="cov_scatter_gg.pdf", width=6,height=4)
+ggsave(cov_scatter_gg, filename="cov_scatter_gg.pdf", width=4,height=3)
 ```
 
 
@@ -178,11 +179,11 @@ gg_marginal_hist <- ggplot(chr1_chr2_df, aes(x=pvalue*10^4)) +
           scale_x_continuous(expand = c(0.02, 0), breaks=c(0,0.5,1)) + 
           scale_y_continuous(expand = c(0.02, 0), limits=c(0,2.5)) + 
           ylab(expression(paste("Density")))+
-          xlab(expression(paste("p-value (", 10^-4, ")"))) 
+          xlab(TeX("p-value ($\\times 10^{-4}$)")) 
 gg_marginal_hist
 ```
 ```{r eval=FALSE}
-ggsave(gg_marginal_hist, filename="gg_marginal_hist.pdf", width=6,height=4)
+ggsave(gg_marginal_hist, filename="gg_marginal_hist.pdf", width=4,height=3)
 ```
 
 
@@ -192,7 +193,7 @@ gg_stratified_hist <- ggplot(chr1_chr2_df, aes(x=pvalue*10^4)) +
           scale_x_continuous(expand = c(0.02, 0), breaks=c(0,0.5,1)) + 
           scale_y_continuous(expand = c(0.02, 0), limits=c(0,11)) + 
           ylab("Density")+
-          xlab(expression(paste("p-value (", 10^-4, ")"))) +
+          xlab(TeX("p-value ($\\times 10^{-4}$)")) +
           facet_grid(~cutoff_groups) + 
           theme(strip.background = element_blank(), strip.text.y = element_blank()) + 
           theme(panel.spacing = unit(2, "lines"))
@@ -200,7 +201,7 @@ gg_stratified_hist
 ```
 
 ```{r eval=FALSE}
-ggsave(gg_stratified_hist, filename="gg_stratified_hist.pdf", width=12,height=4)
+ggsave(gg_stratified_hist, filename="gg_stratified_hist.pdf", width=9,height=3)
 ```
 
 
@@ -233,9 +234,9 @@ rejections(ihw_chr1_chr2)
 
 So we see that we more than doubled discoveries!
 
-# Pick out some of the hypotheses
+# Hypotheses shown in table
 
-For our table we need we one hypothesis in Chr1 that gets rejected both times (by BH and IHW):
+For our table we need one hypothesis in Chr1 that gets rejected both times (by BH and IHW):
 ```{r}
  idx <- which(rejected_hypotheses(ihw_chr1_chr2) & (p.adjust(chr1_chr2_df$pvalue, n = m, method="BH") > alpha) &
                 (covariates(ihw_chr1_chr2)==3) & (ihw_chr1_chr2@df$fold == 1))
@@ -247,7 +248,7 @@ ihw_chr1_chr2@df[idx[idx_max],]
 chr1_df[idx[idx_max],]
 ```
 
-We need one in chr1 that gets weight 0:
+We need one in Chr1 that gets weight 0:
 
 ```{r}
  idx <- which( !rejected_hypotheses(ihw_chr1_chr2) & (p.adjust(chr1_chr2_df$pvalue, n = m, method="BH") > alpha) &
@@ -281,6 +282,7 @@ idx_max <- which.max(pvalues(ihw_chr1_chr2)[idx])
 
 ihw_chr1_chr2@df[idx[idx_max],]
 ```
+
 ```{r}
 chr2_df[idx[idx_max]-nrow(chr1_df),]
 ```
@@ -576,7 +578,6 @@ Below we use ggbio to create the ideograms of Human chromosomes 1 and 2.
 
 ```{r eval = FALSE}
 #ggbio seems to be broken right now, fix later.
-
 chr1_ideo <- Ideogram(genome = "hg19", subchr="chr1")@ggplot + 
                     xlab(paste0("SNPs: ", nrow(snp_chr1), "\n", 
                                 "Peaks: ", nrow(peaks_chr1)))  
