@@ -1,3 +1,5 @@
+context("dataset_analysis")
+
 analyze_dataset("bottomly")
 analyze_dataset("pasilla")
 analyze_dataset("hammer")

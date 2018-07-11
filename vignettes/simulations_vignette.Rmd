@@ -102,7 +102,7 @@ panel_b
 
 ## Panels a, b)
 
-```{r, fig.width=11, fig.height=5.5}
+```{r, fig.width=11, fig.height=5.5, eval=FALSE}
 panel_ab <- plot_grid(panel_a, panel_b, labels=c("a)","b)"), vjust=4.5) 
           
 
@@ -186,7 +186,7 @@ panel_d
 
 ## Put panels c), d) together:
 
-```{r, fig.width=11, fig.height=5.5}
+```{r, fig.width=11, fig.height=5.5, eval=FALSE}
 panel_cd <- plot_grid(panel_c, panel_d, labels=c("c)","d)"), vjust=4.5) 
 
 #ggsave(panel_cd, "t_test_full.pdf",width=11,height=5.5)
@@ -270,7 +270,7 @@ panel_f
 ## Combine main panels for size investing
 
 
-```{r fig.width=11, fig.height=5.5}
+```{r fig.width=11, fig.height=5.5, eval=FALSE}
 panel_ef <- plot_grid(panel_e, panel_f, labels=c("e)","f)"), vjust=4.5) 
 
 #plot_grid(panel_c, panel_d) 
@@ -287,7 +287,7 @@ panel_ef
 
 # Combine everything into main text simulation figure
 
-```{r, fig.width=12, fig.height=16}
+```{r, fig.width=12, fig.height=16, eval=FALSE}
 main_sim_fig <- plot_grid(panel_ab,panel_cd, panel_ef, nrow=3)
 main_sim_fig
 ```
@@ -298,7 +298,7 @@ ggsave(plot=main_sim_fig, file="main_simulations.pdf", width=12, height=16)
 
 # New main fig sim. figures without borders:
 
-```{r, fig.width=12, fig.height=16 }
+```{r, fig.width=12, fig.height=16, eval=FALSE}
 main_sim_fig <- plot_grid(panel_a,panel_b,
                           panel_c,panel_d,
                           panel_e, panel_f,
@@ -367,7 +367,7 @@ sup_panel_b
 
 ## Combine supplementary effect size simulations
 
-```{r fig.width=11, fig.height=5.5}
+```{r fig.width=11, fig.height=5.5, eval=FALSE}
 sup_panel_ab<- plot_grid(sup_panel_a, sup_panel_b, labels=c("a)","b)"), vjust=4.5) 
 
 sup_panel_ab <- ggdraw(sup_panel_ab) +
@@ -435,7 +435,7 @@ sup_panel_d
 
 ## Combine supplemental size investing panels
 
-```{r fig.width=11, fig.height=5.5}
+```{r fig.width=11, fig.height=5.5, eval=FALSE}
 sup_panel_cd <- plot_grid(sup_panel_c, sup_panel_d, labels=c("c)","d)"), vjust=4.5) 
 
 #plot_grid(panel_c, panel_d) 
@@ -452,7 +452,7 @@ sup_panel_cd
 
 # Full supplementary simulations figure
 
-```{r fig.width=12, fig.height=12}
+```{r fig.width=12, fig.height=12, eval=FALSE}
 sup_sim_fig <- plot_grid(sup_panel_ab,sup_panel_cd, nrow=2)
 sup_sim_fig
 ```
@@ -462,7 +462,7 @@ cowplot::ggsave(plot=sup_sim_fig, file="suppl_simulations.pdf", width=12, height
 
 ## New supplementary simulations figure
 
-```{r fig.width=12, fig.height=12}
+```{r fig.width=12, fig.height=12, eval=FALSE}
 sup_sim_fig <- plot_grid(sup_panel_a,sup_panel_b,
                           sup_panel_c,sup_panel_d,
                           nrow=2,

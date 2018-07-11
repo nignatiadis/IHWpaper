@@ -1,3 +1,6 @@
+context("simulation_check")
+
+
 # Exemplary simulation with low number of Monte Carlo replicates
 
 
