@@ -8,7 +8,7 @@ bibliography: bibliography.bib
 vignette: >
   %\VignetteIndexEntry{"Stats paper: hQTL analysis with IHW-Benjamini-Yekutieli"}
   %\VignetteEngine{knitr::rmarkdown}
-  %\usepackage[utf8]{inputenc}
+  %\VignetteEncoding{UTF-8}
 ---
 
 
