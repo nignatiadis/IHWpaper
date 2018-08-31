@@ -266,6 +266,11 @@ chr1_df[idx[idx_max],]
 One which get rejected in both cases from Chr2 :
 
 ```{r}
+idx <- which( rejected_hypotheses(ihw_chr1_chr2) & (p.adjust(chr1_chr2_df$pvalue, n = m, method="BH") <= alpha) &
+                (covariates(ihw_chr1_chr2)==3) & (ihw_chr1_chr2@df$fold == 2))
+```
+
+```{r}
 ihw_chr1_chr2@df[idx[9],]
 ```
 
