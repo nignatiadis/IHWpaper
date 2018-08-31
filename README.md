@@ -29,8 +29,9 @@ install_github("nignatiadis/IHW")
 # install FDRreg, version on CRAN is outdated
 install_github(repo= "jgscott/FDRreg", subdir="R_pkg/", ref = "a63cebae6faecb1fb0ebee634195296f39faa11b")
 # Bioconductor prerequisites
-source("http://bioconductor.org/biocLite.R")
-biocLite(c("genefilter","DESeq2","qvalue","Biobase",
+if (!requireNamespace("BiocManager", quietly=TRUE))
+    install.packages("BiocManager")
+BiocManager::install(c("genefilter","DESeq2","qvalue","Biobase",
             "BiocParallel","airway","pasilla", "BiocStyle"))
 # finally install this package
 install_github("nignatiadis/IHWpaper")
