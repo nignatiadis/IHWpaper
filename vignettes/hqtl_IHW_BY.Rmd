@@ -18,6 +18,7 @@ library(dplyr)
 library(IHW)
 library(fdrtool)
 library(cowplot)
+theme_set(theme_cowplot())
 library(tidyr)
 library(scales)
 library(latex2exp)
@@ -82,7 +83,7 @@ To apply our method despite the fact that only small p-values are available, we 
 
 ```{r eval=FALSE}
 cnt = 0
-ms <- ms*0
+ms <- rep(0, length(levels(myf1)))
 pb = txtProgressBar(min = 0, max = nrow(peaks_chr1), initial = 0) 
 
 for (i in 1:nrow(peaks_chr1)){
@@ -143,20 +144,22 @@ beyonce_colors[6] <- c("#dbcb09") # thicker yellow
 pretty_colors <- beyonce_colors[c(2,1,3:5)]
 ```
 
-
+  
 ```{r}
-set.seed(1)
-n_subsample <- 10000
-chr1_chr2_df_sub <- sample_n(filter(chr1_chr2_df, pvalue <= 1e-7),n_subsample)
-qs <- c(0.25,0.5, 0.75)
-cutoffs <- c(0, quantile(chr1_chr2_df_sub$dist,qs), Inf)
-cov_scatter_gg <- ggplot(chr1_chr2_df_sub, aes(x=rank(dist),y=-log10(pvalue))) +
-     geom_point(alpha=0.2, col=pretty_colors[1]) + 
-     geom_vline(xintercept=qs*n_subsample, linetype="dashed") + 
+qs <- c(0.025, 0.05)
+cutoffs <- c(0, quantile(chr1_chr2_df$dist,qs), Inf)
+cov_scatter_gg <- ggplot(chr1_chr2_df, aes(x=rank(dist)/nrow(chr1_chr2_df),
+                                           y=-log10(pvalue))) +
+     geom_bin2d(bins=150, drop=TRUE) + #  geom_point(alpha=0.2, col=pretty_colors[1]) + 
+     geom_vline(xintercept=qs, linetype="dashed") + 
      ylab(expression(paste(-log[10],"(p-value)"))) +
-     xlab(expression(paste("Rank of distance")))
+     xlab(expression(paste("Quantile of distance"))) + 
+     scale_fill_gradientn(trans="log10", colors=alpha(pretty_colors[1], c(0.2,1)))
 cov_scatter_gg
 ```
+
+
+
 ```{r eval=FALSE}
 ggsave(cov_scatter_gg, filename="cov_scatter_gg.pdf", width=4,height=3)
 ```
@@ -201,7 +204,7 @@ gg_stratified_hist
 ```
 
 ```{r eval=FALSE}
-ggsave(gg_stratified_hist, filename="gg_stratified_hist.pdf", width=9,height=3)
+ggsave(gg_stratified_hist, filename="gg_stratified_hist.pdf", width=7,height=3)
 ```
 
 
