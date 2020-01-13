@@ -3,19 +3,8 @@
 
 # IHWpaper
 
-This is a package which reproduces all IHW paper figures (as well as some additional figures for presentations etc.).
+This is a package which reproduces all IHW paper figures (as well as some additional figures for presentations etc.). The package is available on [Bioconductor](http://bioconductor.org/packages/release/data/experiment/html/IHWpaper.html).
 
-
-# Vignettes in the IHWpaper package
-
-All vignettes can be found in the /vignettes directory. For the vignettes which reproduce figures in our manuscript, we also provide a link to the rendered html page below:
-
-* Figure 1: [Stratified Histograms](https://rawgit.com/nignatiadis/IHWpaper/master/inst/doc/stratified_histograms.html)
-* Figure 2: [Real data examples](https://rawgit.com/nignatiadis/IHWpaper/master/inst/doc/real_data_examples.html)
-* Figures 3 and S1: [Simulation Results](https://rawgit.com/nignatiadis/IHWpaper/master/inst/doc/simulations_vignette.html)
-* Figure 4: Schematic figure, no code used for its generation
-* Figures S2 and S3: [Explaining tdr](https://rawgit.com/nignatiadis/IHWpaper/master/inst/doc/explaining_tdr.html)
-* Figure S4: [IHW-Bonferroni simulations](https://rawgit.com/nignatiadis/IHWpaper/master/inst/doc/IHW_bonferroni_simulations.html)
 
 # Installing the package and reproducing all simulations
 
