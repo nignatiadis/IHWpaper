@@ -17,7 +17,9 @@ This vignette is meant to illustrate how the distribution function of some p-val
 ```{r warning=F, message=F}
 library("IHWpaper")
 library("fdrtool")
+library("ggplot2")
 library("cowplot")
+theme_set(theme_cowplot())
 ```
 
 First we generate some p-values based on 100 independent t-tests. And calculate the ECDF and Grenander estimator.

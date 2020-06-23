@@ -16,6 +16,7 @@ library("grid")
 library("dplyr")
 library("cowplot")
 library("IHWpaper")
+theme_set(theme_cowplot())
 ```
 
 Some general preliminary work, define factors, colours, which methods should we consider conservative, which anticonservative.
@@ -210,7 +211,7 @@ sizeinvesting_e3_file <-  system.file("simulation_benchmarks/result_files",
                         "ihw_wasserman_normal_simulation_benchmark_E3.Rds", package = "IHWpaper")
 sizeinvesting_file <- system.file("simulation_benchmarks/result_files",
                          "ihw_wasserman_normal_simulation_benchmark.Rds", package = "IHWpaper")
-sizeinvesting_df <- rbind_all(lapply(c(sizeinvesting_file,
+sizeinvesting_df <- bind_rows(lapply(c(sizeinvesting_file,
                                        sizeinvesting_e3_file,
                                        sizeinvesting_grb_file), readRDS)) %>%
                     filter(fdr_method != "IHW") %>% # just show IHW with E1-E3 
