@@ -5,8 +5,10 @@
 \title{analyze_dataset: Basically performs preprocessing and then returns analyzed RNASeq dataset (diff. expression)
           , i.e. the DESeq2 result whose p-values and baseMean statistics can then be used with DDHW}
 \usage{
-analyze_dataset(dataset = c("pasilla", "airway", "bottomly", "pasilla"),
-  res = TRUE)
+analyze_dataset(
+  dataset = c("pasilla", "airway", "bottomly", "hammer"),
+  res = TRUE
+)
 }
 \arguments{
 \item{dataset}{Character, name of dataset to be preprocessed, only 4 choices currently available}

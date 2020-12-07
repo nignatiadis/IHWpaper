@@ -6,11 +6,24 @@
 \title{Normal PRDS simulation: Covariate is effect size under alternative, there are latent factors
      driving PRDS correlations among hypotheses}
 \usage{
-wasserman_normal_prds_sim(m, pi0, rho = 0, latent_factors = 1, xi_min = 0,
-  xi_max = 2.5, seed = NULL)
+wasserman_normal_prds_sim(
+  m,
+  pi0,
+  rho = 0,
+  latent_factors = 1,
+  xi_min = 0,
+  xi_max = 2.5,
+  seed = NULL
+)
 
-wasserman_normal_prds_sim_fun(m, pi0, rho = 0, latent_factors = 1,
-  xi_min = 0, xi_max = 2.5)
+wasserman_normal_prds_sim_fun(
+  m,
+  pi0,
+  rho = 0,
+  latent_factors = 1,
+  xi_min = 0,
+  xi_max = 2.5
+)
 }
 \arguments{
 \item{m}{Integer, total number of hypotheses}

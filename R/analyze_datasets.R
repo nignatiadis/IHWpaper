@@ -15,7 +15,7 @@
 #' @import genefilter
 #' @importFrom utils data
 #' @export
-analyze_dataset <- function(dataset=c("pasilla","airway","bottomly","pasilla"), res= TRUE) {
+analyze_dataset <- function(dataset=c("pasilla","airway","bottomly","hammer"), res= TRUE) {
 
     if (dataset=="airway") {
       airway <- NULL
@@ -29,12 +29,11 @@ analyze_dataset <- function(dataset=c("pasilla","airway","bottomly","pasilla"), 
       # have to use hack above, because
       # dds <- DESeqDataSet(se = airway, design = ~ cell + dex)
       # throws the following error for some reason:
-      # "Error in checkSlotAssignment(object, name, value) : 
-      #  assignment of an object of class “ShallowSimpleListAssays”
-      #  is not valid for slot ‘assays’ in an 
-      #  object of class “DESeqDataSet”; is(value, "Assays") is not TRUE
+      # "Error in checkSlotAssignment(object, name, value)
+      #  assignment of an object of class "ShallowSimpleListAssays"
+      #  is not valid for slot 'assays' in an 
+      #  object of class "DESeqDataSet"; is(value, "Assays") is not TRUE
       dds <- DESeq(dds)
-
     } else if (dataset == "pasilla") {
       pasillaGenes <- NULL
       if (!requireNamespace("pasilla", quietly = TRUE)){
@@ -64,6 +63,7 @@ analyze_dataset <- function(dataset=c("pasilla","airway","bottomly","pasilla"), 
                         envir=environment())
       countData <- Biobase::exprs(hammer.eset)
       colData <- pData(hammer.eset)
+      dds <- DESeqDataSetFromMatrix(countData = countData, colData = colData , design = ~protocol)
       dds <- dds[, dds$Time == "2 months"]
       dds <- DESeq(dds)
       

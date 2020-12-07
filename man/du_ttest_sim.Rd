@@ -5,11 +5,22 @@
 \alias{du_ttest_sim_fun}
 \title{t-test simulation: Simulate rowwise t-tests}
 \usage{
-du_ttest_sim(m, pi0, effect_size, n_samples = 10,
-  uninformative_filter = FALSE, seed = NULL)
+du_ttest_sim(
+  m,
+  pi0,
+  effect_size,
+  n_samples = 10,
+  uninformative_filter = FALSE,
+  seed = NULL
+)
 
-du_ttest_sim_fun(m, pi0, effect_size, n_samples = 10,
-  uninformative_filter = FALSE)
+du_ttest_sim_fun(
+  m,
+  pi0,
+  effect_size,
+  n_samples = 10,
+  uninformative_filter = FALSE
+)
 }
 \arguments{
 \item{m}{Integer, total number of hypotheses}
