@@ -1,6 +1,6 @@
 Package: IHWpaper
 Title: Reproduce figures in IHW paper
-Version: 1.19.0
+Version: 1.19.1
 Authors@R: person("Nikos", "Ignatiadis", email =
         "nikos.ignatiadis01@gmail.com", role = c("aut", "cre"))
 Description: This package conveniently wraps all functions needed to
@@ -19,7 +19,7 @@ biocViews: ReproducibleResearch, ExperimentData, RNASeqData,
         ExpressionData
 RoxygenNote: 6.0.1
 Suggests: testthat, RColorBrewer, wesanderson, scales, gridExtra,
-        BiocStyle, knitr, rmarkdown, airway, pasilla, DESeq, locfdr,
+        BiocStyle, knitr, rmarkdown, airway, pasilla, locfdr,
         tidyr, ggbio, latex2exp
 NeedsCompilation: yes
 Author: Nikos Ignatiadis [aut, cre]

@@ -50,9 +50,6 @@ analyze_dataset <- function(dataset=c("pasilla","airway","bottomly","pasilla"), 
                               levels=c("untreated","treated"))
       dds <- DESeq(dds)
     } else if (dataset == "bottomly") {
-      if (!requireNamespace("DESeq", quietly = TRUE)){
-        stop("DESeq data package required.")
-      }
       bottomly.eset <- NULL
       load(system.file("extdata/real_data", "bottomly_eset.RData", package = "IHWpaper"),
         envir= environment())
@@ -62,17 +59,14 @@ analyze_dataset <- function(dataset=c("pasilla","airway","bottomly","pasilla"), 
       dds <- DESeq(dds)
 
     } else if (dataset == "hammer") {
-      if (!requireNamespace("DESeq", quietly = TRUE)){
-        stop("DESeq data package required.")
-      }
       hammer.eset <- NULL
       load(system.file("extdata/real_data", "hammer_eset.RData", package = "IHWpaper"),
                         envir=environment())
       countData <- Biobase::exprs(hammer.eset)
       colData <- pData(hammer.eset)
-      dds <- DESeqDataSetFromMatrix(countData = countData, colData = colData , design = ~protocol)
       dds <- dds[, dds$Time == "2 months"]
       dds <- DESeq(dds)
+      
     } else {
       stop("No such dataset currently available!")
     }

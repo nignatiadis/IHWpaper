@@ -79,7 +79,7 @@ myf1 <- cut(chr1_df$dist, my_breaks)
 myf2 <- cut(chr2_df$dist, my_breaks)
 ```
 
-To apply our method despite the fact that only small p-values are available, we will count how many hypotheses there are in each of the bins. The above code is not very efficient, so we have precomputed these and do not run the below chunk.
+To apply our method despite the fact that only small p-values are available, we will count how many hypotheses there are in each of the bins. The above code is not very efficient, so we have precomputed the results and do not run the below chunk.
 
 ```{r eval=FALSE}
 cnt = 0
@@ -150,7 +150,7 @@ qs <- c(0.025, 0.05)
 cutoffs <- c(0, quantile(chr1_chr2_df$dist,qs), Inf)
 cov_scatter_gg <- ggplot(chr1_chr2_df, aes(x=rank(dist)/nrow(chr1_chr2_df),
                                            y=-log10(pvalue))) +
-     geom_bin2d(bins=150, drop=TRUE) + #  geom_point(alpha=0.2, col=pretty_colors[1]) + 
+     geom_bin2d(bins=150, drop=TRUE) + #  geom_point(alpha=0.2, col=pretty_colors[1]) +
      geom_vline(xintercept=qs, linetype="dashed") + 
      ylab(expression(paste(-log[10],"(p-value)"))) +
      xlab(expression(paste("Quantile of distance"))) + 
@@ -242,8 +242,8 @@ What if we had applied BH and IHW-BH instead of BY and IHW-BY?
 
 ```{r}
 alpha_bh <- 0.01
-ihw_chr1_chr2_bh <- ihw(chr1_chr2_df$pvalue, chr1_chr2_groups, alpha_bh, folds=folds_vec,
-                        m_groups=m_groups, lambdas=2000)
+ihw_chr1_chr2_bh <- ihw(chr1_chr2_df$pvalue, chr1_chr2_groups, alpha_bh,
+                        folds=folds_vec, m_groups=m_groups, lambdas=2000)
 ```
 
 ```{r}
@@ -255,9 +255,10 @@ rejections(ihw_chr1_chr2_bh)
 
 # Hypotheses shown in table
 
-For our table we need one hypothesis in Chr1 that gets rejected both times (by BH and IHW):
+For our table we show one hypothesis on Chromosome 1 that gets rejected both times (by BH and IHW):
+
 ```{r}
- idx <- which(rejected_hypotheses(ihw_chr1_chr2) & (p.adjust(chr1_chr2_df$pvalue, n = m, method="BH") > alpha) &
+idx <- which(rejected_hypotheses(ihw_chr1_chr2) & (p.adjust(chr1_chr2_df$pvalue, n = m, method="BH") > alpha) &
                 (covariates(ihw_chr1_chr2)==3) & (ihw_chr1_chr2@df$fold == 1))
 idx_max <- which.max(pvalues(ihw_chr1_chr2)[idx])
 
@@ -267,14 +268,12 @@ ihw_chr1_chr2@df[idx[idx_max],]
 chr1_df[idx[idx_max],]
 ```
 
-We need one in Chr1 that gets weight 0:
+We show one hypothesis on Chromosome 1 that gets weight 0:
 
 ```{r}
- idx <- which( !rejected_hypotheses(ihw_chr1_chr2) & (p.adjust(chr1_chr2_df$pvalue, n = m, method="BH") > alpha) &
+idx <- which( !rejected_hypotheses(ihw_chr1_chr2) & (p.adjust(chr1_chr2_df$pvalue, n = m, method="BH") > alpha) &
                 (covariates(ihw_chr1_chr2)==15) & (ihw_chr1_chr2@df$fold == 1))
 idx_max <- which.max(pvalues(ihw_chr1_chr2)[idx])
-
-ihw_chr1_chr2@df[idx[idx_max],]
 
 ihw_chr1_chr2@df[idx[idx_max],]
 ```
@@ -282,7 +281,7 @@ ihw_chr1_chr2@df[idx[idx_max],]
 chr1_df[idx[idx_max],]
 ```
 
-One which get rejected in both cases from Chr2 :
+Next we find a hypothesis which gets rejected in both cases from Chr2 :
 
 ```{r}
 idx <- which( rejected_hypotheses(ihw_chr1_chr2) & (p.adjust(chr1_chr2_df$pvalue, n = m, method="BH") <= alpha) &
@@ -337,7 +336,8 @@ get_local_fdr <- function(fold, group){
   local_fdr_bh <- 1/gren$slope.knots[id_bh_thresh-1]
   
   pi0 <- (m_true - length(pvals))/(1-10^(-4))/m_true
-  data.frame(fold=fold, group=group, pi0=pi0, t_ihw=myt, local_fdr_ihw =  local_fdr_ihw, 
+  data.frame(fold=fold, group=group, pi0=pi0, t_ihw=myt, 
+             local_fdr_ihw =  local_fdr_ihw, 
              local_fdr_bh = local_fdr_bh)
 }
 ```
@@ -381,7 +381,9 @@ step_df <- left_join(step_df_weight, step_df_threshold) %>% left_join(lfdrs)
 
 step_df <- step_df %>% mutate(break_left = breaks_left[stratum],
                  break_right = breaks[stratum],
-                 break_ratio = break_right/break_left , 
+                 break_ratio = break_right/break_left,
+                 break_left_init = break_left,
+                 break_right_init = break_right,
                  break_left =break_left * break_ratio^.2,
                  break_right = break_right *break_ratio^(-.2))
 
@@ -600,15 +602,11 @@ ggsave(lfdr_bh_panel, filename="by_fdr.pdf", width=3.5,height=2.5)
 Below we use ggbio to create the ideograms of Human chromosomes 1 and 2.
 
 
-```{r eval = FALSE}
-#ggbio seems to be broken right now, fix later.
-chr1_ideo <- Ideogram(genome = "hg19", subchr="chr1")@ggplot + 
-                    xlab(paste0("SNPs: ", nrow(snp_chr1), "\n", 
-                                "Peaks: ", nrow(peaks_chr1)))  
-chr2_ideo <- Ideogram(genome = "hg19", subchr="chr2")@ggplot + xlab("bla") + 
-                    xlab(paste0("SNPs: ", nrow(snp_chr2), "\n", 
-                                "Peaks: ", nrow(peaks_chr2)))  
-chrs_ideo <- plot_grid(chr1_ideo, chr2_ideo, nrow=2)
-chrs_ideo
+```{r warning=FALSE}
+Ideogram(genome = "hg19", subchr="chr1")
+```
+
+```{r warning=FALSE}
+Ideogram(genome = "hg19", subchr="chr2")
 ```
 
