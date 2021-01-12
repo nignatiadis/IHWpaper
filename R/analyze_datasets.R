@@ -1,12 +1,12 @@
 #' analyze_dataset: Basically performs preprocessing and then returns analyzed RNASeq dataset (diff. expression)
-#'           , i.e. the DESeq2 result whose p-values and baseMean statistics can then be used with DDHW
+#'           , i.e. the DESeq2 result whose p-values and baseMean statistics can then be used with IHW
 #'
 #'
-#' @param dataset  Character, name of dataset to be preprocessed, only 4 choices currently available
+#' @param dataset  Character, name of dataset to be preprocessed, only 3 choices currently available ("airway","bottomly","hammer")
 #' @param res      (default TRUE): return result table, rather than DESeq2 object
 #'
 #' @return Preprocessed dataset
-#' @examples pasilla <- analyze_dataset("pasilla")
+#' @examples bottomly <- analyze_dataset("bottomly")
 #'
 #' @importFrom Biobase pData rowMax rowMin
 #' @importFrom SummarizedExperiment assay colData
@@ -15,7 +15,7 @@
 #' @import genefilter
 #' @importFrom utils data
 #' @export
-analyze_dataset <- function(dataset=c("pasilla","airway","bottomly","hammer"), res= TRUE) {
+analyze_dataset <- function(dataset=c("airway","bottomly","hammer"), res= TRUE) {
 
     if (dataset=="airway") {
       airway <- NULL
@@ -34,20 +34,7 @@ analyze_dataset <- function(dataset=c("pasilla","airway","bottomly","hammer"), r
       #  is not valid for slot 'assays' in an 
       #  object of class "DESeqDataSet"; is(value, "Assays") is not TRUE
       dds <- DESeq(dds)
-    } else if (dataset == "pasilla") {
-      pasillaGenes <- NULL
-      if (!requireNamespace("pasilla", quietly = TRUE)){
-        stop("pasilla data package required.")
-      }
-      data("pasillaGenes", package="pasilla", envir=environment())
-      countData <- counts(pasillaGenes)
-      colData <- pData(pasillaGenes)[,c("condition","type")]
-      dds <- DESeqDataSetFromMatrix(countData = countData,
-                                    colData = colData,
-                                    design = ~ condition)
-      dds$condition <- factor(dds$condition,
-                              levels=c("untreated","treated"))
-      dds <- DESeq(dds)
+      
     } else if (dataset == "bottomly") {
       bottomly.eset <- NULL
       load(system.file("extdata/real_data", "bottomly_eset.RData", package = "IHWpaper"),

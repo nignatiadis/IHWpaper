@@ -3,15 +3,12 @@
 \name{analyze_dataset}
 \alias{analyze_dataset}
 \title{analyze_dataset: Basically performs preprocessing and then returns analyzed RNASeq dataset (diff. expression)
-          , i.e. the DESeq2 result whose p-values and baseMean statistics can then be used with DDHW}
+          , i.e. the DESeq2 result whose p-values and baseMean statistics can then be used with IHW}
 \usage{
-analyze_dataset(
-  dataset = c("pasilla", "airway", "bottomly", "hammer"),
-  res = TRUE
-)
+analyze_dataset(dataset = c("airway", "bottomly", "hammer"), res = TRUE)
 }
 \arguments{
-\item{dataset}{Character, name of dataset to be preprocessed, only 4 choices currently available}
+\item{dataset}{Character, name of dataset to be preprocessed, only 3 choices currently available ("airway","bottomly","hammer")}
 
 \item{res}{(default TRUE): return result table, rather than DESeq2 object}
 }
@@ -20,9 +17,9 @@ Preprocessed dataset
 }
 \description{
 analyze_dataset: Basically performs preprocessing and then returns analyzed RNASeq dataset (diff. expression)
-          , i.e. the DESeq2 result whose p-values and baseMean statistics can then be used with DDHW
+          , i.e. the DESeq2 result whose p-values and baseMean statistics can then be used with IHW
 }
 \examples{
-pasilla <- analyze_dataset("pasilla")
+bottomly <- analyze_dataset("bottomly")
 
 }
